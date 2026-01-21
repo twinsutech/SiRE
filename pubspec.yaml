@@ -1,0 +1,82 @@
+name: sire
+description: "Solo Investor Real Estate App"
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.1 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # 1. 상태 관리
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.3.3
+
+  # 2. 로컬 데이터베이스 (Drift)
+  drift: ^2.18.0
+  sqlite3_flutter_libs: 0.5.20
+  path_provider: ^2.1.5
+  path: ^1.9.0
+
+  # 3. UI 및 차트
+  fl_chart: ^0.66.0
+  intl: ^0.19.0
+  google_fonts: ^6.1.0
+  flutter_slidable: ^3.0.1
+  percent_indicator: ^4.2.3
+
+  # 4. 보안
+  flutter_secure_storage: ^9.0.0
+  local_auth: ^2.1.8
+
+  # 5. 유틸리티
+  uuid: ^4.2.1
+
+  # [추가] 달력 라이브러리
+  table_calendar: ^3.1.1
+
+  # [추가] 엑셀/파일 관련 라이브러리
+  excel: ^4.0.2
+  share_plus: ^10.0.0
+  url_launcher: ^6.3.1
+  shared_preferences: ^2.3.3
+  file_picker: ^8.3.2
+
+  image_picker: ^1.0.7  # 📍 이 라인을 추가하세요
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+  # 코드 생성기 (Code Generator)
+  build_runner: ^2.4.9
+  riverpod_generator: ^2.3.3
+  drift_dev: ^2.18.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.1
+
+# 📍 [추가] 앱 아이콘 설정
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon.png" # 👈 아이콘으로 쓸 이미지 경로
+  min_sdk_android: 21
+
+# 📍 [추가] 스플래시 화면 설정
+flutter_native_splash:
+  color: "#1A237E" # SiRE 메인 네이비 색상
+  image: "assets/images/splash.png" # 👈 스플래시 로고 경로
+  android_12:
+    image: "assets/images/splash.png"
+    color: "#1A237E"
+
+flutter:
+  uses-material-design: true
+  # 📍 에셋 폴더 등록 (이미지 파일을 넣을 곳)
+  assets:
+    - assets/images/
