@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/database/database_provider.dart';
 import '../ledger/unpaid_provider.dart';
 import 'room_detail_screen.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/database/app_database.dart';
 import 'property_provider.dart';
-import 'add_building_dialog.dart'; // 📍 분리된 파일 임포트
-import 'add_unit_dialog.dart';     // 📍 분리된 파일 임포트
+import 'add_building_dialog.dart';
+import 'add_unit_dialog.dart';
+// 📍 새로 만든 통합 필터 리스트 화면 임포트
+import 'unit_filtered_list_screen.dart';
 
 class PropertyScreen extends ConsumerWidget {
   const PropertyScreen({super.key});
@@ -19,6 +23,8 @@ class PropertyScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final propertyListAsync = ref.watch(propertyListProvider);
+    // 📍 요약 데이터 프로바이더 감시
+    final summaryAsync = ref.watch(propertySummaryProvider);
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -62,14 +68,120 @@ class PropertyScreen extends ConsumerWidget {
             );
           }
 
-          return ListView.separated(
+          return ListView(
             padding: const EdgeInsets.all(16),
-            itemCount: buildingList.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 20),
-            itemBuilder: (context, index) => _buildBuildingCard(context, ref, buildingList[index]),
+            children: [
+              // 📍 1. 상단 종합 요약 대시보드 위젯
+              summaryAsync.when(
+                data: (summary) => _buildSummaryDashboard(summary, context),
+                loading: () => const SizedBox(height: 150, child: Center(child: CircularProgressIndicator())),
+                error: (_, __) => const SizedBox.shrink(),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                "My Buildings",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A237E)),
+              ),
+              const SizedBox(height: 16),
+              // 📍 2. 기존 빌딩 카드 리스트
+              ...buildingList.map((item) => Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: _buildBuildingCard(context, ref, item),
+              )),
+            ],
           );
         },
       ),
+    );
+  }
+
+  // 📍 [수정] 종합 요약 대시보드 UI 빌더: 개별 클릭 기능 반영
+  Widget _buildSummaryDashboard(PropertySummary summary, BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Monthly Collection", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+              Text("${(summary.collectionRate * 100).toInt()}%",
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Color(0xFF1A237E))),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: summary.collectionRate,
+              minHeight: 8,
+              backgroundColor: Colors.grey[200],
+              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF1A237E)),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              // 📍 미납(Unpaid) 클릭 시 이동
+              _buildClickableSummaryItem(
+                  context, Icons.warning_amber_rounded, "Unpaid", "${summary.totalUnpaid}", Colors.red, UnitFilterType.unpaid
+              ),
+              // 📍 공실(Vacant) 클릭 시 이동
+              _buildClickableSummaryItem(
+                  context, Icons.door_front_door_outlined, "Vacant", "${summary.totalVacancies}", Colors.grey, UnitFilterType.vacant
+              ),
+              // 📍 만기임박(Expiring) 클릭 시 이동
+              _buildClickableSummaryItem(
+                  context, Icons.event_available_outlined, "Expiring", "${summary.expiringSoon}", Colors.orange, UnitFilterType.expiring
+              ),
+              // 수익률 (단순 표시)
+              _buildSummaryItem(Icons.trending_up, "Yield", "${summary.averageYield.toStringAsFixed(1)}%", Colors.green),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 📍 [신규] 클릭 가능한 요약 아이템 헬퍼
+  Widget _buildClickableSummaryItem(BuildContext context, IconData icon, String label, String value, Color color, UnitFilterType type) {
+    return InkWell(
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => UnitFilteredListScreen(filterType: type))
+      ),
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        child: _buildSummaryItem(icon, label, value, color),
+      ),
+    );
+  }
+
+  // 📍 요약 항목 빌더 (메서드 부활)
+  Widget _buildSummaryItem(IconData icon, String label, String value, Color color) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 14, color: color),
+            const SizedBox(width: 4),
+            Text(label, style: const TextStyle(color: Colors.grey, fontSize: 11)),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+      ],
     );
   }
 
@@ -86,16 +198,12 @@ class PropertyScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 📍 빌딩 헤더: 다중 이미지 중 첫 번째 이미지를 배경으로 사용
           StreamBuilder<List<BuildingImage>>(
             stream: (db.select(db.buildingImages)..where((t) => t.buildingId.equals(building.id))).watch(),
             builder: (context, snapshot) {
               final images = snapshot.data ?? [];
-
-              // 📍 수정 포인트: 리스트가 비어있는지 먼저 확인 (bad state 방지)
               final bool hasImage = images.isNotEmpty;
 
-              // 대표 이미지 찾기 (isPrimary가 true인 것, 없으면 첫 번째 것)
               BuildingImage? displayImage;
               if (hasImage) {
                 displayImage = images.firstWhere(
@@ -107,7 +215,6 @@ class PropertyScreen extends ConsumerWidget {
                 height: 140,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  // 이미지가 있을 때만 DecorationImage 실행
                   image: hasImage
                       ? DecorationImage(
                     image: FileImage(File(displayImage!.imagePath)),
@@ -115,7 +222,6 @@ class PropertyScreen extends ConsumerWidget {
                     colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
                   )
                       : null,
-                  // 이미지가 없을 때만 그라데이션 표시
                   gradient: !hasImage
                       ? LinearGradient(
                     begin: Alignment.topLeft,
@@ -261,16 +367,13 @@ class PropertyScreen extends ConsumerWidget {
     );
   }
 
-  // 📍 _buildRoomButton 부분을 아래 코드로 교체하세요.
   Widget _buildRoomButton(BuildContext context, WidgetRef ref, Unit unit) {
-    // 1. 미납 리스트 프로바이더를 감시합니다.
     final unpaidAsync = ref.watch(unpaidListProvider);
 
     return unpaidAsync.when(
-      loading: () => _buildBaseRoomContainer(unit, Colors.grey, "Loading..."),
-      error: (err, _) => _buildBaseRoomContainer(unit, Colors.red, "Error"),
+      loading: () => _buildBaseRoomContainer(unit, Colors.grey, "로딩 중", null),
+      error: (err, _) => _buildBaseRoomContainer(unit, Colors.red, "에러", null),
       data: (unpaidList) {
-        // 2. 현재 호실의 상태 정보를 찾습니다.
         final myStatus = unpaidList.firstWhere(
               (s) => s.unit.id == unit.id,
           orElse: () => UnpaidStatus(
@@ -281,26 +384,34 @@ class PropertyScreen extends ConsumerWidget {
           ),
         );
 
-        // 3. UI 스타일 결정 로직
         Color statusColor = AppColors.incomeGreen;
-        String statusText = unit.leaseType ?? "Paid";
+        String statusText = "완납";
+        Widget? leaseBadge = _buildLeaseBadge(unit.leaseType);
 
         if (unit.tenantName == null || unit.tenantName!.isEmpty) {
-          // 공실 상태
           statusColor = Colors.grey;
-          statusText = "Vacant";
-        } else if (myStatus.status == 'OVERDUE') {
-          // 📍 실시간 미납 상태 (기존 memo 체크 방식보다 우선순위 높음)
+          statusText = "공실";
+          leaseBadge = null;
+        } else if (myStatus.status == 'OVERDUE' && (unit.leaseType == '월세' || unit.leaseType == '반전세')) {
           statusColor = AppColors.expenseRed;
-          statusText = "Unpaid";
-        } else if (myStatus.status == 'PAID') {
-          // 완납 상태
-          statusColor = AppColors.incomeGreen;
-          statusText = "Paid";
+          statusText = "미납";
         } else {
-          // 입금 대기 상태 (WAITING)
-          statusColor = AppColors.primaryNavy;
-          statusText = unit.leaseType ?? "Waiting";
+          bool isExpiring = false;
+          if (unit.contractEnd != null) {
+            final daysLeft = unit.contractEnd!.difference(DateTime.now()).inDays;
+            if (daysLeft >= 0 && daysLeft <= 30) isExpiring = true;
+          }
+
+          if (isExpiring) {
+            statusColor = Colors.orange;
+            statusText = "만기임박";
+          } else if (myStatus.status == 'PAID') {
+            statusColor = const Color(0xFF1A237E);
+            statusText = "완납";
+          } else {
+            statusColor = AppColors.incomeGreen;
+            statusText = unit.leaseType == '전세' ? "전세" : "대기";
+          }
         }
 
         return InkWell(
@@ -308,110 +419,130 @@ class PropertyScreen extends ConsumerWidget {
             context,
             MaterialPageRoute(builder: (context) => RoomDetailScreen(unit: unit)),
           ),
-          onLongPress: () => _showUnitManagementMenu(context, ref, unit),
-          child: _buildBaseRoomContainer(unit, statusColor, statusText),
+          onLongPress: () => _showUnitManagementMenu(context, ref, unit, myStatus.status == 'OVERDUE'),
+          child: _buildBaseRoomContainer(unit, statusColor, statusText, leaseBadge),
         );
       },
     );
   }
 
-  // 📍 UI 코드를 깔끔하게 유지하기 위한 헬퍼 위젯
-  Widget _buildBaseRoomContainer(Unit unit, Color color, String text) {
+  Widget? _buildLeaseBadge(String? leaseType) {
+    if (leaseType == null || leaseType == '공실') return null;
+
+    Color badgeColor;
+    String label;
+
+    switch (leaseType) {
+      case '월세':
+        badgeColor = const Color(0xFF2196F3);
+        label = "월";
+        break;
+      case '전세':
+        badgeColor = const Color(0xFF9C27B0);
+        label = "전";
+        break;
+      case '반전세':
+        badgeColor = const Color(0xFFFF9800);
+        label = "반";
+        break;
+      default:
+        return null;
+    }
+
     return Container(
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color, width: 1.5),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            unit.roomNumber,
-            style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 14),
+      width: 22, height: 22,
+      decoration: BoxDecoration(color: badgeColor, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.12), blurRadius: 2, offset: const Offset(0, 1))]),
+      alignment: Alignment.center,
+      child: Text(label, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.normal, letterSpacing: -0.5)),
+    );
+  }
+
+  Widget _buildBaseRoomContainer(Unit unit, Color color, String text, Widget? badge) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          width: double.infinity, height: double.infinity,
+          decoration: BoxDecoration(color: color.withOpacity(0.08), borderRadius: BorderRadius.circular(10), border: Border.all(color: color, width: 1.2)),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(unit.roomNumber, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 15)),
+                const SizedBox(height: 2),
+                Text(text, style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w500)),
+              ],
+            ),
           ),
-          Text(
-            text,
-            style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w600),
-          ),
-        ],
+        ),
+        if (badge != null) Positioned(top: -4, right: -4, child: badge),
+      ],
+    );
+  }
+
+  void _showUnitManagementMenu(BuildContext context, WidgetRef ref, Unit unit, bool isOverdue) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(padding: const EdgeInsets.all(20), child: Text("${unit.roomNumber}호 퀵 메뉴", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+            if (unit.tenantName != null && unit.tenantName!.isNotEmpty) ...[
+              ListTile(
+                leading: const CircleAvatar(backgroundColor: Colors.green, child: Icon(Icons.phone, color: Colors.white)),
+                title: Text("${unit.tenantName}님에게 전화"),
+                onTap: () { Navigator.pop(context); _makePhoneCall(unit.tenantPhone ?? ""); },
+              ),
+              ListTile(
+                leading: CircleAvatar(backgroundColor: isOverdue ? Colors.orange : Colors.blue, child: Icon(isOverdue ? Icons.notification_important : Icons.message, color: Colors.white)),
+                title: Text(isOverdue ? "미납 안내 문자 발송" : "문자 메시지 보내기"),
+                onTap: () { Navigator.pop(context); if (isOverdue) { _sendRemindSMS(unit, context); } else { _sendSMS(unit.tenantPhone ?? ""); } },
+              ),
+              const Divider(),
+            ],
+            ListTile(
+              leading: const CircleAvatar(backgroundColor: Color(0xFF1A237E), child: Icon(Icons.info_outline, color: Colors.white)),
+              title: const Text("상세 정보 보기"),
+              onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (context) => RoomDetailScreen(unit: unit))); },
+            ),
+            ListTile(
+              leading: const CircleAvatar(backgroundColor: Colors.redAccent, child: Icon(Icons.delete_outline, color: Colors.white)),
+              title: const Text("호실 삭제"),
+              onTap: () { Navigator.pop(context); _showDeleteUnitConfirm(context, ref, unit); },
+            ),
+            const SizedBox(height: 10),
+          ],
+        ),
       ),
     );
   }
 
-  void _showUnitManagementMenu(BuildContext context, WidgetRef ref, Unit unit) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text("Unit ${unit.roomNumber}"),
-        content: const Text("Choose an action for this unit."),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => RoomDetailScreen(unit: unit)));
-            },
-            child: const Text("Edit Details", style: TextStyle(color: Color(0xFF1A237E))),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _showDeleteUnitConfirm(context, ref, unit);
-            },
-            child: const Text("Delete Unit", style: TextStyle(color: Colors.redAccent)),
-          ),
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-        ],
-      ),
-    );
+  // 📍 독촉 문자/전화 기능
+  Future<void> _sendRemindSMS(Unit unit, BuildContext context) async {
+    if (unit.tenantPhone == null || unit.tenantPhone!.isEmpty) return;
+    final now = DateTime.now();
+    final String message = "[임대료 안내]\n안녕하세요, ${unit.tenantName}님.\n${now.month}월분 임대료(${NumberFormat('#,###').format(unit.monthlyRent)}만원)가 아직 확인되지 않아 연락드립니다.\n\n확인 후 입금 부탁드립니다.\n항상 감사합니다. 😊";
+    final String encodedMessage = Uri.encodeComponent(message).replaceAll('+', '%20');
+    final String smsUrl = Platform.isAndroid ? "sms:${unit.tenantPhone}?body=$encodedMessage" : "sms:${unit.tenantPhone}&body=$encodedMessage";
+    final Uri uri = Uri.parse(smsUrl);
+    if (await canLaunchUrl(uri)) { await launchUrl(uri); }
+    else if (context.mounted) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("문자 앱을 실행할 수 없습니다."))); }
   }
+
+  Future<void> _makePhoneCall(String phoneNumber) async { if (phoneNumber.isEmpty) return; final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber); if (await canLaunchUrl(launchUri)) await launchUrl(launchUri); }
+  Future<void> _sendSMS(String phoneNumber) async { if (phoneNumber.isEmpty) return; final Uri launchUri = Uri(scheme: 'sms', path: phoneNumber); if (await canLaunchUrl(launchUri)) await launchUrl(launchUri); }
 
   Future<void> _showDeleteUnitConfirm(BuildContext context, WidgetRef ref, Unit unit) {
     return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text("Delete Unit"),
-        content: Text("Are you sure you want to delete room '${unit.roomNumber}'?"),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-            onPressed: () async {
-              final db = ref.read(databaseProvider);
-              await (db.delete(db.units)..where((t) => t.id.equals(unit.id))).go();
-              ref.invalidate(propertyListProvider);
-              if (context.mounted) Navigator.pop(context);
-            },
-            child: const Text("Delete"),
-          ),
-        ],
-      ),
-    );
+        context: context, builder: (context) => AlertDialog(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), title: const Text("Delete Unit"), content: Text("Are you sure you want to delete room '${unit.roomNumber}'?"),
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")), ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white), onPressed: () async { final db = ref.read(databaseProvider); await (db.delete(db.units)..where((t) => t.id.equals(unit.id))).go(); ref.invalidate(propertyListProvider); if (context.mounted) Navigator.pop(context); }, child: const Text("Delete"))]));
   }
 
   Future<void> _showDeleteBuildingConfirm(BuildContext context, WidgetRef ref, Building building) {
     return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text("Delete Building"),
-        content: Text("Delete '${building.name}' and all its units?"),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-            onPressed: () async {
-              final db = ref.read(databaseProvider);
-              await (db.delete(db.buildings)..where((t) => t.id.equals(building.id))).go();
-              ref.invalidate(propertyListProvider);
-              if (context.mounted) Navigator.pop(context);
-            },
-            child: const Text("Delete"),
-          ),
-        ],
-      ),
-    );
+        context: context, builder: (context) => AlertDialog(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), title: const Text("Delete Building"), content: Text("Delete '${building.name}' and all its units?"),
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")), ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white), onPressed: () async { final db = ref.read(databaseProvider); await (db.delete(db.buildings)..where((t) => t.id.equals(building.id))).go(); ref.invalidate(propertyListProvider); if (context.mounted) Navigator.pop(context); }, child: const Text("Delete"))]));
   }
 }

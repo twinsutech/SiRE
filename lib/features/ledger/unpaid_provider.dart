@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/app_database.dart';
 import 'ledger_provider.dart';
+import 'package:drift/drift.dart'; // 📍 필터 확장을 위해 추가
 
 part 'unpaid_provider.g.dart';
 
@@ -27,27 +28,34 @@ Future<List<UnpaidStatus>> unpaidList(UnpaidListRef ref) async {
   // 1. 이번 달 장부 내역(ledgerList)을 구독합니다.
   final transactions = await ref.watch(ledgerListProvider.future);
 
-  // 2. 월세 계약인 모든 호실 정보를 가져옵니다.
-  final units = await (db.select(db.units)..where((u) => u.leaseType.equals('월세'))).get();
+  // 2. 월세 혹은 반전세 계약이면서, 월세 금액이 0보다 큰 모든 호실 정보를 가져옵니다.
+  // 📍 수정 포인트: u.leaseType.equals('반전세') 조건 추가
+  final units = await (db.select(db.units)
+    ..where((u) =>
+    u.leaseType.equals('월세') | u.leaseType.equals('반전세')
+    )).get();
 
   final now = DateTime.now();
   final List<UnpaidStatus> results = [];
 
   for (var unit in units) {
+    // 📍 월세가 0원인 경우는 미납 체크 의미가 없으므로 스킵 (전세 등 예외처리)
+    if (unit.monthlyRent <= 0) continue;
+
     // 3. 납부 기한일 계산 (IntColumn인 paymentDay 활용)
     final dueDay = unit.paymentDay ?? 1;
     // 이번 달 납부 기한 날짜 생성
     final dueDate = DateTime(now.year, now.month, dueDay);
 
-    // 4. 해당 호실의 이번 달 '월세' 입금액 합산
-    // 장부의 unitId와 카테고리가 '월세'인 INC 내역을 찾습니다.
+    // 4. 해당 호실의 이번 달 입금액 합산
+    // 📍 수정 포인트: 카테고리가 '월세' 혹은 '반전세'인 수입(INC) 내역을 모두 합산합니다.
     final paidAmount = transactions
         .where((t) =>
     t.transaction.unitId == unit.id &&
         t.transaction.type == 'INC' &&
-        t.transaction.category == '월세'
+        (t.transaction.category == '월세' || t.transaction.category == '반전세')
     )
-        .fold(0, (sum, t) => sum + t.transaction.amount.toInt()); // toInt()로 형변환 에러까지 해결
+        .fold(0, (sum, t) => sum + t.transaction.amount.toInt());
 
     // 5. 상태 판별 로직
     String status;
