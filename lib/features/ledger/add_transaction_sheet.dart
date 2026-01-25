@@ -5,11 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart'; // 📍 영수증 선택을 위해 추가
+
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import '../../core/database/database_provider.dart';
 import '../../core/database/app_database.dart';
 import '../../core/theme/app_colors.dart';
 import '../dashboard/dashboard_provider.dart';
 import '../settings/category_provider.dart';
+import '../property/property_provider.dart'; // 📍 건물 리스트 갱신을 위해 추가
 import 'ledger_provider.dart';
 
 class AddTransactionSheet extends ConsumerStatefulWidget {
@@ -45,7 +48,11 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
         _type = 'EXP';
       }
 
-      _amountController.text = widget.transaction!.amount.toString();
+      // 📍 [수정] 초기 금액 표시 시 현재 로케일 포맷 적용
+      final currentLang = ref.read(localizationProvider.notifier).currentLang;
+      final formatter = NumberFormat.decimalPattern(currentLang);
+      _amountController.text = formatter.format(widget.transaction!.amount);
+
       _memoController.text = widget.transaction!.memo ?? '';
       _category = widget.transaction!.category;
       _selectedDate = widget.transaction!.transactionDate;
@@ -65,11 +72,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
   // 📍 다중 이미지 선택 (갤러리/카메라 소스 선택 포함)
   Future<void> _pickReceiptImages() async {
     final picker = ImagePicker();
-
-    // RoomDetailScreen과 일관성을 위해 다중 선택 기능을 기본으로 사용합니다.
     final List<XFile> selectedFiles = await picker.pickMultiImage(imageQuality: 70);
 
     if (selectedFiles.isNotEmpty) {
+      HapticFeedback.mediumImpact(); // 📍 선택 시 피드백
       setState(() {
         _newReceiptImages.addAll(selectedFiles.map((file) => file.path));
       });
@@ -86,7 +92,6 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // 📍 InteractiveViewer를 통해 확대/축소 가능
             InteractiveViewer(
               panEnabled: true,
               minScale: 0.5,
@@ -112,8 +117,13 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
     final bool isIncome = _type == 'INC';
     final Color themeColor = isIncome ? AppColors.incomeGreen : AppColors.expenseRed;
     final bool isEdit = widget.transaction != null;
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
 
     final categoriesAsync = ref.watch(categoryListProvider);
+
+    // 📍 [추가] 현재 국가의 통화 심볼 파악 ($ 또는 ₩ 등)
+    final currencyFormat = NumberFormat.simpleCurrency(locale: currentLang);
+    final String currencySymbol = currencyFormat.currencySymbol;
 
     return Container(
       padding: EdgeInsets.only(
@@ -131,7 +141,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(width: 40, height: 4, margin: const EdgeInsets.only(bottom: 20), color: Colors.grey[300]),
-            Text(isEdit ? "Edit Record" : "New Record", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(
+                isEdit ? "COMMON_EDIT_RECORD".tr(ref) : "COMMON_NEW_RECORD".tr(ref),
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)
+            ),
             const SizedBox(height: 20),
 
             // 수입/지출 선택 탭
@@ -140,8 +153,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
               decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
               child: Row(
                 children: [
-                  _buildTypeButton("INC", "Income", isIncome ? AppColors.incomeGreen : Colors.transparent, isIncome ? Colors.white : Colors.grey),
-                  _buildTypeButton("EXP", "Expense", !isIncome ? AppColors.expenseRed : Colors.transparent, !isIncome ? Colors.white : Colors.grey),
+                  _buildTypeButton("INC", "COMMON_INCOME".tr(ref), isIncome ? AppColors.incomeGreen : Colors.transparent, isIncome ? Colors.white : Colors.grey),
+                  _buildTypeButton("EXP", "COMMON_EXPENSE".tr(ref), !isIncome ? AppColors.expenseRed : Colors.transparent, !isIncome ? Colors.white : Colors.grey),
                 ],
               ),
             ),
@@ -155,12 +168,16 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                   initialDate: _selectedDate,
                   firstDate: DateTime(2020),
                   lastDate: DateTime(2030),
+                  locale: Locale(currentLang), // 📍 달력 언어 설정
                   builder: (context, child) => Theme(
                     data: Theme.of(context).copyWith(colorScheme: ColorScheme.light(primary: themeColor)),
                     child: child!,
                   ),
                 );
-                if (picked != null) setState(() => _selectedDate = picked);
+                if (picked != null) {
+                  HapticFeedback.lightImpact();
+                  setState(() => _selectedDate = picked);
+                }
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -168,7 +185,8 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(DateFormat('yyyy-MM-dd (EEEE)').format(_selectedDate)),
+                    // 📍 요일까지 포함된 현지화 날짜 포맷
+                    Text(DateFormat.yMMMEd(currentLang).format(_selectedDate)),
                     Icon(Icons.calendar_today, size: 20, color: themeColor),
                   ],
                 ),
@@ -191,15 +209,16 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                 return DropdownButtonFormField<String>(
                   value: filtered.any((c) => c.name == _category) ? _category : null,
                   isExpanded: true,
-                  hint: const Text("Select Category"),
+                  hint: Text("LEDGER_SELECT_CATEGORY".tr(ref)),
                   decoration: InputDecoration(
-                    labelText: "Category",
+                    labelText: "COMMON_CATEGORY".tr(ref),
                     prefixIcon: Icon(Icons.category, color: themeColor),
                     border: const OutlineInputBorder(),
                   ),
                   items: filtered.map((c) => DropdownMenuItem(
                       value: c.name,
-                      child: Text(c.name)
+                      // 📍 카테고리명이 키(CAT_...)인 경우 번역해서 보여줌
+                      child: Text(c.name.startsWith('CAT_') ? c.name.tr(ref) : c.name)
                   )).toList(),
                   onChanged: (val) => setState(() => _category = val),
                 );
@@ -209,15 +228,23 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
             ),
             const SizedBox(height: 15),
 
-            // 금액 입력
+            // 📍 [금액 입력 UX 최적화 및 버그 수정]
             TextField(
               controller: _amountController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                CurrencyInputFormatter(locale: currentLang),
+              ],
               decoration: InputDecoration(
-                labelText: "Amount",
-                prefixIcon: Icon(Icons.attach_money, color: themeColor),
-                suffixText: "만",
+                labelText: "COMMON_AMOUNT".tr(ref),
+                // 📍 [수정] 통화 심볼을 왼쪽에 명확하게 표시
+                prefixIcon: Container(
+                  width: 48,
+                  alignment: Alignment.center,
+                  child: Text(currencySymbol, style: TextStyle(color: themeColor, fontSize: 18, fontWeight: FontWeight.bold)),
+                ),
+                // 📍 [해결] 오른쪽의 중복된 'W' 단위를 제거하여 영어 모드에서도 어색하지 않게 수정
+                suffixText: null,
                 border: const OutlineInputBorder(),
               ),
             ),
@@ -227,27 +254,27 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
             TextField(
               controller: _memoController,
               decoration: InputDecoration(
-                labelText: "Memo (Optional)",
+                labelText: "COMMON_MEMO_HINT".tr(ref),
                 prefixIcon: Icon(Icons.edit_note, color: themeColor),
                 border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 20),
 
-            // 📍 다중 영수증 갤러리 섹션 (RoomDetailScreen과 동일한 구조)
+            // 📍 다중 영수증 갤러리 섹션
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Receipt Gallery", style: TextStyle(color: Colors.grey, fontSize: 14)),
+                Text("COMMON_RECEIPT_GALLERY".tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 14)),
                 TextButton.icon(
                   onPressed: _pickReceiptImages,
                   icon: const Icon(Icons.add_a_photo, size: 18),
-                  label: const Text("Add Photo"),
+                  label: Text("COMMON_ADD_PHOTO".tr(ref)),
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            _buildMultiReceiptGallery(),
+            _buildMultiReceiptGallery(ref),
             const SizedBox(height: 25),
 
             // 하단 버튼
@@ -268,7 +295,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                   child: ElevatedButton(
                     onPressed: () => _saveTransaction(context),
                     style: ElevatedButton.styleFrom(backgroundColor: themeColor, foregroundColor: Colors.white, padding: const EdgeInsets.symmetric(vertical: 16)),
-                    child: Text(isEdit ? "Update Changes" : "Add Transaction", style: const TextStyle(fontWeight: FontWeight.bold)),
+                    child: Text(
+                        isEdit ? "COMMON_UPDATE_CHANGES".tr(ref) : "COMMON_ADD_RECORD".tr(ref),
+                        style: const TextStyle(fontWeight: FontWeight.bold)
+                    ),
                   ),
                 ),
               ],
@@ -279,8 +309,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
     );
   }
 
-  // 📍 다중 영수증 갤러리 위젯 (RoomDetailScreen 일관성 유지)
-  Widget _buildMultiReceiptGallery() {
+  Widget _buildMultiReceiptGallery(WidgetRef ref) {
     final db = ref.watch(databaseProvider);
 
     return StreamBuilder<List<TransactionImage>>(
@@ -298,7 +327,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.grey[300]!, style: BorderStyle.solid),
             ),
-            child: const Center(child: Text("No receipts attached", style: TextStyle(color: Colors.grey, fontSize: 12))),
+            child: Center(child: Text("LEDGER_NO_RECEIPTS".tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 12))),
           );
         }
 
@@ -307,14 +336,12 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
-              // 1. 새로 추가한 이미지들 (임시 상태)
               ..._newReceiptImages.asMap().entries.map((entry) {
                 return _buildImageThumbnail(
                   entry.value,
                   onDelete: () => setState(() => _newReceiptImages.removeAt(entry.key)),
                 );
               }),
-              // 2. 이미 DB에 저장된 이미지들
               ...savedImages.map((img) {
                 return _buildImageThumbnail(
                   img.imagePath,
@@ -330,7 +357,6 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
     );
   }
 
-  // 📍 이미지 썸네일 아이템 빌더
   Widget _buildImageThumbnail(String path, {required VoidCallback onDelete}) {
     return Stack(
       children: [
@@ -351,7 +377,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
           top: 5,
           right: 17,
           child: GestureDetector(
-            onTap: onDelete,
+            onTap: () {
+              HapticFeedback.lightImpact();
+              onDelete();
+            },
             child: const CircleAvatar(
               radius: 12,
               backgroundColor: Colors.black87,
@@ -366,7 +395,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
   Widget _buildTypeButton(String type, String label, Color bgColor, Color textColor) {
     return Expanded(
       child: GestureDetector(
-        onTap: () => setState(() { _type = type; _category = null; }),
+        onTap: () {
+          HapticFeedback.selectionClick();
+          setState(() { _type = type; _category = null; });
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(10)),
@@ -376,11 +408,13 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
     );
   }
 
-
   Future<void> _saveTransaction(BuildContext context) async {
-    final amount = int.tryParse(_amountController.text) ?? 0;
+    // 📍 [수정] 콤마가 포함된 문자열을 다시 숫자로 정규화하여 추출
+    final rawAmountText = _amountController.text.replaceAll(RegExp(r'[^0-9.]'), '');
+    final amount = (double.tryParse(rawAmountText) ?? 0).toInt();
+
     if (amount <= 0 || _category == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Check amount and category."), backgroundColor: Colors.orange));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("ERROR_CHECK_AMOUNT_CATEGORY".tr(ref)), backgroundColor: Colors.orange));
       return;
     }
 
@@ -388,20 +422,32 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
     int transactionId;
 
     try {
+      final buildingList = await db.select(db.buildings).get();
+      int targetBuildingId;
+
+      if (buildingList.isEmpty) {
+        targetBuildingId = await db.into(db.buildings).insert(
+          BuildingsCompanion.insert(
+            name: 'COMMON_BUILDING_NAME'.tr(ref),
+            address: const Value('System Generated'),
+          ),
+        );
+        ref.invalidate(propertyListProvider);
+      } else {
+        targetBuildingId = buildingList.first.id;
+      }
+
       if (widget.transaction == null) {
-        // 📍 [신규 저장]
         transactionId = await db.into(db.transactions).insert(TransactionsCompanion.insert(
-          buildingId: 1,
+          buildingId: targetBuildingId,
           type: _type,
           amount: amount,
           transactionDate: _selectedDate,
           category: _category!,
           memo: Value(_memoController.text),
-          // 📍 기존 단일 영수증 컬럼은 이제 사용하지 않으므로 absent 처리하거나 null 허용
           receiptImagePath: const Value.absent(),
         ));
       } else {
-        // 📍 [수정]
         transactionId = widget.transaction!.id;
         await (db.update(db.transactions)..where((t) => t.id.equals(transactionId))).write(
           TransactionsCompanion(
@@ -410,12 +456,10 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
             transactionDate: Value(_selectedDate),
             category: Value(_category!),
             memo: Value(_memoController.text),
-            // 수정 시에도 기존 단일 컬럼은 건드리지 않음
           ),
         );
       }
 
-      // 📍 [다중 이미지 저장] 신규 리스트에 있는 파일들을 TransactionImages 테이블에 인서트
       if (_newReceiptImages.isNotEmpty) {
         for (var path in _newReceiptImages) {
           await db.into(db.transactionImages).insert(
@@ -427,30 +471,27 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
         }
       }
 
-      // 📍 모든 상태 무효화 (실시간 반영의 핵심)
       ref.invalidate(ledgerListProvider);
       ref.invalidate(ledgerSummaryProvider);
       ref.invalidate(dashboardDataProvider);
 
       if (context.mounted) Navigator.pop(context);
     } catch (e) {
-      // 에러 발생 시 사용자에게 알림
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Save failed: $e"), backgroundColor: Colors.red));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${"ERROR_SAVE_FAILED".tr(ref)}: $e"), backgroundColor: Colors.red));
       }
     }
   }
-
 
   Future<void> _deleteTransaction(BuildContext context) async {
     final bool? confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text("Delete"),
-        content: const Text("Delete this record?"),
+        title: Text("COMMON_DELETE".tr(ref)),
+        content: Text("DIALOG_DELETE_TRANSACTION_DESC".tr(ref)),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text("Cancel")),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text("Delete", style: TextStyle(color: Colors.red))),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text("COMMON_CANCEL".tr(ref))),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text("COMMON_DELETE".tr(ref), style: const TextStyle(color: Colors.red))),
         ],
       ),
     );
@@ -461,7 +502,34 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
       ref.invalidate(ledgerListProvider);
       ref.invalidate(ledgerSummaryProvider);
       ref.invalidate(dashboardDataProvider);
-      Navigator.pop(context);
+      if (context.mounted) Navigator.pop(context);
     }
+  }
+}
+
+// 📍 [핵심 클래스] 통화 입력 포매터
+class CurrencyInputFormatter extends TextInputFormatter {
+  final String locale;
+  CurrencyInputFormatter({required this.locale});
+
+  @override
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) return newValue;
+
+    // 1. 숫자 이외의 문자 제거 (소수점 유지)
+    String rawValue = newValue.text.replaceAll(RegExp(r'[^0-9.]'), '');
+
+    // 2. 숫자로 변환
+    double? value = double.tryParse(rawValue);
+    if (value == null) return oldValue;
+
+    // 3. 로케일별 포맷 적용 (자동 콤마)
+    final formatter = NumberFormat.decimalPattern(locale);
+    String newText = formatter.format(value);
+
+    return newValue.copyWith(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
+    );
   }
 }

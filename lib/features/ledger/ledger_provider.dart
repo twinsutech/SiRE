@@ -1,7 +1,10 @@
+// lib/src/features/ledger/ledger_provider.dart
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:drift/drift.dart';
 import '../../core/database/database_provider.dart';
 import '../../core/database/app_database.dart';
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 
 part 'ledger_provider.g.dart';
 
@@ -243,6 +246,8 @@ class LedgerAction extends _$LedgerAction {
   }) async {
     final db = ref.read(databaseProvider);
     final now = DateTime.now();
+    // 📍 다국어 지원을 위해 노티파이어 참조
+    final l10n = ref.read(localizationProvider.notifier);
 
     await db.into(db.transactions).insert(
       TransactionsCompanion.insert(
@@ -250,8 +255,10 @@ class LedgerAction extends _$LedgerAction {
         unitId: Value(unitId),
         amount: amount,
         type: 'INC',
-        category: '월세',
-        memo: Value('$unitNumber호 ($tenantName) 수납 완료'),
+        // 📍 카테고리도 'CAT_RENT' 같은 고유 키로 저장하는 것이 다국어 환경에서 안전합니다.
+        category: 'CAT_RENT',
+        // 📍 메모 역시 현재 언어 설정에 맞춰 자동 생성되도록 수정
+        memo: Value('$unitNumber${l10n.translate("COMMON_ROOM_UNIT")} ($tenantName) ${l10n.translate("DASHBOARD_PAYMENT_CONFIRM")}'),
         transactionDate: now,
       ),
     );

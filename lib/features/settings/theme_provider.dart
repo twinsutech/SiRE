@@ -6,8 +6,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class ThemeNotifier extends StateNotifier<ThemeMode> {
   ThemeNotifier() : super(ThemeMode.system);
 
+  // 📍 테마 전환 로직 (다국어 설정 화면의 스위치와 연동됨)
   void toggleTheme(bool isDark) {
     state = isDark ? ThemeMode.dark : ThemeMode.light;
+  }
+
+  // 📍 시스템 설정에 따른 테마 모드 설정
+  void setSystemTheme() {
+    state = ThemeMode.system;
   }
 }
 

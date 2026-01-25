@@ -10,6 +10,7 @@ class CategoryList extends _$CategoryList {
   @override
   Future<List<Category>> build() async {
     final db = ref.watch(databaseProvider);
+    // 📍 카테고리 목록 조회 (ID 순으로 정렬)
     return (db.select(db.categories)..orderBy([(t) => OrderingTerm.asc(t.id)])).get();
   }
 
@@ -18,6 +19,7 @@ class CategoryList extends _$CategoryList {
     final db = ref.read(databaseProvider);
 
     // 혹시 'INCOME'이 들어와도 'INC'로 변환하여 저장
+    // 📍 다국어와 상관없이 DB 내부 타입 코드는 'INC' / 'EXP'로 고정 관리합니다.
     final normalizedType = (type == 'INCOME' || type == 'INC') ? 'INC' : 'EXP';
 
     await db.into(db.categories).insert(
@@ -29,6 +31,7 @@ class CategoryList extends _$CategoryList {
     ref.invalidateSelf();
   }
 
+  // 📍 카테고리 삭제
   Future<void> deleteCategory(int id) async {
     final db = ref.read(databaseProvider);
     await (db.delete(db.categories)..where((t) => t.id.equals(id))).go();

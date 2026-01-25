@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart'; // 날짜 포맷팅
 import 'package:path/path.dart';
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import '../../core/theme/app_colors.dart';
 import '../../core/database/app_database.dart';
 import '../../core/database/database_provider.dart';
@@ -24,6 +25,7 @@ class RoomDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final db = ref.watch(databaseProvider);
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
 
     // 📍 실시간 미납 리스트 상태 감시 (아이콘 색상 결정용)
     final unpaidAsync = ref.watch(unpaidListProvider);
@@ -52,12 +54,12 @@ class RoomDetailScreen extends ConsumerWidget {
         // UI 스타일 결정 (메모에 '밀림'이 있거나, 장부상 OVERDUE인 경우 모두 포함)
         final bool isOverdueUI = isRealOverdue || (currentUnit.memo?.contains('밀림') ?? false);
         final statusColor = isOverdueUI ? AppColors.expenseRed : AppColors.primaryNavy;
-        final statusText = isOverdueUI ? "(연체중)" : "";
+        final statusText = isOverdueUI ? "(${'STATUS_OVERDUE'.tr(ref)})" : "";
 
         return Scaffold(
           backgroundColor: AppColors.background,
           appBar: AppBar(
-            title: Text("${currentUnit.roomNumber}호 상세정보 $statusText"),
+            title: Text("${currentUnit.roomNumber}${'COMMON_ROOM_UNIT'.tr(ref)} ${'PROP_VIEW_DETAIL'.tr(ref)} $statusText"),
             backgroundColor: statusColor,
             foregroundColor: Colors.white,
             actions: [
@@ -76,12 +78,12 @@ class RoomDetailScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildTenantInfoCard(currentUnit, isOverdueUI, context), // 📍 연체 여부 전달
+                _buildTenantInfoCard(currentUnit, isOverdueUI, context, ref), // 📍 연체 여부 전달
                 _buildRentPaymentCard(context, ref, currentUnit), // 📍 수납 버튼 섹션 추가
                 const SizedBox(height: 20),
-                _buildContractCard(currentUnit),
+                _buildContractCard(currentUnit, ref, currentLang),
                 const SizedBox(height: 20),
-                const Text("메모 및 사진", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text("PROP_MEMO_PHOTO_TITLE".tr(ref), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 10),
                 Container(
                   width: double.infinity,
@@ -91,20 +93,20 @@ class RoomDetailScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("관리 메모", style: TextStyle(color: Colors.grey, fontSize: 13)),
+                      Text("PROP_ADMIN_MEMO".tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 13)),
                       const SizedBox(height: 4),
-                      Text(currentUnit.memo ?? "입력된 메모가 없습니다.",
+                      Text(currentUnit.memo ?? "PROP_NO_MEMO".tr(ref),
                           style: const TextStyle(fontSize: 16)),
                       const SizedBox(height: 20),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text("호실 사진 갤러리", style: TextStyle(color: Colors.grey, fontSize: 14)),
+                          Text("PROP_ROOM_GALLERY".tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 14)),
                           TextButton.icon(
                             onPressed: () => _pickAndAddImages(ref, currentUnit),
                             icon: const Icon(Icons.add_a_photo, size: 18),
-                            label: const Text("사진 추가"),
+                            label: Text("COMMON_ADD_PHOTO".tr(ref)),
                           ),
                         ],
                       ),
@@ -122,8 +124,17 @@ class RoomDetailScreen extends ConsumerWidget {
   }
 
   // 1. 세입자 정보 카드 (연락처 및 유형 표시)
-  Widget _buildTenantInfoCard(Unit currentUnit, bool isOverdue, BuildContext context) {
-    final leaseType = currentUnit.leaseType ?? "공실";
+  Widget _buildTenantInfoCard(Unit currentUnit, bool isOverdue, BuildContext context, WidgetRef ref) {
+    final rawLeaseType = currentUnit.leaseType ?? '공실';
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+    // 📍 [화폐 다국어] 국가별 통화 포매터 정의
+    final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
+
+    String leaseTypeLabel = "";
+    if (rawLeaseType == '공실') leaseTypeLabel = 'DASHBOARD_VACANT_UNITS'.tr(ref);
+    else if (rawLeaseType == '월세') leaseTypeLabel = 'LEASE_MONTHLY'.tr(ref);
+    else if (rawLeaseType == '전세') leaseTypeLabel = 'LEASE_JEONSE'.tr(ref);
+    else if (rawLeaseType == '반전세') leaseTypeLabel = 'LEASE_HALF_JEONSE'.tr(ref);
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -143,16 +154,16 @@ class RoomDetailScreen extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
-                      color: leaseType == '공실' ? Colors.grey : AppColors.primaryNavy.withOpacity(0.1),
+                      color: rawLeaseType == '공실' ? Colors.grey : AppColors.primaryNavy.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(4),
                     ),
-                    child: Text(leaseType, style: TextStyle(color: leaseType == '공실' ? Colors.white : AppColors.primaryNavy, fontSize: 12, fontWeight: FontWeight.bold)),
+                    child: Text(leaseTypeLabel, style: TextStyle(color: rawLeaseType == '공실' ? Colors.white : AppColors.primaryNavy, fontSize: 12, fontWeight: FontWeight.bold)),
                   ),
                   const SizedBox(height: 8),
-                  Text(currentUnit.tenantName ?? "입주자 없음", style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  Text(currentUnit.tenantName ?? "PROP_NO_TENANT".tr(ref), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                 ],
               ),
-              if (leaseType != '공실')
+              if (rawLeaseType != '공실')
                 Row(
                   children: [
                     CircleAvatar(
@@ -166,7 +177,7 @@ class RoomDetailScreen extends ConsumerWidget {
                       child: IconButton(
                           onPressed: () {
                             if (isOverdue) {
-                              _sendRemindSMS(currentUnit, context); // 연체 시 독촉 양식 발송
+                              _sendRemindSMS(currentUnit, context, ref); // 연체 시 독촉 양식 발송
                             } else {
                               _sendSMS(currentUnit.tenantPhone ?? ""); // 일반 문자 발송
                             }
@@ -185,9 +196,10 @@ class RoomDetailScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _infoItem("보증금", "${NumberFormat('#,###').format(currentUnit.deposit)} 만원"),
-              if (leaseType == '월세' || leaseType == '반전세')
-                _infoItem("월세", "${NumberFormat('#,###').format(currentUnit.monthlyRent)} 만원"),
+              // 📍 [수정] 보증금 및 임대료 금액 표시 다국어 포맷 적용
+              _infoItem("CAT_DEPOSIT".tr(ref), currencyFmt.format(currentUnit.deposit)),
+              if (rawLeaseType == '월세' || rawLeaseType == '반전세')
+                _infoItem("CAT_RENT".tr(ref), currencyFmt.format(currentUnit.monthlyRent)),
             ],
           ),
         ],
@@ -207,17 +219,19 @@ class RoomDetailScreen extends ConsumerWidget {
   }
 
   // 2. 계약 상세 정보 카드
-  Widget _buildContractCard(Unit currentUnit) {
+  Widget _buildContractCard(Unit currentUnit, WidgetRef ref, String lang) {
     if (currentUnit.leaseType == '공실' || currentUnit.leaseType == null) {
       return Container(
         padding: const EdgeInsets.all(20),
         width: double.infinity,
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-        child: const Center(child: Text("현재 등록된 계약 정보가 없습니다.", style: TextStyle(color: Colors.grey))),
+        child: Center(child: Text("PROP_NO_CONTRACT_INFO".tr(ref), style: const TextStyle(color: Colors.grey))),
       );
     }
 
-    final startDate = currentUnit.contractStart != null ? DateFormat('yyyy.MM.dd').format(currentUnit.contractStart!) : "-";    final endDate = currentUnit.contractEnd != null ? DateFormat('yyyy.MM.dd').format(currentUnit.contractEnd!) : "-";    final paymentDay = currentUnit.paymentDay != null ? "매월 ${currentUnit.paymentDay}일" : "정보 없음";
+    final startDate = currentUnit.contractStart != null ? DateFormat.yMd(lang).format(currentUnit.contractStart!) : "-";
+    final endDate = currentUnit.contractEnd != null ? DateFormat.yMd(lang).format(currentUnit.contractEnd!) : "-";
+    final paymentDay = currentUnit.paymentDay != null ? "${'PROP_EVERY_MONTH'.tr(ref)} ${currentUnit.paymentDay}${ 'PROP_DAY_UNIT'.tr(ref)}" : "COMMON_ERROR".tr(ref);
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -225,25 +239,25 @@ class RoomDetailScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.assignment, size: 18, color: Colors.grey),
-              SizedBox(width: 8),
-              Text("계약 상세 내역", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              const Icon(Icons.assignment, size: 18, color: Colors.grey),
+              const SizedBox(width: 8),
+              Text("PROP_CONTRACT_DETAIL_TITLE".tr(ref), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             ],
           ),
           const SizedBox(height: 16),
-          _contractRow("계약 기간", "$startDate ~ $endDate"),
+          _contractRow("PROP_CONTRACT_PERIOD".tr(ref), "$startDate ~ $endDate"),
           if (currentUnit.leaseType != '전세') ...[
             const SizedBox(height: 10),
-            _contractRow("월세 납입일", paymentDay),
+            _contractRow("PROP_PAYMENT_DAY_LABEL".tr(ref), paymentDay),
           ],
         ],
       ),
     );
   }
 
-  // 📍 수정된 월세 수납 현황 카드 (중복 체크 로직 포함)
+  // 📍 수정된 월세 수납 현황 카드 (화폐 다국어 적용)
   Widget _buildRentPaymentCard(BuildContext context, WidgetRef ref, Unit currentUnit) {
     if (currentUnit.leaseType == '공실' || currentUnit.leaseType == '전세') {
       return const SizedBox.shrink();
@@ -251,7 +265,10 @@ class RoomDetailScreen extends ConsumerWidget {
 
     final db = ref.watch(databaseProvider);
     final now = DateTime.now();
-    final currentMonth = "${now.year}년 ${now.month}월";
+    final lang = ref.watch(localizationProvider.notifier).currentLang;
+    final currentMonthLabel = DateFormat.yMMMM(lang).format(now);
+    // 📍 [화폐 다국어] 통화 포매터 정의
+    final currencyFmt = NumberFormat.simpleCurrency(locale: lang, decimalDigits: 0);
 
     // 📍 DB에서 이번 달, 이 호실의 수납 내역이 있는지 실시간 감시
     return StreamBuilder<List<Transaction>>(
@@ -260,7 +277,7 @@ class RoomDetailScreen extends ConsumerWidget {
         t.unitId.equals(currentUnit.id) &
         t.transactionDate.year.equals(now.year) &
         t.transactionDate.month.equals(now.month) &
-        t.category.equals('월세')))
+        (t.category.equals('월세') | t.category.equals('CAT_RENT'))))
           .watch(),
       builder: (context, snapshot) {
         final isPaid = snapshot.hasData && snapshot.data!.isNotEmpty;
@@ -279,7 +296,7 @@ class RoomDetailScreen extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("$currentMonth 수납 현황", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  Text("$currentMonthLabel ${'PROP_PAYMENT_STATUS'.tr(ref)}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   Icon(
                     isPaid ? Icons.check_circle : Icons.monetization_on,
                     color: isPaid ? Colors.green : AppColors.incomeGreen,
@@ -293,8 +310,9 @@ class RoomDetailScreen extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("이번 달 임대료", style: TextStyle(color: Colors.grey, fontSize: 13)),
-                        Text("${NumberFormat('#,###').format(currentUnit.monthlyRent)} 만원",
+                        Text("PROP_MONTHLY_RENT_THIS_MONTH".tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                        // 📍 [수정] 수납 카드 내 금액 표시 다국어 포맷 적용
+                        Text(currencyFmt.format(currentUnit.monthlyRent),
                             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       ],
                     ),
@@ -303,7 +321,7 @@ class RoomDetailScreen extends ConsumerWidget {
                   ElevatedButton.icon(
                     onPressed: isPaid ? null : () => _handleRentPayment(context, ref, currentUnit),
                     icon: Icon(isPaid ? Icons.done_all : Icons.check_circle),
-                    label: Text(isPaid ? "수납 완료" : "수납 확인"),
+                    label: Text(isPaid ? "STATUS_PAID".tr(ref) : "DASHBOARD_PAYMENT_CONFIRM".tr(ref)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isPaid ? Colors.grey : AppColors.incomeGreen,
                       foregroundColor: Colors.white,
@@ -313,10 +331,10 @@ class RoomDetailScreen extends ConsumerWidget {
                 ],
               ),
               if (isPaid)
-                const Padding(
-                  padding: EdgeInsets.only(top: 8.0),
-                  child: Text("✅ 이번 달 임대료가 이미 장부에 기록되었습니다.",
-                      style: TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.bold)),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text("PROP_ALREADY_RECORDED_MSG".tr(ref),
+                      style: const TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.bold)),
                 ),
             ],
           ),
@@ -325,10 +343,11 @@ class RoomDetailScreen extends ConsumerWidget {
     );
   }
 
-  // 📍 수납 핸들러 (제공해주신 원본 코드에 '수입' 타입 명시 확인 및 최적화)
+  // 📍 수납 핸들러 (기존 유지)
   Future<void> _handleRentPayment(BuildContext context, WidgetRef ref, Unit unit) async {
     final db = ref.read(databaseProvider);
     final now = DateTime.now();
+    final l10n = ref.read(localizationProvider.notifier);
 
     // 1. 중복 체크: 이번 달 동일 호실의 '월세' 수납 내역 확인
     final existing = await (db.select(db.transactions)
@@ -336,12 +355,12 @@ class RoomDetailScreen extends ConsumerWidget {
       t.unitId.equals(unit.id) &
       t.transactionDate.year.equals(now.year) &
       t.transactionDate.month.equals(now.month) &
-      t.category.equals('월세')))
+      (t.category.equals('월세') | t.category.equals('CAT_RENT'))))
         .get();
 
     if (existing.isNotEmpty) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("이미 이번 달 수납 처리가 완료되었습니다.")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("PROP_ALREADY_RECORDED_MSG".tr(ref))));
       }
       return;
     }
@@ -353,10 +372,10 @@ class RoomDetailScreen extends ConsumerWidget {
           buildingId: unit.buildingId,
           unitId: Value(unit.id),
           type: 'INC',
-          category: '월세',
+          category: 'CAT_RENT',
           amount: unit.monthlyRent,
           transactionDate: now,
-          memo: Value("${unit.roomNumber}호 ${now.month}월 월세 수납"),
+          memo: Value("${unit.roomNumber}${l10n.translate('COMMON_ROOM_UNIT')} ${now.month}${l10n.translate('COMMON_MONTH_UNIT')} ${l10n.translate('CAT_RENT')} ${l10n.translate('STATUS_PAID')}"),
         ),
       );
 
@@ -374,32 +393,33 @@ class RoomDetailScreen extends ConsumerWidget {
       ref.invalidate(dashboardDataProvider); // 대시보드 요약 갱신
 
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${unit.roomNumber}호 수납이 완료되었습니다.")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${unit.roomNumber}${l10n.translate('COMMON_ROOM_UNIT')} ${l10n.translate('STATUS_PAID')}")));
       }
 
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("오류가 발생했습니다.")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("COMMON_ERROR".tr(ref))));
       }
     }
   }
 
-  // 📍 독촉 문자 발송 로직 (에러 및 '+' 현상 수정본)
-  Future<void> _sendRemindSMS(Unit unit, BuildContext context) async { // context를 인자로 받음
+  // 📍 독촉 문자 발송 로직 (화폐 다국어 적용)
+  Future<void> _sendRemindSMS(Unit unit, BuildContext context, WidgetRef ref) async {
     if (unit.tenantPhone == null || unit.tenantPhone!.isEmpty) return;
 
     final now = DateTime.now();
-    final String message =
-        "[임대료 안내]\n"
-        "안녕하세요, ${unit.tenantName}님.\n"
-        "${now.month}월분 임대료(${NumberFormat('#,###').format(unit.monthlyRent)}만원)가 "
-        "아직 확인되지 않아 연락드립니다.\n\n"
-        "확인 후 입금 부탁드립니다.\n"
-        "항상 감사합니다. 😊";
+    final lang = ref.read(localizationProvider.notifier).currentLang;
+    // 📍 [화폐 다국어] 독촉 문자 내 금액 포맷팅을 위해 포매터 생성
+    final currencyFmt = NumberFormat.simpleCurrency(locale: lang, decimalDigits: 0);
 
-    // 📍 '+' 대신 '%20'을 사용하도록 강제 인코딩
+    final String msgTemplate = "PROP_SMS_REMIND_TEMPLATE".tr(ref);
+    final String message = msgTemplate
+        .replaceAll("{tenant}", unit.tenantName ?? "")
+        .replaceAll("{month}", "${now.month}")
+    // 📍 [수정] 독촉 문자 속 금액 표시를 로케일에 맞게 다국어 포맷으로 변경
+        .replaceAll("{amount}", currencyFmt.format(unit.monthlyRent));
+
     final String encodedMessage = Uri.encodeComponent(message).replaceAll('+', '%20');
-
     final String smsUrl = Platform.isAndroid
         ? "sms:${unit.tenantPhone}?body=$encodedMessage"
         : "sms:${unit.tenantPhone}&body=$encodedMessage";
@@ -409,18 +429,13 @@ class RoomDetailScreen extends ConsumerWidget {
     try {
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri);
-      } else {
-        // 비동기 작업 후 context가 여전히 유효한지 체크 (에러 방지)
-        if (!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("문자 앱을 실행할 수 없습니다."))
-        );
+      } else if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("ALERT_SMS_APP_ERROR".tr(ref))));
       }
     } catch (e) {
-      if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("오류가 발생했습니다: $e"))
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${'COMMON_ERROR'.tr(ref)}: $e")));
+      }
     }
   }
 
@@ -447,7 +462,7 @@ class RoomDetailScreen extends ConsumerWidget {
             child: Container(
               height: 100, width: double.infinity,
               decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(8), border: Border.all(color: Colors.grey[300]!, style: BorderStyle.solid)),
-              child: const Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Icon(Icons.photo_library, color: Colors.grey), Text("사진이 없습니다. 탭하여 추가하세요.", style: TextStyle(color: Colors.grey, fontSize: 12))])),
+              child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [const Icon(Icons.photo_library, color: Colors.grey), Text("PROP_NO_PHOTO_DESC".tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 12))])),
             ),
           );
         }
@@ -485,7 +500,7 @@ class RoomDetailScreen extends ConsumerWidget {
     );
   }
 
-  // 4. 고도화된 정보 수정 다이얼로그 (전세/월세 동적 폼 적용)
+  // 4. 고도화된 정보 수정 다이얼로그 (화폐 다국어 대응)
   void _showEditDialog(BuildContext context, WidgetRef ref, Unit currentUnit) {
     final roomController = TextEditingController(text: currentUnit.roomNumber);
     final tenantController = TextEditingController(text: currentUnit.tenantName);
@@ -499,13 +514,17 @@ class RoomDetailScreen extends ConsumerWidget {
     DateTime? startDate = currentUnit.contractStart;
     DateTime? endDate = currentUnit.contractEnd;
 
+    // 📍 [화폐 다국어] 다이얼로그 내 심볼 표시용
+    final currentLang = ref.read(localizationProvider.notifier).currentLang;
+    final currencySymbol = NumberFormat.simpleCurrency(locale: currentLang).currencySymbol;
+
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
           insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Text("호실 및 계약 정보 수정", style: TextStyle(fontWeight: FontWeight.bold)),
+          title: Text("PROP_EDIT_INFO_TITLE".tr(ref), style: const TextStyle(fontWeight: FontWeight.bold)),
           content: SizedBox(
             width: MediaQuery.of(context).size.width,
             child: ConstrainedBox(
@@ -515,31 +534,39 @@ class RoomDetailScreen extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TextField(controller: roomController, decoration: const InputDecoration(labelText: "호수", border: OutlineInputBorder(), isDense: true)),
+                    TextField(controller: roomController, decoration: InputDecoration(labelText: "PROP_ROOM_NUMBER_LABEL".tr(ref), border: const OutlineInputBorder(), isDense: true)),
                     const SizedBox(height: 20),
-                    const Text("계약 유형", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                    Text("PROP_LEASE_TYPE_LABEL".tr(ref), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                     const SizedBox(height: 8),
                     LayoutBuilder(builder: (context, constraints) {
+                      final types = ['월세', '전세', '반전세', '공실'];
+                      final labels = [
+                        'LEASE_MONTHLY_SHORT'.tr(ref),
+                        'LEASE_JEONSE_SHORT'.tr(ref),
+                        'LEASE_HALF_JEONSE_SHORT'.tr(ref),
+                        'DASHBOARD_VACANT_UNITS'.tr(ref)
+                      ];
                       return ToggleButtons(
-                        isSelected: ['월세', '전세', '반전세', '공실'].map((e) => selectedType == e).toList(),
-                        onPressed: (index) => setState(() => selectedType = ['월세', '전세', '반전세', '공실'][index]),
+                        isSelected: types.map((e) => selectedType == e).toList(),
+                        onPressed: (index) => setState(() => selectedType = types[index]),
                         borderRadius: BorderRadius.circular(8),
                         constraints: BoxConstraints(minWidth: (constraints.maxWidth - 5) / 4, minHeight: 45),
-                        children: const [Text('월세'), Text('전세'), Text('반전세'), Text('공실')],
+                        children: labels.map((l) => Text(l)).toList(),
                       );
                     }),
                     if (selectedType != '공실') ...[
                       const SizedBox(height: 20),
-                      TextField(controller: tenantController, decoration: const InputDecoration(labelText: "세입자 성함", border: OutlineInputBorder(), isDense: true)),
+                      TextField(controller: tenantController, decoration: InputDecoration(labelText: "PROP_TENANT_NAME_LABEL".tr(ref), border: const OutlineInputBorder(), isDense: true)),
                       const SizedBox(height: 12),
-                      TextField(controller: phoneController, decoration: const InputDecoration(labelText: "연락처", border: OutlineInputBorder(), isDense: true), keyboardType: TextInputType.phone),
+                      TextField(controller: phoneController, decoration: InputDecoration(labelText: "PROP_PHONE_LABEL".tr(ref), border: const OutlineInputBorder(), isDense: true), keyboardType: TextInputType.phone),
                       const SizedBox(height: 12),
-                      TextField(controller: depositController, decoration: const InputDecoration(labelText: "보증금 (만원)", border: OutlineInputBorder(), isDense: true), keyboardType: TextInputType.number, inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
+                      // 📍 [수정] 보증금 및 임대료 입력창 레이블에 다국어 심볼 적용
+                      TextField(controller: depositController, decoration: InputDecoration(labelText: "${'CAT_DEPOSIT'.tr(ref)} ($currencySymbol)", border: const OutlineInputBorder(), isDense: true), keyboardType: TextInputType.number, inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
                       if (selectedType == '월세' || selectedType == '반전세') ...[
                         const SizedBox(height: 12),
-                        TextField(controller: rentController, decoration: const InputDecoration(labelText: "월세 (만원)", border: OutlineInputBorder(), isDense: true), keyboardType: TextInputType.number, inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
+                        TextField(controller: rentController, decoration: InputDecoration(labelText: "${'CAT_RENT'.tr(ref)} ($currencySymbol)", border: const OutlineInputBorder(), isDense: true), keyboardType: TextInputType.number, inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
                         const SizedBox(height: 12),
-                        TextField(controller: paymentDayController, decoration: const InputDecoration(labelText: "납입 예정일", border: OutlineInputBorder(), isDense: true), keyboardType: TextInputType.number, inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
+                        TextField(controller: paymentDayController, decoration: InputDecoration(labelText: "PROP_PAYMENT_DAY_LABEL".tr(ref), border: const OutlineInputBorder(), isDense: true), keyboardType: TextInputType.number, inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
                       ],
                       const SizedBox(height: 20),
                       Row(
@@ -547,24 +574,24 @@ class RoomDetailScreen extends ConsumerWidget {
                           Expanded(child: OutlinedButton(onPressed: () async {
                             final picked = await showDatePicker(context: context, initialDate: startDate ?? DateTime.now(), firstDate: DateTime(2000), lastDate: DateTime(2100));
                             if (picked != null) setState(() => startDate = picked);
-                          }, child: Text(startDate == null ? '시작일' : DateFormat('yy-MM-dd').format(startDate!)))),
+                          }, child: Text(startDate == null ? 'PROP_START_DATE'.tr(ref) : DateFormat('yy-MM-dd').format(startDate!)))),
                           const Padding(padding: EdgeInsets.symmetric(horizontal: 4), child: Text('~')),
                           Expanded(child: OutlinedButton(onPressed: () async {
                             final picked = await showDatePicker(context: context, initialDate: endDate ?? DateTime.now(), firstDate: DateTime(2000), lastDate: DateTime(2100));
                             if (picked != null) setState(() => endDate = picked);
-                          }, child: Text(endDate == null ? '종료일' : DateFormat('yy-MM-dd').format(endDate!)))),
+                          }, child: Text(endDate == null ? 'PROP_END_DATE'.tr(ref) : DateFormat('yy-MM-dd').format(endDate!)))),
                         ],
                       ),
                     ],
                     const SizedBox(height: 20),
-                    TextField(controller: memoController, decoration: const InputDecoration(labelText: "메모", border: OutlineInputBorder(), isDense: true), maxLines: 2),
+                    TextField(controller: memoController, decoration: InputDecoration(labelText: "PROP_ADMIN_MEMO".tr(ref), border: const OutlineInputBorder(), isDense: true), maxLines: 2),
                   ],
                 ),
               ),
             ),
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text("취소")),
+            TextButton(onPressed: () => Navigator.pop(context), child: Text("COMMON_CANCEL".tr(ref))),
             ElevatedButton(
               onPressed: () async {
                 final db = ref.read(databaseProvider);
@@ -587,7 +614,7 @@ class RoomDetailScreen extends ConsumerWidget {
                 ref.invalidate(unpaidListProvider);
                 if (context.mounted) Navigator.pop(context);
               },
-              child: const Text("저장"),
+              child: Text("COMMON_SAVE".tr(ref)),
             ),
           ],
         ),
@@ -613,7 +640,7 @@ class RoomDetailScreen extends ConsumerWidget {
   }
 
   void _confirmDelete(BuildContext context, WidgetRef ref, Unit currentUnit) {
-    showDialog(context: context, builder: (context) => AlertDialog(title: const Text("호실 삭제"), content: const Text("정말로 삭제하시겠습니까? 관련 사진 데이터도 모두 삭제됩니다."), actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("취소")), ElevatedButton(onPressed: () async { final db = ref.read(databaseProvider); await (db.delete(db.units)..where((u) => u.id.equals(currentUnit.id))).go(); ref.invalidate(propertyListProvider); ref.invalidate(unpaidListProvider); if (context.mounted) { Navigator.pop(context); Navigator.pop(context); } }, style: ElevatedButton.styleFrom(backgroundColor: AppColors.expenseRed), child: const Text("삭제", style: TextStyle(color: Colors.white)))]));
+    showDialog(context: context, builder: (context) => AlertDialog(title: Text("PROP_DELETE_UNIT".tr(ref)), content: Text("PROP_DELETE_CONFIRM_DESC".tr(ref)), actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text("COMMON_CANCEL".tr(ref))), ElevatedButton(onPressed: () async { final db = ref.read(databaseProvider); await (db.delete(db.units)..where((u) => u.id.equals(currentUnit.id))).go(); ref.invalidate(propertyListProvider); ref.invalidate(unpaidListProvider); if (context.mounted) { Navigator.pop(context); Navigator.pop(context); } }, style: ElevatedButton.styleFrom(backgroundColor: AppColors.expenseRed), child: Text("COMMON_DELETE".tr(ref), style: const TextStyle(color: Colors.white)))]));
   }
 
   Future<void> _makePhoneCall(String phoneNumber) async { if (phoneNumber.isEmpty) return; final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber); if (await canLaunchUrl(launchUri)) await launchUrl(launchUri); }

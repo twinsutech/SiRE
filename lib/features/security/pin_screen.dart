@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import 'security_provider.dart';
 import '../../main_screen.dart'; // 메인 화면 경로가 맞는지 확인해주세요.
 
@@ -48,9 +49,9 @@ class _PinScreenState extends ConsumerState<PinScreen> {
             setState(() => _input = "");
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("Invalid PIN. Try again."),
-                  duration: Duration(seconds: 1),
+                SnackBar(
+                  content: Text("SEC_PIN_INVALID".tr(ref)), // 📍 다국어: "Invalid PIN. Try again."
+                  duration: const Duration(seconds: 1),
                 ),
               );
             }
@@ -75,7 +76,7 @@ class _PinScreenState extends ConsumerState<PinScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                widget.isSetting ? "Set Your PIN" : "Enter PIN",
+                widget.isSetting ? "SEC_PIN_SET_TITLE".tr(ref) : "SEC_PIN_ENTER_TITLE".tr(ref), // 📍 다국어 적용
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,

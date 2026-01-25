@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import '../ledger/ledger_provider.dart';
 
 // 1. 월별 수입(Income) 데이터 Provider
@@ -36,6 +37,9 @@ final buildingRevenueProvider = FutureProvider<Map<String, double>>((ref) async 
   final transactions = await ref.watch(ledgerListProvider.future);
   final Map<String, double> buildingData = {};
 
+  // 📍 다국어 지원을 위해 번역 함수 준비
+  final l10n = ref.read(localizationProvider.notifier);
+
   for (var item in transactions) {
     // 📍 포장지에서 알맹이 추출
     final tx = item.transaction;
@@ -44,7 +48,8 @@ final buildingRevenueProvider = FutureProvider<Map<String, double>>((ref) async 
     if (tx.type == 'INC') {
       // 현재는 건물 ID가 1로 고정되어 있으니 이름을 하드코딩하거나
       // 나중에 건물 DB와 조인해야 합니다. 지금은 'Main Bldg'로 통일합니다.
-      const buildingName = "Main Bldg";
+      // 📍 다국어 적용: "기본 건물" 명칭을 다국어 키로 처리
+      final buildingName = l10n.translate("REPORT_MAIN_BUILDING");
 
       buildingData[buildingName] = (buildingData[buildingName] ?? 0) + tx.amount.toDouble();
     }
@@ -52,7 +57,9 @@ final buildingRevenueProvider = FutureProvider<Map<String, double>>((ref) async 
 
   // (테스트용) 차트가 예쁘게 나오도록 가짜 데이터 하나 추가
   if (buildingData.isNotEmpty) {
-    buildingData['Side Bldg'] = buildingData.values.first * 0.3;
+    // 📍 다국어 적용: "부속 건물" 명칭
+    final sideBldgName = l10n.translate("REPORT_SIDE_BUILDING");
+    buildingData[sideBldgName] = buildingData.values.first * 0.3;
   }
 
   return buildingData;

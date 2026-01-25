@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import '../../core/theme/app_colors.dart';
 import 'ledger_provider.dart';
 
@@ -13,9 +14,15 @@ class StatsScreen extends ConsumerWidget {
     final statsAsync = ref.watch(categoryStatisticsProvider);
     final selectedDate = ref.watch(selectedDateProvider);
 
+    // 📍 [화폐 다국어] 현재 설정된 언어 로케일 가져오기
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+    // 📍 [화폐 다국어] 국가별 표준 통화 포매터 정의 (심볼 위치 자동 조절)
+    final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("${selectedDate.month}월 지출 분석"),
+        // 📍 다국어: "{월} 지출 분석"
+        title: Text("${selectedDate.month}${"COMMON_MONTH_UNIT".tr(ref)} ${"STATS_TITLE".tr(ref)}"),
         centerTitle: true,
         backgroundColor: Colors.white,
         elevation: 0,
@@ -28,11 +35,11 @@ class StatsScreen extends ConsumerWidget {
         error: (err, stack) => Center(child: Text("Error: $err")),
         data: (stats) {
           if (stats.isEmpty) {
-            return const Center(
+            return Center(
               child: Text(
-                "지출 내역이 없습니다.\n돈을 아끼셨군요! 🎉",
+                "STATS_EMPTY_MSG".tr(ref), // 📍 다국어: "지출 내역이 없습니다.\n돈을 아끼셨군요! 🎉"
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey, fontSize: 16),
+                style: const TextStyle(color: Colors.grey, fontSize: 16),
               ),
             );
           }
@@ -66,13 +73,15 @@ class StatsScreen extends ConsumerWidget {
                           ),
                           const SizedBox(width: 10),
                           Text(
-                            item.category,
+                            // 📍 카테고리 다국어 처리 (CAT_ 키워드 대응)
+                            item.category.startsWith('CAT_') ? item.category.tr(ref) : item.category,
                             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
                       Text(
-                        "${NumberFormat('#,###').format(item.amount)}원 (${(item.percentage * 100).toStringAsFixed(1)}%)",
+                        // 📍 [수정] 하드코딩된 단위 대신 국가별 표준 통화 포맷 적용
+                        "${currencyFmt.format(item.amount)} (${(item.percentage * 100).toStringAsFixed(1)}%)",
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],

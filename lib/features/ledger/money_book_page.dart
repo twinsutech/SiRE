@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import '../../core/database/database_provider.dart';
 import '../../core/theme/app_colors.dart';
 import 'ledger_provider.dart';
@@ -17,6 +19,11 @@ class MoneyBookPage extends ConsumerWidget {
     final summaryAsync = ref.watch(ledgerSummaryProvider);
     // 📍 이제 List<TransactionWithImages>를 반환합니다.
     final ledgerListAsync = ref.watch(ledgerListProvider);
+
+    // 📍 [화폐 다국어] 현재 설정된 언어 로케일 가져오기
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+    // 📍 [화폐 다국어] 국가별 표준 통화 포매터 정의
+    final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -64,7 +71,8 @@ class MoneyBookPage extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: _buildSummaryItem(
-                        "Income",
+                        ref,
+                        "COMMON_INCOME", // 📍 다국어: "수익"
                         summary.totalIncome,
                         AppColors.incomeGreen,
                       ),
@@ -72,7 +80,8 @@ class MoneyBookPage extends ConsumerWidget {
                     Container(width: 1, height: 40, color: Colors.grey[300]),
                     Expanded(
                       child: _buildSummaryItem(
-                        "Expense",
+                        ref,
+                        "COMMON_EXPENSE", // 📍 다국어: "지출"
                         summary.totalExpense,
                         AppColors.expenseRed,
                       ),
@@ -92,11 +101,11 @@ class MoneyBookPage extends ConsumerWidget {
               error: (err, stack) => Center(child: Text("Error: $err")),
               data: (items) { // 📍 List<TransactionWithImages> 수신
                 if (items.isEmpty) {
-                  return const Center(
+                  return Center(
                     child: Text(
-                      "No transactions yet.\nTap + to add one!",
+                      "LEDGER_EMPTY_DESC".tr(ref), // 📍 다국어: "내역이 없습니다. +버튼을 눌러 추가하세요."
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey),
+                      style: const TextStyle(color: Colors.grey),
                     ),
                   );
                 }
@@ -124,6 +133,7 @@ class MoneyBookPage extends ConsumerWidget {
                         child: const Icon(Icons.delete, color: Colors.white),
                       ),
                       onDismissed: (direction) async {
+                        HapticFeedback.mediumImpact(); // 📍 삭제 피드백
                         final db = ref.read(databaseProvider);
                         await (db.delete(db.transactions)
                           ..where((t) => t.id.equals(tx.id)))
@@ -133,17 +143,20 @@ class MoneyBookPage extends ConsumerWidget {
 
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("삭제되었습니다.")),
+                            SnackBar(content: Text("COMMON_DELETED_MSG".tr(ref))), // 📍 다국어: "삭제되었습니다."
                           );
                         }
                       },
                       child: InkWell( // 📍 클릭 시 상세 보기로 이동 추가
-                        onTap: () => showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) => AddTransactionSheet(transaction: tx),
-                        ),
+                        onTap: () {
+                          HapticFeedback.lightImpact();
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => AddTransactionSheet(transaction: tx),
+                          );
+                        },
                         child: Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
@@ -183,8 +196,9 @@ class MoneyBookPage extends ConsumerWidget {
                                   children: [
                                     Row(
                                       children: [
+                                        // 📍 카테고리 명칭 다국어 키 처리
                                         Text(
-                                          tx.category,
+                                          tx.category.startsWith('CAT_') ? tx.category.tr(ref) : tx.category,
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 16,
@@ -209,7 +223,8 @@ class MoneyBookPage extends ConsumerWidget {
                                 ),
                               ),
                               Text(
-                                "${isIncome ? '+' : '-'}${NumberFormat('#,###').format(tx.amount)}",
+                                // 📍 [수정] 하드코딩된 단위 대신 국가별 표준 통화 포맷 적용
+                                "${isIncome ? '+' : '-'}${currencyFmt.format(tx.amount)}",
                                 style: TextStyle(
                                   color: isIncome
                                       ? AppColors.incomeGreen
@@ -234,6 +249,7 @@ class MoneyBookPage extends ConsumerWidget {
       // 4. 입력 버튼 (FAB)
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          HapticFeedback.lightImpact();
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
@@ -247,17 +263,28 @@ class MoneyBookPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildSummaryItem(String title, int amount, Color color) {
+  Widget _buildSummaryItem(WidgetRef ref, String titleKey, int amount, Color color) {
+    // 📍 [화폐 다국어] 요약 아이템에서도 로케일 포맷터 적용
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+    final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
+
     return Column(
       children: [
-        Text(title, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(titleKey.tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 12)),
+        ),
         const SizedBox(height: 4),
-        Text(
-          NumberFormat('#,###').format(amount),
-          style: TextStyle(
-            color: color,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            // 📍 [수정] 요약 카드에도 글로벌 표준 통화 포맷 적용
+            currencyFmt.format(amount),
+            style: TextStyle(
+              color: color,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],

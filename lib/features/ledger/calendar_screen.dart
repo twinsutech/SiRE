@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import '../../core/theme/app_colors.dart';
 import 'ledger_provider.dart';
 import '../../core/database/app_database.dart';
@@ -20,6 +22,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   @override
   Widget build(BuildContext context) {
     final eventsAsync = ref.watch(calendarEventsProvider);
+    // 📍 현재 설정된 언어 코드 가져오기
+    final currentLocale = ref.watch(localizationProvider.notifier).currentLang;
 
     return Scaffold(
       backgroundColor: Colors.grey[100], // 배경색 통일
@@ -30,9 +34,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false, // 왼쪽 정렬
-        title: const Text(
-          "Calendar View",
-          style: TextStyle(fontSize: 20),
+        title: Text(
+          "NAV_CALENDAR".tr(ref), // 📍 다국어 적용: "Calendar View"
+          style: const TextStyle(fontSize: 20),
         ),
       ),
       body: eventsAsync.when(
@@ -52,6 +56,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: TableCalendar<Transaction>(
+                  // 📍 로케일 적용: 요일 및 월 이름이 자동 번역됩니다.
+                  locale: currentLocale,
                   firstDay: DateTime(2020),
                   lastDay: DateTime(2030),
                   focusedDay: _focusedDay,
@@ -60,6 +66,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                     return events[DateTime.utc(day.year, day.month, day.day)] ?? [];
                   },
                   onDaySelected: (selectedDay, focusedDay) {
+                    HapticFeedback.lightImpact(); // 📍 터치 피드백 추가
                     setState(() {
                       _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
@@ -86,25 +93,34 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 ),
               ),
 
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Transactions", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  child: Text(
+                      "DASHBOARD_RECENT_ACTIVITY".tr(ref), // 📍 다국어: "Transactions" 또는 "Recent Activity"
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)
+                  ),
                 ),
               ),
 
               // 하단 리스트
               Expanded(
                 child: selectedEvents.isEmpty
-                    ? const Center(child: Text("No transactions.", style: TextStyle(color: Colors.grey)))
+                    ? Center(child: Text("LEDGER_NO_TRANSACTIONS".tr(ref), style: const TextStyle(color: Colors.grey)))
                     : ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: selectedEvents.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 12),
                   itemBuilder: (context, index) {
                     final tx = selectedEvents[index];
-                    final isIncome = tx.type == 'INCOME';
+                    final isIncome = tx.type == 'INC'; // 📍 DB 타입 'INC'로 정정
+
+                    // 📍 [화폐 다국어 처리] 로케일별 통화 포매터 정의
+                    final currencyFmt = NumberFormat.simpleCurrency(
+                      locale: currentLocale,
+                      decimalDigits: 0, // 소수점 제외 (국가별 필요 시 조절 가능)
+                    );
 
                     return Container(
                       padding: const EdgeInsets.all(16),
@@ -122,12 +138,14 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              tx.category,
+                              // 📍 카테고리 다국어 처리 (CAT_ 키워드 대응)
+                              tx.category.startsWith('CAT_') ? tx.category.tr(ref) : tx.category,
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ),
+                          // 📍 [수정] 하드코딩된 포맷 대신 글로벌 표준 통화 포맷 적용
                           Text(
-                            "${NumberFormat('#,###').format(tx.amount)}원",
+                            currencyFmt.format(tx.amount),
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: isIncome ? AppColors.incomeGreen : AppColors.expenseRed,

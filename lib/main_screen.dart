@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'core/localization/localization_provider.dart'; // 📍 다국어 임포트 추가
 import 'features/dashboard/dashboard_screen.dart';
 import 'features/property/property_screen.dart';
 import 'features/ledger/ledger_screen.dart';
@@ -82,12 +83,13 @@ class _MainScreenState extends ConsumerState<MainScreen> with WidgetsBindingObse
         selectedItemColor: const Color(0xFF1A237E),
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.apartment), label: 'Buildings'),
-          BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Ledger'),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: 'Reports'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+        items: [
+          // 📍 하단 탭 메뉴 다국어 적용
+          BottomNavigationBarItem(icon: const Icon(Icons.home), label: 'NAV_HOME'.tr(ref)),
+          BottomNavigationBarItem(icon: const Icon(Icons.apartment), label: 'NAV_BUILDINGS'.tr(ref)),
+          BottomNavigationBarItem(icon: const Icon(Icons.receipt_long), label: 'NAV_LEDGER'.tr(ref)),
+          BottomNavigationBarItem(icon: const Icon(Icons.bar_chart), label: 'NAV_REPORTS'.tr(ref)),
+          BottomNavigationBarItem(icon: const Icon(Icons.settings), label: 'NAV_SETTINGS'.tr(ref)),
         ],
       ),
     );

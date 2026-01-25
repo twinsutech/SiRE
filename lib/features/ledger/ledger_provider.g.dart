@@ -255,7 +255,7 @@ final selectedDateProvider =
 );
 
 typedef _$SelectedDate = AutoDisposeNotifier<DateTime>;
-String _$ledgerActionHash() => r'8be20b7bc27d41e6b747becf41d0da5d494664c4';
+String _$ledgerActionHash() => r'e78d40d1da0da3e5ab301cdad3897ecbd458dee1';
 
 /// See also [LedgerAction].
 @ProviderFor(LedgerAction)

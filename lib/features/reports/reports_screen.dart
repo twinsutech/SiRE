@@ -8,6 +8,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import '../ledger/ledger_provider.dart';
 import '../ledger/unpaid_provider.dart';
 import 'excel_export_service.dart';
@@ -23,6 +24,10 @@ class ReportsScreen extends ConsumerWidget {
     final monthlyTrendAsync = ref.watch(monthlyTrendProvider);
     final categoryStatsAsync = ref.watch(categoryStatisticsProvider);
     final unpaidAsync = ref.watch(unpaidListProvider);
+    final lang = ref.watch(localizationProvider.notifier).currentLang;
+
+    // 📍 [화폐 다국어] 국가별 표준 통화 포매터 정의
+    final currencyFmt = NumberFormat.simpleCurrency(locale: lang, decimalDigits: 0);
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -33,9 +38,9 @@ class ReportsScreen extends ConsumerWidget {
         scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
         centerTitle: false,
-        title: const Text(
-          "Reports",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        title: Text(
+          "NAV_REPORTS".tr(ref), // 📍 다국어: "Reports"
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
       body: SingleChildScrollView(
@@ -43,8 +48,8 @@ class ReportsScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 📍 1. Financial Analytics 섹션 (아이콘 추가)
-            _buildSectionTitle(Icons.analytics_outlined, "Financial Analytics"),
+            // 📍 1. Financial Analytics 섹션
+            _buildSectionTitle(Icons.analytics_outlined, "REPORT_SEC_FINANCIAL".tr(ref)),
             const SizedBox(height: 10),
             Container(
               height: 320,
@@ -57,7 +62,7 @@ class ReportsScreen extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Monthly Trend (6 Months)", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                        Text("REPORT_MONTHLY_TREND_TITLE".tr(ref), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 25),
                         Expanded(
                           child: monthlyTrendAsync.when(
@@ -74,7 +79,8 @@ class ReportsScreen extends ConsumerWidget {
                                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
                                       if (rod.toY == 0) return null;
                                       return BarTooltipItem(
-                                        NumberFormat('#,###').format(rod.toY),
+                                        // 📍 [수정] 툴팁 금액 다국어 포맷 적용
+                                        currencyFmt.format(rod.toY),
                                         TextStyle(color: rod.color, fontWeight: FontWeight.bold, fontSize: 9),
                                       );
                                     },
@@ -117,7 +123,7 @@ class ReportsScreen extends ConsumerWidget {
                                         if (index >= 0 && index < data.length) {
                                           return Padding(
                                             padding: const EdgeInsets.only(top: 8.0),
-                                            child: Text(DateFormat('MMM').format(data[index].month), style: const TextStyle(fontSize: 9)),
+                                            child: Text(DateFormat.MMM(lang).format(data[index].month), style: const TextStyle(fontSize: 9)),
                                           );
                                         }
                                         return const Text('');
@@ -135,9 +141,9 @@ class ReportsScreen extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            _buildLegend(Colors.blue, "Income"),
+                            _buildLegend(Colors.blue, "COMMON_INCOME".tr(ref)),
                             const SizedBox(width: 12),
-                            _buildLegend(Colors.redAccent, "Expense"),
+                            _buildLegend(Colors.redAccent, "COMMON_EXPENSE".tr(ref)),
                           ],
                         )
                       ],
@@ -150,14 +156,14 @@ class ReportsScreen extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Annual Expenses", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                        Text("REPORT_ANNUAL_EXPENSE_TITLE".tr(ref), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                         const SizedBox(height: 10),
                         Expanded(
                           child: categoryStatsAsync.when(
                             loading: () => const Center(child: CircularProgressIndicator()),
                             error: (_, __) => const SizedBox(),
                             data: (data) {
-                              if (data.isEmpty) return const Center(child: Text("No Data", style: TextStyle(fontSize: 10)));
+                              if (data.isEmpty) return Center(child: Text("REPORT_NO_DATA".tr(ref), style: const TextStyle(fontSize: 10)));
                               final colors = [Colors.indigo, Colors.teal, Colors.orange, Colors.brown, Colors.purple];
 
                               return Column(
@@ -171,10 +177,13 @@ class ReportsScreen extends ConsumerWidget {
                                             sections: data.asMap().entries.map((entry) {
                                               final double pctValue = entry.value.percentage * 100;
                                               final String percentageStr = pctValue.toStringAsFixed(0);
+                                              final String categoryName = entry.value.category.startsWith('CAT_')
+                                                  ? entry.value.category.tr(ref)
+                                                  : entry.value.category;
 
                                               final String sectionTitle = pctValue <= 1
                                                   ? ''
-                                                  : '${entry.value.category}\n($percentageStr%)';
+                                                  : '$categoryName\n($percentageStr%)';
 
                                               return PieChartSectionData(
                                                 value: entry.value.amount.toDouble(),
@@ -198,14 +207,20 @@ class ReportsScreen extends ConsumerWidget {
                                     child: SingleChildScrollView(
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: data.asMap().entries.map((entry) => Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 3),
-                                          child: _buildLegend(
-                                              colors[entry.key % colors.length],
-                                              "${entry.value.category} (${NumberFormat('#,###').format(entry.value.amount)}만)",
-                                              fontSize: 9
-                                          ),
-                                        )).toList(),
+                                        children: data.asMap().entries.map((entry) {
+                                          final String categoryName = entry.value.category.startsWith('CAT_')
+                                              ? entry.value.category.tr(ref)
+                                              : entry.value.category;
+                                          return Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 3),
+                                            child: _buildLegend(
+                                                colors[entry.key % colors.length],
+                                                // 📍 [수정] 범례 금액 다국어 포맷 적용
+                                                "$categoryName (${currencyFmt.format(entry.value.amount)})",
+                                                fontSize: 9
+                                            ),
+                                          );
+                                        }).toList(),
                                       ),
                                     ),
                                   ),
@@ -224,7 +239,7 @@ class ReportsScreen extends ConsumerWidget {
             const SizedBox(height: 30),
 
             // 📍 2. Tax Data Management 섹션
-            _buildSectionTitle(Icons.assessment_outlined, "Tax Data Management"),
+            _buildSectionTitle(Icons.assessment_outlined, "REPORT_SEC_TAX".tr(ref)),
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.all(16),
@@ -237,7 +252,7 @@ class ReportsScreen extends ConsumerWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Period: ${DateFormat('yyyy.01.01').format(DateTime.now())} - Present"),
+                        Text("${'REPORT_TAX_PERIOD'.tr(ref)}: ${DateFormat('yyyy.01.01').format(DateTime.now())} - ${'COMMON_TODAY'.tr(ref)}"),
                         const Icon(Icons.calendar_today, size: 20, color: Colors.grey),
                       ],
                     ),
@@ -256,10 +271,10 @@ class ReportsScreen extends ConsumerWidget {
                         final transactions = await ref.read(ledgerListProvider.future);
                         if (transactions.isEmpty) return;
                         final pureTransactions = transactions.map((e) => e.transaction).toList();
-                        await ExcelExportService().exportTransactionsToExcel(pureTransactions);
+                        await ExcelExportService().exportTransactionsToExcel(pureTransactions, ref);
                       },
                       icon: const Icon(Icons.file_download),
-                      label: const Text("Tax Excel", style: TextStyle(fontWeight: FontWeight.bold)),
+                      label: Text("REPORT_BTN_TAX_EXCEL".tr(ref), style: const TextStyle(fontWeight: FontWeight.bold)),
                     ),
                   ),
                 ],
@@ -269,7 +284,7 @@ class ReportsScreen extends ConsumerWidget {
             const SizedBox(height: 30),
 
             // 📍 3. Unpaid Management 섹션
-            _buildSectionTitle(Icons.notification_important_outlined, "Unpaid Management"),
+            _buildSectionTitle(Icons.notification_important_outlined, "REPORT_SEC_UNPAID".tr(ref)),
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.all(16),
@@ -288,22 +303,24 @@ class ReportsScreen extends ConsumerWidget {
                       ),
                       child: unpaidAsync.when(
                         loading: () => const Center(child: CircularProgressIndicator()),
-                        error: (_, __) => const Text("Failed to load data"),
+                        error: (_, __) => Text("COMMON_ERROR".tr(ref)),
                         data: (list) {
                           final overdue = list.where((u) => u.status == 'OVERDUE').toList();
                           final totalOverdueAmount = overdue.fold(0, (sum, item) => sum + item.unit.monthlyRent);
-                          if (overdue.isEmpty) return const Text("All rent is collected! 🎉", textAlign: TextAlign.center);
+                          if (overdue.isEmpty) return Text("REPORT_UNPAID_ALL_COLLECTED".tr(ref), textAlign: TextAlign.center);
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  "Overdue: ${overdue.length} Units / Total: ${NumberFormat('#,###').format(totalOverdueAmount)}원",
+                                // 📍 [수정] 미납 총액 다국어 포맷 적용
+                                  "${'ALERT_OVERDUE_TITLE'.tr(ref)}: ${overdue.length} ${'COMMON_ROOMS'.tr(ref)} / ${'PROP_TOTAL'.tr(ref)}: ${currencyFmt.format(totalOverdueAmount)}",
                                   style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)
                               ),
                               const SizedBox(height: 8),
                               ...overdue.take(5).map((u) => Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 2),
-                                child: Text("• ${u.unit.roomNumber}호 (${u.unit.tenantName ?? '익명'}): ${NumberFormat('#,###').format(u.unit.monthlyRent)}원", style: const TextStyle(fontSize: 12, color: Colors.black87)),
+                                // 📍 [수정] 개별 미납액 다국어 포맷 적용
+                                child: Text("• ${u.unit.roomNumber}${ 'COMMON_ROOM_UNIT'.tr(ref)} (${u.unit.tenantName ?? '익명'}): ${currencyFmt.format(u.unit.monthlyRent)}", style: const TextStyle(fontSize: 12, color: Colors.black87)),
                               )),
                             ],
                           );
@@ -326,10 +343,10 @@ class ReportsScreen extends ConsumerWidget {
                             final list = await ref.read(unpaidListProvider.future);
                             final overdue = list.where((u) => u.status == 'OVERDUE').toList();
                             if (overdue.isEmpty) return;
-                            await ExcelExportService().exportUnpaidListToExcel(overdue);
+                            await ExcelExportService().exportUnpaidListToExcel(overdue, ref);
                           },
                           icon: const Icon(Icons.file_download),
-                          label: const Text("Unpaid Excel", style: TextStyle(fontWeight: FontWeight.bold)),
+                          label: Text("REPORT_BTN_UNPAID_EXCEL".tr(ref), style: const TextStyle(fontWeight: FontWeight.bold)),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -341,9 +358,9 @@ class ReportsScreen extends ConsumerWidget {
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           ),
-                          onPressed: () => _captureAndShareImage(context),
+                          onPressed: () => _captureAndShareImage(context, ref),
                           icon: const Icon(Icons.share_outlined),
-                          label: const Text("Unpaid Image", style: TextStyle(fontWeight: FontWeight.bold)),
+                          label: Text("REPORT_BTN_UNPAID_IMAGE".tr(ref), style: const TextStyle(fontWeight: FontWeight.bold)),
                         ),
                       ),
                     ],
@@ -354,17 +371,16 @@ class ReportsScreen extends ConsumerWidget {
 
             const SizedBox(height: 30),
 
-            // 📍 4. Annual Summary (당해 연도 데이터 반영)
-            _buildSectionTitle(Icons.table_chart_outlined, "Annual Summary"),
+            // 📍 4. Annual Summary
+            _buildSectionTitle(Icons.table_chart_outlined, "REPORT_SEC_ANNUAL_SUMMARY".tr(ref)),
             const SizedBox(height: 10),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
               child: monthlyTrendAsync.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (_, __) => const Text("Error loading summary"),
+                error: (_, __) => Text("REPORT_ERROR_LOADING".tr(ref)),
                 data: (trend) {
-                  // 당해 연도(1월~현재) 데이터만 필터링하여 합산
                   final int currentYear = DateTime.now().year;
                   final currentYearData = trend.where((item) => item.month.year == currentYear).toList();
 
@@ -377,19 +393,20 @@ class ReportsScreen extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text("Year: $currentYear", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
+                          Text("${'COMMON_YEAR'.tr(ref)}: $currentYear", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF1A237E))),
                         ],
                       ),
                       const SizedBox(height: 10),
-                      _buildSummaryRow("Yearly Revenue", yearlyIncome, Colors.blue),
+                      // 📍 [수정] 요약 금액들 다국어 포맷 적용
+                      _buildSummaryRow(ref, currencyFmt, "REPORT_YEARLY_REVENUE".tr(ref), yearlyIncome, Colors.blue),
                       const Divider(height: 20),
-                      _buildSummaryRow("Yearly Expenses", yearlyExpense, Colors.redAccent),
+                      _buildSummaryRow(ref, currencyFmt, "REPORT_YEARLY_EXPENSES".tr(ref), yearlyExpense, Colors.redAccent),
                       const Divider(height: 20),
-                      _buildSummaryRow("Annual Net Profit", yearlyProfit, Colors.indigo, isBold: true),
+                      _buildSummaryRow(ref, currencyFmt, "REPORT_ANNUAL_NET_PROFIT".tr(ref), yearlyProfit, Colors.indigo, isBold: true),
                       const SizedBox(height: 15),
-                      const Text(
-                        "* Figures are based on cumulative data from January 1st.",
-                        style: TextStyle(fontSize: 10, color: Colors.grey, fontStyle: FontStyle.italic),
+                      Text(
+                        "* ${'REPORT_SUMMARY_FOOTNOTE'.tr(ref)}",
+                        style: const TextStyle(fontSize: 10, color: Colors.grey, fontStyle: FontStyle.italic),
                       )
                     ],
                   );
@@ -403,8 +420,8 @@ class ReportsScreen extends ConsumerWidget {
     );
   }
 
-  // 📍 요약 표를 위한 행 빌더
-  Widget _buildSummaryRow(String label, int amount, Color color, {bool isBold = false}) {
+  // 📍 [수정] 요약 표 행 빌더에 포매터 추가
+  Widget _buildSummaryRow(WidgetRef ref, NumberFormat fmt, String label, int amount, Color color, {bool isBold = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -417,7 +434,8 @@ class ReportsScreen extends ConsumerWidget {
           ),
         ),
         Text(
-          "${NumberFormat('#,###').format(amount)} 만",
+          // 📍 국가별 통화 포맷 적용
+          fmt.format(amount),
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -428,7 +446,6 @@ class ReportsScreen extends ConsumerWidget {
     );
   }
 
-  // 📍 섹션 타이틀 빌더
   Widget _buildSectionTitle(IconData icon, String title) {
     return Row(
       children: [
@@ -442,7 +459,6 @@ class ReportsScreen extends ConsumerWidget {
     );
   }
 
-  // 📍 범례 위젯
   Widget _buildLegend(Color color, String label, {double fontSize = 10}) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -463,7 +479,7 @@ class ReportsScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _captureAndShareImage(BuildContext context) async {
+  Future<void> _captureAndShareImage(BuildContext context, WidgetRef ref) async {
     try {
       RenderRepaintBoundary boundary = _unpaidCaptureKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
@@ -472,9 +488,9 @@ class ReportsScreen extends ConsumerWidget {
       final tempDir = await getTemporaryDirectory();
       final file = await File('${tempDir.path}/unpaid_report.png').create();
       await file.writeAsBytes(pngBytes);
-      await Share.shareXFiles([XFile(file.path)], text: '미납 호실 현황 리포트');
+      await Share.shareXFiles([XFile(file.path)], text: 'REPORT_SHARE_UNPAID_TEXT'.tr(ref));
     } catch (e) {
-      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("캡처 실패: $e")));
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${'REPORT_CAPTURE_FAILED'.tr(ref)}: $e")));
     }
   }
 }

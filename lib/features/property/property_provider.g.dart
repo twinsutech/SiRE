@@ -21,7 +21,7 @@ final propertyListProvider =
 );
 
 typedef PropertyListRef = AutoDisposeFutureProviderRef<List<BuildingWithUnits>>;
-String _$propertySummaryHash() => r'919875df2ea3911e819b38e1fb60b19606ae3199';
+String _$propertySummaryHash() => r'2a23a94cf657331a9f341e41533a530e58bd6d3b';
 
 /// See also [propertySummary].
 @ProviderFor(propertySummary)

@@ -3,8 +3,11 @@ import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
+
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import '../../core/database/database_provider.dart';
 import '../../core/database/app_database.dart';
 import '../../core/theme/app_colors.dart';
@@ -51,18 +54,18 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
-        title: const Text(
-          "Ledger",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+        title: Text(
+          "NAV_LEDGER".tr(ref), // 📍 다국어 적용: "Ledger"
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
         ),
       ),
       body: Column(
         children: [
           _buildMonthSelector(context, ref, selectedDate),
-          _buildSummaryHeader(summaryAsync),
+          _buildSummaryHeader(summaryAsync, ref),
 
           // 📍 1단계 수정: 분석 토글 버튼 (아래쪽 라운드 적용)
-          _buildAnalysisToggleButton(),
+          _buildAnalysisToggleButton(ref),
 
           // 📍 1단계 수정: 차트 고정 노출 (리스트 밖 배치)
           if (_isAnalysisOpen)
@@ -99,12 +102,13 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
                       padding: const EdgeInsets.all(16),
                       children: [
                         if (sortedList.isEmpty)
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 40),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 40),
                             child: Center(
                               child: Text(
-                                "No transactions for this month.",
-                                style: TextStyle(color: Colors.grey, fontSize: 16),
+                                "LEDGER_NO_TRANSACTIONS".tr(ref), // 📍 다국어 적용
+                                style: const TextStyle(color: Colors.grey, fontSize: 16),
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           )
@@ -112,7 +116,7 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
                         // 📍 정렬된 sortedList를 사용하여 카드 출력
                           ...sortedList.map((item) => Padding(
                             padding: const EdgeInsets.only(bottom: 0),
-                            child: _buildTransactionCard(context, item),
+                            child: _buildTransactionCard(context, ref, item),
                           )),
 
                         const SizedBox(height: 80),
@@ -129,6 +133,7 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
         backgroundColor: const Color(0xFF1A237E),
         child: const Icon(Icons.add, color: Colors.white),
         onPressed: () {
+          HapticFeedback.lightImpact(); // 📍 터치 피드백
           showModalBottomSheet(
             context: context,
             isScrollControlled: true,
@@ -142,15 +147,16 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
     );
   }
 
-  // 📍 1단계: 분석 토글 버튼 위젯 (아래쪽 모서리 라운드 처리)
-  Widget _buildAnalysisToggleButton() {
-    // 닫힘: 진한 네이비 (0xFF1A237E)
-    // 열림: 중간 톤 블루 (0xFF3F51B5)
+  // 📍 1단계: 분석 토글 버튼 위젯 (다국어 및 햅틱 적용)
+  Widget _buildAnalysisToggleButton(WidgetRef ref) {
     final Color bgColor = _isAnalysisOpen ? const Color(0xFF3F51B5) : const Color(0xFF1A237E);
     final Color contentColor = _isAnalysisOpen ? Colors.white : Colors.white70;
 
     return InkWell(
-      onTap: () => setState(() => _isAnalysisOpen = !_isAnalysisOpen),
+      onTap: () {
+        HapticFeedback.selectionClick(); // 📍 상태 변경 피드백
+        setState(() => _isAnalysisOpen = !_isAnalysisOpen);
+      },
       customBorder: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(15),
@@ -167,7 +173,6 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
             bottomLeft: Radius.circular(15),
             bottomRight: Radius.circular(15),
           ),
-          // 열렸을 때 버튼이 리스트와 구분되도록 아주 미세한 그림자 추가 (선택사항)
           boxShadow: _isAnalysisOpen ? [
             BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4, offset: const Offset(0, 2))
           ] : null,
@@ -182,7 +187,7 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
             ),
             const SizedBox(width: 8),
             Text(
-              _isAnalysisOpen ? "분석 닫기" : "이번 달 지출 분석 보기",
+              _isAnalysisOpen ? "LEDGER_CLOSE_ANALYSIS".tr(ref) : "LEDGER_OPEN_ANALYSIS".tr(ref), // 📍 다국어
               style: TextStyle(
                 color: contentColor,
                 fontSize: 13,
@@ -198,6 +203,11 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
   Widget _buildMonthSelector(BuildContext context, WidgetRef ref, DateTime selectedDate) {
     final now = DateTime.now();
     final isTodayMonth = selectedDate.year == now.year && selectedDate.month == now.month;
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+
+    // 📍 [수정] 하드코딩된 'MMMM yyyy' 대신 언어별 표준 포맷인 yMMMM을 사용합니다.
+    // 한국어: "2026년 1월", 영어: "January 2026" 등으로 자동 정렬됩니다.
+    final dateStr = DateFormat.yMMMM(currentLang).format(selectedDate);
 
     return Container(
       color: const Color(0xFF1A237E),
@@ -219,7 +229,7 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
                 ),
                 const SizedBox(width: 16),
                 Text(
-                  DateFormat('MMMM yyyy').format(selectedDate),
+                  dateStr,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -268,9 +278,9 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
                           decoration: const BoxDecoration(color: Colors.amberAccent, shape: BoxShape.circle),
                         ),
                         const SizedBox(width: 6),
-                        const Text(
-                          "Today",
-                          style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                        Text(
+                          "COMMON_TODAY".tr(ref), // 📍 다국어: "Today"
+                          style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
@@ -285,6 +295,8 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
 
   Widget _buildExpenseStatistics(WidgetRef ref) {
     final statsAsync = ref.watch(categoryStatisticsProvider);
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+
     return statsAsync.when(
       loading: () => const SizedBox(height: 100, child: Center(child: CircularProgressIndicator())),
       error: (err, stack) => const SizedBox.shrink(),
@@ -294,7 +306,7 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-            child: const Center(child: Text("No expense data (EXP) to analyze.", style: TextStyle(color: Colors.grey))),
+            child: Center(child: Text("LEDGER_NO_EXPENSE_DATA".tr(ref), style: const TextStyle(color: Colors.grey))),
           );
         }
         return Container(
@@ -307,9 +319,9 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                "이번 달 지출 항목 비중",
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 13),
+              Text(
+                "LEDGER_EXPENSE_RATIO_TITLE".tr(ref), // 📍 다국어: "이번 달 지출 항목 비중"
+                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 13),
               ),
               const SizedBox(height: 12),
               SizedBox(
@@ -322,11 +334,9 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
                       final double pctValue = s.percentage * 100;
                       final String percentageStr = pctValue.toStringAsFixed(0);
 
-                      // 📍 수정: 1% 이하인 경우 차트 내부 라벨을 표시하지 않음
-                      // 📍 수정: 지출항목\n(%) 형식으로 변경
-                      final String sectionTitle = pctValue <= 1
-                          ? ''
-                          : '${s.category}\n($percentageStr%)';
+                      // 📍 핵심 수정: 통계 차트의 카테고리명 번역
+                      final String categoryName = s.category.startsWith('CAT_') ? s.category.tr(ref) : s.category;
+                      final String sectionTitle = pctValue <= 1 ? '' : '$categoryName\n($percentageStr%)';
 
                       return PieChartSectionData(
                         color: _getCategoryColor(s.category),
@@ -349,17 +359,24 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
                 spacing: 10,
                 runSpacing: 6,
                 alignment: WrapAlignment.center,
-                children: stats.map((s) => Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.circle, color: _getCategoryColor(s.category), size: 8),
-                    const SizedBox(width: 4),
-                    Text(
-                      "${s.category} (${NumberFormat('#,###').format(s.amount)}만)",
-                      style: const TextStyle(fontSize: 11, color: Colors.black87),
-                    ),
-                  ],
-                )).toList(),
+                children: stats.map((s) {
+                  // 📍 핵심 수정: 범례 카테고리명 및 통화 포맷 번역
+                  final String categoryName = s.category.startsWith('CAT_') ? s.category.tr(ref) : s.category;
+                  // 📍 [수정] 통계 범례 금액 표시를 국가별 통화 관습에 맞게 변경
+                  final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
+
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.circle, color: _getCategoryColor(s.category), size: 8),
+                      const SizedBox(width: 4),
+                      Text(
+                        "$categoryName (${currencyFmt.format(s.amount)})",
+                        style: const TextStyle(fontSize: 11, color: Colors.black87),
+                      ),
+                    ],
+                  );
+                }).toList(),
               ),
             ],
           ),
@@ -368,35 +385,36 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
     );
   }
 
-  IconData _getCategoryIcon(String category) {
-    switch (category) {
-      case 'Rent': case '임대료 수입': case '월세': return Icons.home_work_rounded;
-      case 'Tax': case '세금/공과금': return Icons.request_quote_rounded;
-      case 'Repair': case '수리보수비': return Icons.build_circle_rounded;
-      case 'Utility': case '전기/수도료': return Icons.lightbulb_circle_rounded;
-      case 'Cleaning': case '청소비': return Icons.cleaning_services_rounded;
-      case 'Maintenance': case '관리비': return Icons.settings_suggest_rounded;
-      case '보험료': return Icons.verified_user_rounded;
-      case 'Deposit': case '보증금': return Icons.vpn_key_rounded;
+  // 이제 언어가 무엇이든 상관없이 고정된 키값으로만 판단합니다.
+  IconData _getCategoryIcon(String categoryKey) {
+    switch (categoryKey) {
+      case 'CAT_RENT': return Icons.home_work_rounded;
+      case 'CAT_TAX': return Icons.request_quote_rounded;
+      case 'CAT_REPAIR': return Icons.build_circle_rounded;
+      case 'CAT_UTILITY': return Icons.lightbulb_circle_rounded;
+      case 'CAT_CLEANING': return Icons.cleaning_services_rounded;
+      case 'CAT_MAINTENANCE': return Icons.settings_suggest_rounded;
+      case 'CAT_INSURANCE': return Icons.verified_user_rounded;
+      case 'CAT_DEPOSIT': return Icons.vpn_key_rounded;
       default: return Icons.receipt_long_rounded;
     }
   }
 
-  Color _getCategoryColor(String category) {
-    switch (category) {
-      case 'Rent': case '임대료 수입': case '월세': return Colors.indigo;
-      case 'Tax': case '세금/공과금': return Colors.redAccent;
-      case 'Repair': case '수리보수비': return Colors.orange;
-      case 'Utility': case '전기/수도료': return Colors.teal;
-      case 'Cleaning': case '청소비': return Colors.blue;
-      case 'Maintenance': case '관리비': return Colors.amber;
-      case '보험료': return Colors.purple;
-      case 'Deposit': case '보증금': return Colors.brown;
+  Color _getCategoryColor(String categoryKey) {
+    switch (categoryKey) {
+      case 'CAT_RENT': return Colors.indigo;
+      case 'CAT_TAX': return Colors.redAccent;
+      case 'CAT_REPAIR': return Colors.orange;
+      case 'CAT_UTILITY': return Colors.teal;
+      case 'CAT_CLEANING': return Colors.blue;
+      case 'CAT_MAINTENANCE': return Colors.amber;
+      case 'CAT_INSURANCE': return Colors.purple;
+      case 'CAT_DEPOSIT': return Colors.brown;
       default: return Colors.blueGrey;
     }
   }
 
-  Widget _buildSummaryHeader(AsyncValue<LedgerSummary> summaryAsync) {
+  Widget _buildSummaryHeader(AsyncValue<LedgerSummary> summaryAsync, WidgetRef ref) {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -410,53 +428,73 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
         data: (summary) => Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _summaryItem("Income", summary.totalIncome, Colors.greenAccent),
+            _summaryItem(ref, "COMMON_INCOME", summary.totalIncome, Colors.greenAccent),
             Container(width: 1, height: 40, color: Colors.white24),
-            _summaryItem("Expense", summary.totalExpense, Colors.redAccent),
+            _summaryItem(ref, "COMMON_EXPENSE", summary.totalExpense, Colors.redAccent),
             Container(width: 1, height: 40, color: Colors.white24),
-            _summaryItem("Balance", summary.balance, Colors.amberAccent),
+            _summaryItem(ref, "COMMON_BALANCE", summary.balance, Colors.amberAccent),
           ],
         ),
       ),
     );
   }
 
-  Widget _summaryItem(String label, int amount, Color color) {
-    final fmt = NumberFormat('#,###');
+  Widget _summaryItem(WidgetRef ref, String labelKey, int amount, Color color) {
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+    // 📍 [수정] 상단 요약 바 금액 표시를 로케일별 통화 관습($ ₩ 등)에 맞게 변경
+    final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
+
     return Column(
       children: [
-        Text(label, style: const TextStyle(color: Colors.white70, fontSize: 12)),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(labelKey.tr(ref), style: const TextStyle(color: Colors.white70, fontSize: 12)),
+        ),
         const SizedBox(height: 4),
-        Text(
-            "${fmt.format(amount)} 만",
-            style: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.bold)
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+              currencyFmt.format(amount),
+              style: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.bold)
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildTransactionCard(BuildContext context, TransactionWithImages item) {
+  Widget _buildTransactionCard(BuildContext context, WidgetRef ref, TransactionWithImages item) {
     final tx = item.transaction;
     final isIncome = tx.type == 'INC';
     final themeColor = isIncome ? AppColors.incomeGreen : AppColors.expenseRed;
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+
+    // 📍 [수정] 리스트의 각 항목 금액 표시를 로케일별 통화 관습($ ₩ 등)에 맞게 변경
+    final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
 
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        onTap: () => showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.transparent,
-          builder: (context) => AddTransactionSheet(transaction: tx),
-        ),
+        onTap: () {
+          HapticFeedback.lightImpact(); // 📍 터치 피드백
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (context) => AddTransactionSheet(transaction: tx),
+          );
+        },
         leading: CircleAvatar(
           backgroundColor: themeColor.withOpacity(0.1),
           child: Icon(_getCategoryIcon(tx.category), color: themeColor, size: 22),
         ),
         title: Row(
           children: [
-            Text(tx.category, style: const TextStyle(fontWeight: FontWeight.bold)),
+            // 📍 핵심 수정: 리스트의 카테고리명 번역 (CAT_... 키값인 경우)
+            Text(
+                tx.category.startsWith('CAT_') ? tx.category.tr(ref) : tx.category,
+                style: const TextStyle(fontWeight: FontWeight.bold)
+            ),
             if (item.hasImages) ...[
               const SizedBox(width: 6),
               const Icon(Icons.receipt_long, size: 14, color: Colors.blueGrey),
@@ -465,7 +503,7 @@ class _LedgerScreenState extends ConsumerState<LedgerScreen> {
         ),
         subtitle: Text("${DateFormat('MM.dd').format(tx.transactionDate)} ${tx.memo ?? ''}"),
         trailing: Text(
-          "${isIncome ? '+' : '-'}${NumberFormat('#,###').format(tx.amount)} 만",
+          "${isIncome ? '+' : '-'}${currencyFmt.format(tx.amount)}",
           style: TextStyle(color: themeColor, fontWeight: FontWeight.bold, fontSize: 16),
         ),
       ),

@@ -1,0 +1,770 @@
+{
+  "NAV_SETTINGS": {
+    "ar": "الإعدادات", "bn": "সেটিংস", "zh": "设置", "nl": "Instellingen", "en": "Settings", "fr": "Paramètres", "de": "Einstellungen", "hi": "से팅्स", "id": "Pengaturan", "it": "Impostazioni", "ja": "設定", "ko": "설정", "ms": "Tetapan", "pl": "Ustawienia", "pt": "Configurações", "ru": "Настройки", "es": "Configuraciones", "th": "การตั้งค่า", "tr": "Ayarlar", "vi": "Cài đặt"
+  },
+  "SETTINGS_USER_PROFILE": {
+    "ar": "ملف المستخدم", "bn": "ব্যবহারকারীর প্রোফাইল", "zh": "用户资料", "nl": "Gebruikersprofiel", "en": "User Profile", "fr": "Profil utilisateur", "de": "Benutzerprofil", "hi": "उपयोगकर्ता प्रोफ़ाइल", "id": "Profil Pengguna", "it": "Profilo utente", "ja": "ユーザープロフィール", "ko": "사용자 프로필", "ms": "Profil Pengguna", "pl": "Profil użytkownika", "pt": "Perfil do Usuário", "ru": "Профиль пользователя", "es": "Perfil de usuario", "th": "โปรไฟล์ผู้ใช้", "tr": "Kullanıcı Profili", "vi": "Hồ sơ người dùng"
+  },
+  "SETTINGS_PROFILE_IMAGE": {
+    "ar": "صورة الملف الشخصي", "bn": "প্রোফাইল ছবি", "zh": "个人主页图像", "nl": "Profielfoto", "en": "Profile Image", "fr": "Image de profil", "de": "Profilbild", "hi": "प्रोफ़ाइल छवि", "id": "Gambar Profil", "it": "Immagine del profilo", "ja": "プロフィール画像", "ko": "프로필 이미지", "ms": "Imej Profil", "pl": "Zdjęcie profilowe", "pt": "Imagem de perfil", "ru": "Изображение профиля", "es": "Imagen de perfil", "th": "รูปโปรไฟล์", "tr": "Profil Resmi", "vi": "Hình ảnh hồ sơ"
+  },
+  "SETTINGS_CHANGE_PHOTO_HINT": {
+    "ar": "انقر لتغيير الصورة", "bn": "ছবি পরিবর্তন করতে ট্যাপ করুন", "zh": "点击更换照片", "nl": "Tik om foto te wijzigen", "en": "Tap to change photo", "fr": "Appuyez pour changer de photo", "de": "Tippen, um das Foto zu ändern", "hi": "फोटो बदलने के लिए टैप करें", "id": "Ketuk untuk mengubah foto", "it": "Tocca per cambiare foto", "ja": "タップして写真を変更", "ko": "사진을 변경하려면 누르세요", "ms": "Ketik untuk tukar foto", "pl": "Dotknij, aby zmienić zdjęcie", "pt": "Toque para alterar a foto", "ru": "Нажмите, чтобы изменить фото", "es": "Toca para cambiar la foto", "th": "แตะเพื่อเปลี่ยนรูปภาพ", "tr": "Fotoğrafı değiştirmek için dokunun", "vi": "Nhấn để thay đổi ảnh"
+  },
+  "SETTINGS_LANDLORD_NICKNAME": {
+    "ar": "كنية المالك", "bn": "মালিকের ডাকনাম", "zh": "业主昵称", "nl": "Bijnaam verhuurder", "en": "Landlord Nickname", "fr": "Surnom du propriétaire", "de": "Spitzname des Vermieters", "hi": "मकान मालिक का उपनाम", "id": "Nama Panggilan Tuan Tanah", "it": "Soprannome del proprietario", "ja": "大家さんのニックネーム", "ko": "임대인 닉네임", "ms": "Nama Panggilan Tuan Tanah", "pl": "Pseudonim wynajmującego", "pt": "Apelido do senhorio", "ru": "Ник владельца", "es": "Apodo del arrendador", "th": "ชื่อเล่นเจ้าของที่", "tr": "Ev Sahibi Takma Adı", "vi": "Biệt danh chủ nhà"
+  },
+  "SETTINGS_LANGUAGE_SECTION": {
+    "ar": "إعدادات اللغة", "bn": "ভাষা সেটিংস", "zh": "语言设置", "nl": "Taalinstellingen", "en": "Language Settings", "fr": "Paramètres de langue", "de": "Spracheinstellungen", "hi": "भाषा सेटिंग", "id": "Pengaturan Bahasa", "it": "Impostazioni della lingua", "ja": "言語設定", "ko": "언어 설정", "ms": "Tetapan Bahasa", "pl": "Ustawienia języka", "pt": "Configurações de idioma", "ru": "Настройки языка", "es": "Ajustes de idioma", "th": "ตั้งค่าภาษา", "tr": "Dil Ayarları", "vi": "Cài đặt ngôn ngữ"
+  },
+  "SETTINGS_SELECT_LANGUAGE": {
+    "ar": "اختر اللغة", "bn": "ভাষা নির্বাচন করুন", "zh": "选择语言", "nl": "Selecteer taal", "en": "Select Language", "fr": "Sélectionnez la langue", "de": "Sprache auswählen", "hi": "भाषा चुनें", "id": "Pilih Bahasa", "it": "Seleziona la lingua", "ja": "言語を選択", "ko": "언어 선택", "ms": "Pilih Bahasa", "pl": "Wybierz język", "pt": "Selecionar idioma", "ru": "Выберите язык", "es": "Seleccionar idioma", "th": "เลือกภาษา", "tr": "Dili Seç", "vi": "Chọn ngôn ngữ"
+  },
+  "SETTINGS_SECURITY": {
+    "ar": "الأمان", "bn": "নিরাপত্তা", "zh": "安全", "nl": "Beveiliging", "en": "Security", "fr": "Sécurité", "de": "Sicherheit", "hi": "सुरक्षा", "id": "Keamanan", "it": "Sicurezza", "ja": "セキュリティ", "ko": "보안", "ms": "Keselamatan", "pl": "Bezpieczeństwo", "pt": "Segurança", "ru": "Безопасность", "es": "Seguridad", "th": "ความปลอดภัย", "tr": "Güvenlik", "vi": "Bảo mật"
+  },
+  "SETTINGS_USE_PIN": {
+    "ar": "استخدام قفل PIN", "bn": "পিন লক ব্যবহার করুন", "zh": "使用 PIN 锁", "nl": "PIN-slot gebruiken", "en": "Use PIN Lock", "fr": "Utiliser le verrouillage par code", "de": "PIN-Sperre verwenden", "hi": "पिन लॉक का उपयोग करें", "id": "Gunakan Kunci PIN", "it": "Usa blocco PIN", "ja": "PINロックを使用", "ko": "PIN 잠금 사용", "ms": "Guna Kunci PIN", "pl": "Użyj blokady PIN", "pt": "Usar bloqueio por PIN", "ru": "Использовать PIN-код", "es": "Usar bloqueo por PIN", "th": "ใช้การล็อกด้วย PIN", "tr": "PIN Kilidi Kullan", "vi": "Sử dụng khóa PIN"
+  },
+  "SETTINGS_CHANGE_PIN": {
+    "ar": "تغيير رمز PIN", "bn": "পিন পরিবর্তন করুন", "zh": "更改 PIN", "nl": "PIN wijzigen", "en": "Change PIN", "fr": "Changer le code", "de": "PIN ändern", "hi": "पिन बदलें", "id": "Ubah PIN", "it": "Cambia PIN", "ja": "PINを変更", "ko": "PIN 변경", "ms": "Tukar PIN", "pl": "Zmień PIN", "pt": "Alterar PIN", "ru": "Изменить PIN-код", "es": "Cambiar PIN", "th": "เปลี่ยน PIN", "tr": "PIN Değiştir", "vi": "Thay đổi mã PIN"
+  },
+  "SETTINGS_DATA_MANAGEMENT": {
+    "ar": "إدارة البيانات", "bn": "ডেটা ব্যবস্থাপনা", "zh": "数据管理", "nl": "Gegevensbeheer", "en": "Data Management", "fr": "Gestion des données", "de": "Datenverwaltung", "hi": "डेटा प्रबंधन", "id": "Manajemen Data", "it": "Gestione dati", "ja": "データ管理", "ko": "데이터 관리", "ms": "Pengurusan Data", "pl": "Zarządzanie danymi", "pt": "Gestão de dados", "ru": "Управление данными", "es": "Gestión de datos", "th": "การจัดการข้อมูล", "tr": "Veri Yönetimi", "vi": "Quản lý dữ liệu"
+  },
+  "SETTINGS_BACKUP": {
+    "ar": "نسخ احتياطي للبيانات", "bn": "ডেটা ব্যাকআপ", "zh": "备份数据", "nl": "Gegevensback-up", "en": "Backup Data", "fr": "Sauvegarder les données", "de": "Datensicherung", "hi": "डेटा बैकअप", "id": "Cadangkan Data", "it": "Backup dati", "ja": "データのバックアップ", "ko": "데이터 백업", "ms": "Sandaran Data", "pl": "Kopia zapasowa danych", "pt": "Backup de dados", "ru": "Резервное копирование", "es": "Copia de seguridad", "th": "สำรองข้อมูล", "tr": "Veri Yedekleme", "vi": "Sao lưu dữ liệu"
+  },
+  "SETTINGS_BACKUP_DESC": {
+    "ar": "تصدير قاعدة البيانات إلى السحابة أو البريد الإلكتروني", "bn": "ক্লাউড বা ইমেলে ডেটাবেস রপ্তানি করুন", "zh": "将数据库导出到云端或电子邮件", "nl": "Exporteer database naar cloud of e-mail", "en": "Export database to cloud or email", "fr": "Exporter la base de données vers le cloud ou par e-mail", "de": "Datenbank in die Cloud 또는 E-Mail exportieren", "hi": "क्लाउड या ईमेल पर डेटाबेस निर्यात करें", "id": "Ekspor database ke cloud 또는 email", "it": "Esporta il database su cloud o email", "ja": "データベースをクラウドまたはメールにエクスポート", "ko": "클라우드나 이메일로 데이터베이스 내보내기", "ms": "Eksport pangkalan data ke awan atau e-mel", "pl": "Eksportuj bazę danych do chmury lub e-maila", "pt": "Exportar banco de dados para a nuvem ou e-mail", "ru": "Экспорт базы данных в облако или на почту", "es": "Exportar base de datos a la nube o correo", "th": "ส่งออกฐานข้อมูลไปยังคลาวด์หรืออีเมล", "tr": "Veritabanını buluta veya e-postaya aktar", "vi": "Xuất cơ sở dữ liệu lên đám mây hoặc email"
+  },
+  "SETTINGS_RESTORE": {
+    "ar": "استعادة البيانات", "bn": "ডেটা পুনরুদ্ধার", "zh": "恢复数据", "nl": "Gegevens herstellen", "en": "Restore Data", "fr": "Restaurer les données", "de": "Daten wiederherstellen", "hi": "डेटा पुनर्स्थापित करें", "id": "Pulihkan Data", "it": "Ripristina dati", "ja": "データの復원", "ko": "데이터 복구", "ms": "Pulihkan Data", "pl": "Przywróć dane", "pt": "Restaurar dados", "ru": "Восстановление данных", "es": "Restaurar datos", "th": "กู้คืนข้อมูล", "tr": "Verileri Geri Yükle", "vi": "Khôi phục dữ liệu"
+  },
+  "SETTINGS_RESTORE_DESC": {
+    "ar": "استعادة من ملف النسخ الاحتياطي .sqlite", "bn": ".sqlite ব্যাকআপ ফাইল থেকে পুনরুদ্ধার করুন", "zh": "从 .sqlite 备份文件恢复", "nl": "Herstellen van .sqlite back-upbestand", "en": "Restore from .sqlite backup file", "fr": "Restaurer à partir du fichier .sqlite", "de": "Aus .sqlite-Sicherungsdatei wiederherstellen", "hi": ".sqlite बैकअप फ़ाइल से पुनर्स्थापित करें", "id": "Pulihkan dari file cadangan .sqlite", "it": "Ripristina dal file di backup .sqlite", "ja": ".sqliteバックアップファイルから復元", "ko": ".sqlite 백업 파일에서 복구하기", "ms": "Pulihkan daripada fail sandaran .sqlite", "pl": "Przywróć z pliku kopii zapasowej .sqlite", "pt": "Restaurar a partir do arquivo .sqlite", "ru": "Восстановление из файла .sqlite", "es": "Restaurar desde archivo .sqlite", "th": "กู้คืนจากไฟล์สำรอง .sqlite", "tr": ".sqlite yedek dosyasından geri yükle", "vi": "Khôi phục từ tệp sao lưu .sqlite"
+  },
+  "SETTINGS_CUSTOMIZATION": {
+    "ar": "التخصيص", "bn": "কাস্টমাইজেশন", "zh": "定制", "nl": "Aanpassing", "en": "Customization", "fr": "Personnalisation", "de": "Anpassung", "hi": "अनुकूलन", "id": "Kustomisasi", "it": "Personalizzazione", "ja": "カスタマイ즈", "ko": "커스터마이징", "ms": "Penyesuaian", "pl": "Personalizacja", "pt": "Personalização", "ru": "Настройка", "es": "Personalización", "th": "การปรับแต่ง", "tr": "Özelleştirme", "vi": "Tùy chỉnh"
+  },
+  "SETTINGS_MANAGE_CATEGORIES": {
+    "ar": "إدارة الفئات", "bn": "বিভাগ পরিচালনা করুন", "zh": "管理类别", "nl": "Categorieën beheren", "en": "Manage Categories", "fr": "Gérer les catégories", "de": "Kategorien verwalten", "hi": "श्रेणियां प्रबंधित करें", "id": "Kelola Kategori", "it": "Gestisci categorie", "ja": "カテゴリの管理", "ko": "카테고리 관리", "ms": "Urus Kategori", "pl": "Zarządzaj kategoriami", "pt": "Gerenciar categorias", "ru": "Управление категориями", "es": "Gestionar categorías", "th": "จัดการหมวดหมู่", "tr": "Kategorileri Yönet", "vi": "Quản lý danh mục"
+  },
+  "SETTINGS_CATEGORIES_DESC": {
+    "ar": "إضافة أو تعديل فئات الدخل/المصروفات", "bn": "আয়/ব্যয় বিভাগ যোগ বা সম্পাদনা করুন", "zh": "添加或编辑收入/支出类别", "nl": "Inkomsten/uitgaven categorieën toevoegen of bewerken", "en": "Add or edit income/expense categories", "fr": "Ajouter ou modifier des catégories de revenus/dépenses", "de": "Einnahmen-/Ausgabenkategorien hinzufügen oder bearbeiten", "hi": "आय/व्यय श्रेणियां जोड़ें या संपादित करें", "id": "Tambah 또는 edit kategori pendapatan/pengeluaran", "it": "Aggiungi o modifica categorie entrate/uscite", "ja": "収入/支出カテゴリの追加または編集", "ko": "수입/지출 카테고리 추가 및 수정", "ms": "Tambah atau edit kategori pendapatan/perbelanjaan", "pl": "Dodaj lub edytuj kategorie dochodów/wydatków", "pt": "Adicionar ou editar categorias de receitas/despesas", "ru": "Добавление или изменение категорий доходов/расходов", "es": "Añadir o editar categorías de ingresos/gastos", "th": "เพิ่มหรือแก้ไขหมวดหมู่รายรับ/รายจ่าย", "tr": "Gelir/gider kategorilerini ekle veya düzenle", "vi": "Thêm hoặc chỉnh sửa danh mục thu nhập/chi phí"
+  },
+  "SETTINGS_LANGUAGE_CHANGED": {
+    "ar": "تم تغيير اللغة.", "bn": "ভাষা পরিবর্তন করা হয়েছে।", "zh": "语言已更改。", "nl": "Taal is gewijzigd.", "en": "Language has been changed.", "fr": "La langue a été modifiée.", "de": "Sprache wurde geändert.", "hi": "भाषा बदल दी गई है।", "id": "Bahasa telah diubah.", "it": "La lingua è stata cambiata.", "ja": "言語が変更されました。", "ko": "언어가 변경되었습니다.", "ms": "Bahasa telah ditukar.", "pl": "Język został zmieniony.", "pt": "O idioma foi alterado.", "ru": "Язык был изменен.", "es": "Se ha cambiado el idioma.", "th": "เปลี่ยนภาษาแล้ว", "tr": "Dil değiştirildi.", "vi": "Ngôn ngữ đã được thay đổi."
+  },
+  "SETTINGS_EDIT_NICKNAME_TITLE": {
+    "ar": "تعديل الكنية", "bn": "ডাকনাম সম্পাদনা করুন", "zh": "编辑昵称", "nl": "Bijnaam bewerken", "en": "Edit Nickname", "fr": "Modifier le surnom", "de": "Spitzname bearbeiten", "hi": "उपनाम संपादित करें", "id": "Edit Nama Panggilan", "it": "Modifica soprannome", "ja": "ニックネームを編集", "ko": "닉네임 변경", "ms": "Edit Nama Panggilan", "pl": "Edytuj pseudonim", "pt": "Editar apelido", "ru": "Изменить ник", "es": "Editar apodo", "th": "แก้ไขชื่อเล่น", "tr": "Takma Adı Düzenle", "vi": "Chỉnh sửa biệt danh"
+  },
+  "SETTINGS_EDIT_NICKNAME_HINT": {
+    "ar": "أدخل كنية جديدة", "bn": "নতুন ডাকনাম লিখুন", "zh": "输入新昵称", "nl": "Voer een nieuwe bijnaam in", "en": "Enter new nickname", "fr": "Entrez un nouveau surnom", "de": "Neuen Spitznamen eingeben", "hi": "नया उपनाम दर्ज करें", "id": "Masukkan nama panggilan baru", "it": "Inserisci un nuovo soprannome", "ja": "新しいニックネームを入力", "ko": "새로운 닉네임을 입력하세요", "ms": "Masukkan nama panggilan baru", "pl": "Wpisz nowy pseudonim", "pt": "Digite o novo apelido", "ru": "Введите новый ник", "es": "Ingresa un nuevo apodo", "th": "ใส่ชื่อเล่นใหม่", "tr": "Yeni takma ad girin", "vi": "Nhập biệt danh mới"
+  },
+  "COMMON_CANCEL": {
+    "ar": "إلغاء", "bn": "বাতিল", "zh": "取消", "nl": "Annuleren", "en": "Cancel", "fr": "Annuler", "de": "Abbrechen", "hi": "रद्द करें", "id": "Batal", "it": "Annulla", "ja": "キャンセル", "ko": "취소", "ms": "Batal", "pl": "Anuluj", "pt": "Cancelar", "ru": "Отмена", "es": "Cancelar", "th": "ยกเลิก", "tr": "İptal", "vi": "Hủy"
+  },
+  "COMMON_SAVE": {
+    "ar": "حفظ", "bn": "সংরক্ষণ", "zh": "保存", "nl": "Opslaan", "en": "Save", "fr": "Sauvegarder", "de": "Speichern", "hi": "सहेजें", "id": "Simpan", "it": "Salva", "ja": "保存", "ko": "저장", "ms": "Simpan", "pl": "Zapisz", "pt": "Salvar", "ru": "Сохранить", "es": "Guardar", "th": "บันทึก", "tr": "Kaydet", "vi": "Lưu"
+  },
+  "COMMON_OK": {
+    "ar": "موافق", "bn": "ঠিক আছে", "zh": "确定", "nl": "OK", "en": "OK", "fr": "OK", "de": "OK", "hi": "ठीक है", "id": "OK", "it": "OK", "ja": "OK", "ko": "확인", "ms": "OK", "pl": "OK", "pt": "OK", "ru": "OK", "es": "OK", "th": "ตกลง", "tr": "Tamam", "vi": "OK"
+  },
+  "NAV_HOME": {
+    "ar": "الرئيسية", "bn": "হোম", "zh": "首页", "nl": "Home", "en": "Home", "fr": "Accueil", "de": "Startseite", "hi": "होम", "id": "Beranda", "it": "Home", "ja": "ホーム", "ko": "홈", "ms": "Utama", "pl": "Główny", "pt": "Início", "ru": "Главная", "es": "Inicio", "th": "หน้าแรก", "tr": "Anasayfa", "vi": "Trang chủ"
+  },
+  "DASHBOARD_WELCOME": {
+    "ar": "مرحباً بعودتك،", "bn": "স্বাগতম,", "zh": "欢迎回来，", "nl": "Welkom terug,", "en": "Welcome back,", "fr": "Bon retour,", "de": "Willkommen zurück,", "hi": "स्वागत है,", "id": "Selamat datang kembali,", "it": "Bentornato,", "ja": "おかえりなさい、", "ko": "어서오세요,", "ms": "Selamat kembali,", "pl": "Witaj ponownie,", "pt": "Bem-vindo de volta,", "ru": "С возвращением,", "es": "Bienvenido de nuevo,", "th": "ยินดีต้อนรับกลับมา", "tr": "Tekrar hoş geldiniz,", "vi": "Chào mừng trở lại,"
+  },
+  "DASHBOARD_THIS_MONTH": {
+    "ar": "هذا الشهر", "bn": "এই মাস", "zh": "本月", "nl": "Deze maand", "en": "This Month", "fr": "Ce mois-ci", "de": "Diesen Monat", "hi": "इस महीने", "id": "Bulan Ini", "it": "Questo mese", "ja": "今月", "ko": "이번 달 수익", "ms": "Bulan Ini", "pl": "W tym miesiącu", "pt": "Este mês", "ru": "В этом месяце", "es": "Este mes", "th": "เดือนนี้", "tr": "Bu Ay", "vi": "Tháng này"
+  },
+  "DASHBOARD_OCCUPANCY": {
+    "ar": "نسبة الإشغال", "bn": "দখল হার", "zh": "入住率", "nl": "Bezetting", "en": "Occupancy", "fr": "Occupation", "de": "Belegung", "hi": "अधिभोग", "id": "Okupansi", "it": "Occupazione", "ja": "入居率", "ko": "현재 점유율", "ms": "Penghunian", "pl": "Obłożenie", "pt": "Ocupação", "ru": "Заполняемость", "es": "Ocupación", "th": "การเข้าพัก", "tr": "Doluluk", "vi": "Tỷ lệ lấp đầy"
+  },
+  "DASHBOARD_VACANT_UNITS": {
+    "ar": "شاغر", "bn": "খালি", "zh": "空置", "nl": "Vacant", "en": "Vacant", "fr": "Vacant", "de": "Leerstand", "hi": "खाली", "id": "Kosong", "it": "Vacante", "ja": "空室", "ko": "공실", "ms": "Kosong", "pl": "Wolne", "pt": "Vago", "ru": "Свободно", "es": "Vacante", "th": "ว่าง", "tr": "Boş", "vi": "Trống"
+  },
+  "DASHBOARD_REVENUE_TREND": {
+    "ar": "اتجاه الإيرادات", "bn": "রাজস্ব প্রবণতা", "zh": "收入趋势", "nl": "Omzet trend", "en": "Revenue Trend", "fr": "Tendance des revenus", "de": "Umsatztrend", "hi": "राजस्व प्रवृत्ति", "id": "Tren Pendapatan", "it": "Andamento ricavi", "ja": "収益推移", "ko": "수익 추이", "ms": "Trend Hasil", "pl": "Trend przychodów", "pt": "Tendência de receita", "ru": "Тренд выручки", "es": "Tendencia de ingresos", "th": "แนวโน้มรายได้", "tr": "Gelir Trendi", "vi": "Xu hướng doanh thu"
+  },
+  "DASHBOARD_RECENT_ACTIVITY": {
+    "ar": "النشاط الأخير", "bn": "সাম্প্রতিক কার্যকলাপ", "zh": "近期活动", "nl": "Recente activiteit", "en": "Recent Activity", "fr": "Activité récente", "de": "Kürzliche Aktivitäten", "hi": "हाल की गतिविधि", "id": "Aktivitas Terbaru", "it": "Attività recente", "ja": "最近の活動", "ko": "최근 활동", "ms": "Aktiviti Terkini", "pl": "Ostatnia aktywność", "pt": "Atividade recente", "ru": "Последние действия", "es": "Actividad reciente", "th": "กิจกรรมล่าสุด", "tr": "Son Etkinlik", "vi": "Hoạt động gần đây"
+  },
+  "DASHBOARD_NO_RECENT_ACTIVITY": {
+    "ar": "لا توجد أنشطة أخيرة", "bn": "কোন সাম্প্রতিক কার্যকলাপ নেই", "zh": "没有近期活动", "nl": "Geen recente activiteiten", "en": "No recent activities", "fr": "Pas d'activité récente", "de": "Keine küzlichen Aktivitäten", "hi": "कोई हाल की गतिविधि नहीं", "id": "Tidak ada aktivitas terbaru", "it": "Nessuna attività recente", "ja": "最近の活動はありません", "ko": "최근 활동 내역이 없습니다.", "ms": "Tiada aktiviti terkini", "pl": "Brak ostatniej aktywności", "pt": "Nenhuma atividade recente", "ru": "Нет последних действий", "es": "No hay actividad reciente", "th": "ไม่มีกิจกรรมล่าสุด", "tr": "Son etkinlik yok", "vi": "Không có hoạt động gần đây"
+  },
+  "DASHBOARD_UNPAID_DETECTED": {
+    "ar": "تم اكتشاف إيجار غير مدفوع!", "bn": "বকেয়া ভাড়া পাওয়া গেছে!", "zh": "检测到未付租金！", "nl": "Onbetaalde huur gedetecteerd!", "en": "Unpaid Rent Detected!", "fr": "Loyer impayé détecté !", "de": "Unbezahlte Miete festgestellt!", "hi": "अवैतनिक किराया मिला!", "id": "Sewa Belum Dibayar Terdeteksi!", "it": "Rilevato affitto non pagato!", "ja": "未払い賃料を検出！", "ko": "미납 임대료 감지!", "ms": "Sewa Belum Dibayar Terkesan!", "pl": "Wykryto nieopłacony czynsz!", "pt": "Aluguel não pago detectado!", "ru": "Обнаружена неоплата аренды!", "es": "¡Alquiler impagado detectado!", "th": "ตรวจพบการค้างชำระค่าเช่า!", "tr": "Ödenmemiş Kira Tespit Edildi!", "vi": "Phát hiện tiền thuê chưa trả!"
+  },
+  "DASHBOARD_UNPAID_TITLE": {
+    "ar": "معالجة المبالغ غير المدفوعة", "bn": "বকেয়া সংগ্রহ প্রক্রিয়া", "zh": "处理未付款项", "nl": "Onbetaalde betalingen verwerken", "en": "Process Unpaid", "fr": "Gérer les impayés", "de": "Zahlungseingang prüfen", "hi": "अवैतनिक प्रक्रिया", "id": "Proses Belum Bayar", "it": "Gestisci non pagati", "ja": "未払い収容処理", "ko": "미납 수납 처리", "ms": "Proses Tunggakan", "pl": "Przetwarzaj nieopłacone", "pt": "Processar não pagos", "ru": "Обработка неоплат", "es": "Procesar impagos", "th": "ดำเนินการยอดค้างชำระ", "tr": "Ödenmemiş İşlemleri", "vi": "Xử lý khoản chưa trả"
+  },
+  "DASHBOARD_UNPAID_SUBTITLE": {
+    "ar": "اضغط على الزر للغرف التي تم تأكيد دفعها.", "bn": "পেমেন্ট নিশ্চিত হওয়া রুমগুলোর জন্য বাটনে চাপ দিন।", "zh": "点击已确认付款的房间按钮。", "nl": "Tik op de knop voor kamers waarvan de betaling is bevestigd.", "en": "Tap the button for rooms where payment is confirmed.", "fr": "Appuyez sur le bouton pour les chambres dont le paiement est confirmé.", "de": "Tippen Sie auf die Schaltfläche für Räume, deren Zahlung bestätigt wurde.", "hi": "उन कमरों के लिए बटन दबाएं जहां भुगतान की पुष्टि हो गई है।", "id": "Ketuk tombol untuk kamar yang pembayarannya telah dikonfirmasi.", "it": "Tocca il pulsante per le stanze in cui il pagamento è confermato.", "ja": "入金が確認された号室のボタンを押してください。", "ko": "입금이 확인된 호실의 버튼을 눌러주세요.", "ms": "Ketik butang untuk bilik yang pembayarannya telah disahkan.", "pl": "Dotknij przycisku dla pokoi, w których płatność została potwierdzona.", "pt": "Toque no botão para os quartos onde o pagamento foi confirmado.", "ru": "Нажмите кнопку для комнат, оплата по которым подтверждена.", "es": "Toque el botón para las habitaciones donde se confirma el pago.", "th": "แตะปุ่มสำหรับห้องที่ยืนยันการชำระเงินแล้ว", "tr": "Ödemesi onaylanan odalar için düğmeye dokunun.", "vi": "Nhấn nút cho các phòng đã xác nhận thanh toán."
+  },
+  "DASHBOARD_PAYMENT_CONFIRM": {
+    "ar": "تأكيد الدفع", "bn": "পেমেন্ট নিশ্চিত", "zh": "确认收款", "nl": "Betaling bevestigen", "en": "Payment Confirmed", "fr": "Paiement confirmé", "de": "Zahlung bestätigt", "hi": "भुगतान की पुष्टि", "id": "Pembayaran Dikonfirmasi", "it": "Pagamento confermato", "ja": "収納確認", "ko": "수납 확인", "ms": "Bayaran Disahkan", "pl": "Płatność potwierdzona", "pt": "Pagamento confirmado", "ru": "Оплата подтверждена", "es": "Pago confirmado", "th": "ยืนยันการรับชำระ", "tr": "Ödeme Onaylandı", "vi": "Xác nhận thanh toán"
+  },
+  "DASHBOARD_PAYMENT_COMPLETE": {
+    "ar": " اكتملت معالجة الدفع.", "bn": " পেমেন্ট প্রক্রিয়া সম্পন্ন হয়েছে।", "zh": " 付款处理完成。", "nl": " betaling verwerkt.", "en": " payment complete.", "fr": " paiement effectué.", "de": " Zahlung abgeschlossen.", "hi": " भुगतान पूरा हुआ।", "id": " pembayaran selesai.", "it": " pagamento completato.", "ja": " 収納処理が完了しました。", "ko": "호 수납 처리가 완료되었습니다.", "ms": " bayaran selesai.", "pl": " płatność zakończona.", "pt": " pagamento concluído.", "ru": " оплата завершена.", "es": " pago completado.", "th": " ดำเนินการชำระเงินเสร็จสิ้น", "tr": " ödeme tamamlandı.", "vi": " thanh toán hoàn tất."
+  },
+  "COMMON_CURRENCY_UNIT": {
+    "ar": "مان-وون", "bn": "মান-ওন", "zh": "万韩元", "nl": "10k Won", "en": "10k Won", "fr": "10k Won", "de": "10k Won", "hi": "10k वॉन", "id": "10rb Won", "it": "10k Won", "ja": "万ウォン", "ko": "만원", "ms": "10rb Won", "pl": "10k Won", "pt": "10k Won", "ru": "10к вон", "es": "10k Won", "th": "หมื่นวอน", "tr": "10k Won", "vi": "vạn Won"
+  },
+  "COMMON_CURRENCY_SMALL": {
+    "ar": "وون", "bn": "ওন", "zh": "万", "nl": "W", "en": "W", "fr": "W", "de": "W", "hi": "W", "id": "W", "it": "W", "ja": "万", "ko": "만", "ms": "W", "pl": "W", "pt": "W", "ru": "W", "es": "W", "th": "วอน", "tr": "W", "vi": "vạn"
+  },
+  "COMMON_ROOMS": {
+    "ar": "الغرف", "bn": "রুমগুলো", "zh": "房间", "nl": "Kamers", "en": "Rooms", "fr": "Chambres", "de": "Zimmer", "hi": "कमरे", "id": "Kamar", "it": "Stanze", "ja": "号室", "ko": "호실", "ms": "Bilik", "pl": "Pokoje", "pt": "Quartos", "ru": "Комнаты", "es": "Habitaciones", "th": "ห้อง", "tr": "Odalar", "vi": "Phòng"
+  },
+  "COMMON_ROOM_UNIT": {
+    "ar": "وحدة ", "bn": "রুম ", "zh": "号", "nl": "Unit ", "en": "Unit ", "fr": "Unité ", "de": "Einheit ", "hi": "यूनिट ", "id": "Unit ", "it": "Unità ", "ja": "号", "ko": "호", "ms": "Unit ", "pl": "Unit ", "pt": "Unid. ", "ru": "№ ", "es": "Unid. ", "th": "ห้อง ", "tr": "Ünite ", "vi": "Phòng "
+  },
+  "COMMON_MONTH_UNIT": {
+    "ar": "شهر", "bn": "মাস", "zh": "月", "nl": "Maand", "en": "Month", "fr": "Mois", "de": "Monat", "hi": "महीना", "id": "Bulan", "it": "Mese", "ja": "月", "ko": "월", "ms": "Bulan", "pl": "Miesiąc", "pt": "Mês", "ru": "Мес.", "es": "Mes", "th": "เดือน", "tr": "Ay", "vi": "Tháng"
+  },
+  "COMMON_INCOME": {
+    "ar": "الدخل", "bn": "আয়", "zh": "收入", "nl": "Inkomsten", "en": "Income", "fr": "Revenu", "de": "Einnahmen", "hi": "आय", "id": "Pendapatan", "it": "Entrate", "ja": "収益", "ko": "수익", "ms": "Pendapatan", "pl": "Przychód", "pt": "Receita", "ru": "Доход", "es": "Ingresos", "th": "รายรับ", "tr": "Gelir", "vi": "Thu nhập"
+  },
+  "COMMON_EXPENSE": {
+    "ar": "المصروفات", "bn": "ব্যয়", "zh": "支出", "nl": "Uitgaven", "en": "Expense", "fr": "Dépense", "de": "Ausgaben", "hi": "व्यय", "id": "Pengeluaran", "it": "Uscite", "ja": "支出", "ko": "지출", "ms": "Perbelanjaan", "pl": "Wydatki", "pt": "Despesa", "ru": "Расход", "es": "Gastos", "th": "รายจ่าย", "tr": "Gider", "vi": "Chi phí"
+  },
+  "COMMON_LOADING": {
+    "ar": "جارٍ التحميل...", "bn": "লোড হচ্ছে...", "zh": "加载中...", "nl": "Laden...", "en": "Loading...", "fr": "Chargement...", "de": "Laden...", "hi": "लोड हो रहा है...", "id": "Memuat...", "it": "Caricamento...", "ja": "読み込み中...", "ko": "로딩 중", "ms": "Memuatkan...", "pl": "Ładowanie...", "pt": "Carregando...", "ru": "Загрузка...", "es": "Cargando...", "th": "กำลังโหลด...", "tr": "Yükleniyor...", "vi": "Đang tải..."
+  },
+  "COMMON_ERROR": {
+    "ar": "خطأ", "bn": "ত্রুটি", "zh": "错误", "nl": "Fout", "en": "Error", "fr": "Erreur", "de": "Fehler", "hi": "त्रुटि", "id": "Kesalahan", "it": "Errore", "ja": "エラー", "ko": "에러", "ms": "Ralat", "pl": "Błąd", "pt": "Erro", "ru": "Ошибка", "es": "Error", "th": "ข้อผิดพลาด", "tr": "Hata", "vi": "Lỗi"
+  },
+  "COMMON_CONFIRM": {
+    "ar": "تأكيد", "bn": "নিশ্চিত করুন", "zh": "确认", "nl": "Bevestigen", "en": "Confirm", "fr": "Confirmer", "de": "Bestätigen", "hi": "पुष्टि करें", "id": "Konfirmasi", "it": "Conferma", "ja": "確認", "ko": "확인", "ms": "Sahkan", "pl": "Potwierdź", "pt": "Confirmar", "ru": "Подтвердить", "es": "Confirmar", "th": "ยืนยัน", "tr": "Onayla", "vi": "Xác nhận"
+  },
+
+  "NAV_ALERTS": {
+    "ar": "مركز التنبيهات", "bn": "বিজ্ঞপ্তি কেন্দ্র", "zh": "通知中心", "nl": "Meldingscentrum", "en": "Alert Center", "fr": "Centre d'alertes", "de": "Benachrichtigungszentrum", "hi": "अलर्ट सेंटर", "id": "Pusat Peringatan", "it": "Centro avvisi", "ja": "通知センター", "ko": "알림 센터", "ms": "Pusat Amaran", "pl": "Centrum alertów", "pt": "Central de Alertas", "ru": "Центр уведомлений", "es": "Centro de alertas", "th": "ศูนย์แจ้งเตือน", "tr": "Uyarı Merkezi", "vi": "Trung tâm thông báo"
+  },
+  "ALERT_EMPTY_LIST": {
+    "ar": "لا توجد تنبيهات", "bn": "কোন বিজ্ঞপ্তি নেই", "zh": "没有通知", "nl": "Geen meldingen", "en": "No alerts to display.", "fr": "Aucune alerte", "de": "Keine Benachrichtigungen", "hi": "कोई अलर्ट नहीं", "id": "Tidak ada peringatan", "it": "Nessun avviso", "ja": "表示する通知はありません。", "ko": "표시할 알림이 없습니다.", "ms": "Tiada amaran", "pl": "Brak alertów", "pt": "Sem alertas", "ru": "Нет уведомлений", "es": "No hay alertas", "th": "ไม่มีการแจ้งเตือน", "tr": "Uyarı yok", "vi": "Không có thông báo"
+  },
+  "ALERT_ACTION_SMS": {
+    "ar": "إرسال رسالة", "bn": "মেসেজ পাঠান", "zh": "发送短信", "nl": "SMS verzenden", "en": "Send SMS", "fr": "Envoyer SMS", "de": "SMS senden", "hi": "एसएमएस भेजें", "id": "Kirim SMS", "it": "Invia SMS", "ja": "문자 보내기", "ko": "문자 보내기", "ms": "Hantar SMS", "pl": "Wyślij SMS", "pt": "Enviar SMS", "ru": "Отправить SMS", "es": "Enviar SMS", "th": "ส่งข้อความ", "tr": "SMS Gönder", "vi": "Gửi tin nhắn"
+  },
+  "ALERT_ACTION_CALL": {
+    "ar": "اتصال", "bn": "কল করুন", "zh": "拨打电话", "nl": "Bellen", "en": "Call", "fr": "Appeler", "de": "Anrufen", "hi": "कॉल करें", "id": "Telepon", "it": "Chiama", "ja": "電話をかける", "ko": "전화 걸기", "ms": "Panggil", "pl": "Zadzwoń", "pt": "Ligar", "ru": "Позвонить", "es": "Llamar", "th": "โทรออก", "tr": "Ara", "vi": "Gọi điện"
+  },
+  "ALERT_NO_PHONE_ERROR": {
+    "ar": "لا يوجد رقم مسجل", "bn": "কোন নম্বর নেই", "zh": "没有登记的号码", "nl": "Geen nummer geregistreerd", "en": "No registered tenant contact found.", "fr": "Pas de numéro enregistré", "de": "Keine Nummer registriert", "hi": "कोई नंबर नहीं", "id": "Nomor tidak terdaftar", "it": "Nessun numero registrato", "ja": "登録された連絡先がありません。", "ko": "등록된 세입자 연락처가 없습니다.", "ms": "Tiada nombor berdaftar", "pl": "Brak numeru", "pt": "Sem número registrado", "ru": "Нет номера", "es": "Sin número registrado", "th": "ไม่มีเบอร์โทรศัพท์", "tr": "Kayıtlı numara yok", "vi": "Không có số điện thoại"
+  },
+  "ALERT_EMPTY_PHONE_MSG": {
+    "ar": " رقم الهاتف فارغ.", "bn": " ফোন নম্বর খালি।", "zh": " 电话号码为空。", "nl": " telefoonnummer is leeg.", "en": " phone number is empty.", "fr": " numéro est vide.", "de": " Nummer ist leer.", "hi": " फोन नंबर खाली है।", "id": " nomor telepon kosong.", "it": " numero è vuoto.", "ja": "号室の電話番号が空です。", "ko": "호의 저장된 전화번호가 비어있습니다.", "ms": " nombor telefon kosong.", "pl": " numer jest pusty.", "pt": " número está vazio.", "ru": " номер пуст.", "es": " número está vacío.", "th": " เบอร์โทรศัพท์ว่าง", "tr": " numara boş.", "vi": " số điện thoại trống."
+  },
+  "ALERT_SMS_APP_ERROR": {
+    "ar": "لا يمكن فتح تطبيق الرسائل", "bn": "মেসেজ অ্যাপ খোলা যাচ্ছে না", "zh": "无法打开短信应用", "nl": "Kan SMS-app niet openen", "en": "Cannot launch SMS app.", "fr": "Impossible d'ouvrir SMS", "de": "SMS-App kann nicht geöffnet werden", "hi": "एसएमएस ऐप नहीं खुल रहा है", "id": "Tidak dapat membuka aplikasi SMS", "it": "Impossibile aprire SMS", "ja": "メッセージアプリを起動できません。", "ko": "문자 앱을 실행할 수 없습니다.", "ms": "Gagal melancarkan aplikasi SMS", "pl": "Nie można otworzyć SMS", "pt": "Falha ao abrir SMS", "ru": "Ошибка запуска SMS", "es": "Fallo al abrir SMS", "th": "เปิดแอพข้อความไม่ได้", "tr": "SMS uygulaması açılamadı", "vi": "Không thể mở ứng dụng tin nhắn"
+  },
+  "ALERT_SMS_TEMPLATE_HEAD": {
+    "ar": "[المسؤول] بخصوص الوحدة", "bn": "[ম্যানেজার] ইউনিট", "zh": "[管理员] 关于", "nl": "[Beheerder] Betreft unit", "en": "[Manager] Regarding Unit", "fr": "[Gérant] Concernant l'unité", "de": "[Verwalter] Betreff Einheit", "hi": "[प्रबंधक] यूनिट", "id": "[Manajer] Mengenai Unit", "it": "[Gestore] Riguardo l'unità", "ja": "[管理員]", "ko": "[관리인]", "ms": "[Pengurus] Mengenai Unit", "pl": "[Zarządca] Dotyczy jednostki", "pt": "[Gerente] Sobre a unidade", "ru": "[Менеджер] По объекту", "es": "[Administrador] Sobre la unidad", "th": "[ผู้ดูแล] เกี่ยวกับห้อง", "tr": "[Yönetici] Ünite hakkında", "vi": "[Quản lý] Về phòng"
+  },
+  "ALERT_SMS_TEMPLATE_TAIL": {
+    "ar": " أنا أتواصل معك.", "bn": " আমি আপনার সাথে যোগাযোগ করছি।", "zh": " 号与您联系。", "nl": " neem ik contact op.", "en": ", I am contacting you.", "fr": " je vous contacte.", "de": " kontaktiere ich Sie.", "hi": " के संबंध में संपर्क कर रहा हूँ।", "id": " saya menghubungi Anda.", "it": " la sto contattando.", "ja": "号室の件でご連絡いたしました。", "ko": "호 관련 연락드립니다.", "ms": " saya menghubungi anda.", "pl": " kontaktuję się z Tobą.", "pt": " estou entrando em contato.", "ru": " я связываюсь с вами.", "es": " me pongo en contacto.", "th": " ผมขอติดต่อคุณ", "tr": " sizinle iletişime geçiyorum.", "vi": " tôi đang liên hệ với bạn."
+  },
+
+  "ALERT_OVERDUE_TITLE": {
+    "ar": "تأخر دفع الإيجار", "bn": "ভাড়া বকেয়া", "zh": "未付租金", "nl": "Huurachterstand", "en": "Unpaid Rent", "fr": "Loyer impayé", "de": "Mietrückstand", "hi": "अवैतनिक किराया", "id": "Sewa Belum Dibayar", "it": "Affitto non pagato", "ja": "賃料未払い", "ko": "임대료 미납", "ms": "Sewa Belum Dibayar", "pl": "Zaległy czynsz", "pt": "Aluguel não pago", "ru": "Просрочка аренды", "es": "Alquiler impagado", "th": "ค้างชำระค่าเช่า", "tr": "Ödenmemiş Kira", "vi": "Chưa trả tiền thuê"
+  },
+  "ALERT_OVERDUE_BODY": {
+    "ar": "الإيجار لا يزال غير مدفوع.", "bn": "ভাড়া এখনও বকেয়া আছে।", "zh": "租金尚未支付。", "nl": "huur is nog steeds niet betaald.", "en": "rent is still unpaid.", "fr": "le loyer est toujours impayé.", "de": "Miete ist noch unbezahlt.", "hi": "किराया अभी भी बकाया है।", "id": "sewa masih belum dibayar.", "it": "l'affitto non è ancora stato pagato.", "ja": "賃料가 아직 미납입니다.", "ko": "임대료가 아직 미납입니다.", "ms": "sewa masih belum dibayar.", "pl": "czynsz nadal nie jest opłacony.", "pt": "o aluguel ainda não foi pago.", "ru": "аренда все еще не оплачена.", "es": "el alquiler aún no ha sido pagado.", "th": "ค่าเช่ายังคงค้างชำระ", "tr": "kira hala ödenmedi.", "vi": "tiền thuê vẫn chưa được trả."
+  },
+  "ALERT_CONTRACT_ENDING_TITLE": {
+    "ar": "انتهاء العقد قريباً", "bn": "চুক্তি শেষ হতে চলেছে", "zh": "合同即将到期", "nl": "Contract loopt af", "en": "Contract Expiring", "fr": "Expiration du contrat", "de": "Vertragsende bevorstehend", "hi": "अनुबंध समाप्त हो रहा है", "id": "Kontrak Berakhir", "it": "Contratto in scadenza", "ja": "契約満了予定", "ko": "계약 만료 예정", "ms": "Kontrak Berakhir", "pl": "Wygaśnięcie umowy", "pt": "Vencimento do contrato", "ru": "Истечение договора", "es": "Vencimiento del contrato", "th": "สัญญาใกล้หมดอายุ", "tr": "Sözleşme Bitiyor", "vi": "Sắp hết hạn hợp đồng"
+  },
+  "ALERT_CONTRACT_ENDING_BODY_1": {
+    "ar": "بقي على انتهاء العقد ", "bn": "চুক্তি শেষ হতে ", "zh": "合同到期还有", "nl": "contract loopt af over ", "en": "contract expires in ", "fr": "le contrat expire dans ", "de": "Vertrag endet in ", "hi": "अनुबंध समाप्त होने में ", "id": "kontrak berakhir dalam ", "it": "il contratto scade tra ", "ja": "契約満了まであと ", "ko": "계약 만료가 ", "ms": "kontrak tamat dalam ", "pl": "umowa wygasa za ", "pt": "o contrato vence em ", "ru": "договор истекает через ", "es": "el contrato vence en ", "th": "สัญญาจะหมดอายุในอีก ", "tr": "sözleşmenin bitmesine ", "vi": "hợp đồng sẽ hết hạn sau "
+  },
+  "ALERT_CONTRACT_ENDING_BODY_2": {
+    "ar": " أيام.", "bn": " দিন বাকি।", "zh": " 天。", "nl": " dagen.", "en": " days.", "fr": " jours.", "de": " Tagen.", "hi": " दिन शेष।", "id": " hari.", "it": " giorni.", "ja": " 日です。", "ko": "일 남았습니다.", "ms": " hari.", "pl": " dni.", "pt": " dias.", "ru": " дн.", "es": " días.", "th": " วัน", "tr": " gün kaldı.", "vi": " ngày."
+  },
+
+  "NAV_LEDGER": {
+    "ar": "دفتر الاستاذ", "bn": "খতিয়ান", "zh": "账本", "nl": "Grootboek", "en": "Ledger", "fr": "Grand livre", "de": "Hauptbuch", "hi": "लेजर", "id": "Buku Besar", "it": "Libro mastro", "ja": "帳簿", "ko": "장부 관리", "ms": "Lejar", "pl": "Księga", "pt": "Livro Razão", "ru": "Книга", "es": "Libro mayor", "th": "บัญชีแยกประเภท", "tr": "Defter", "vi": "Sổ cái"
+  },
+  "LEDGER_NO_TRANSACTIONS": {
+    "ar": "لا توجد معاملات لهذا الشهر.", "bn": "এই মাসের জন্য কোন লেনদেন নেই।", "zh": "本月没有交易。", "nl": "Geen transacties voor deze maand.", "en": "No transactions for this month.", "fr": "Aucune transaction pour ce mois.", "de": "Keine Transaktionen für diesen Monat.", "hi": "इस महीने के लिए कोई लेन-देन नहीं।", "id": "Tidak ada transaksi untuk bulan ini.", "it": "Nessuna transazione per questo mese.", "ja": "今月の取引はありません。", "ko": "이번 달 내역이 없습니다.", "ms": "Tiada transaksi untuk bulan ini.", "pl": "Brak transakcji w tym miesiącu.", "pt": "Nenhuma transação para este mês.", "ru": "Нет транзакций за этот месяц.", "es": "No hay transacciones para este mes.", "th": "ไม่มีรายการในเดือนนี้", "tr": "Bu ay için işlem yok.", "vi": "Không có giao dịch nào trong tháng này."
+  },
+  "LEDGER_CLOSE_ANALYSIS": {
+    "ar": "إغلاق التحليل", "bn": "বিশ্লেষণ বন্ধ করুন", "zh": "关闭分析", "nl": "Analyse sluiten", "en": "Close Analysis", "fr": "Fermer l'analyse", "de": "Analyse schließen", "hi": "विश्लेषण बंद करें", "id": "Tutup Analisis", "it": "Chiudi analisi", "ja": "分析を閉じる", "ko": "분석 닫기", "ms": "Tutup Analisis", "pl": "Zamknij analizę", "pt": "Fechar análise", "ru": "Закрыть анализ", "es": "Cerrar análisis", "th": "ปิดการวิเคราะห์", "tr": "Analizi Kapat", "vi": "Đóng phân tích"
+  },
+  "LEDGER_OPEN_ANALYSIS": {
+    "ar": "عرض تحليل النفقات", "bn": "ব্যয় বিশ্লেষণ দেখুন", "zh": "查看支出分析", "nl": "Uitgavenanalyse bekijken", "en": "View Expense Analysis", "fr": "Voir l'analyse des dépenses", "de": "Ausgabenanalyse anzeigen", "hi": "व्यय विश्लेषण देखें", "id": "Lihat Analisis Pengeluaran", "it": "Visualizza analisi spese", "ja": "支出分析を表示", "ko": "이번 달 지출 분석 보기", "ms": "Lihat Analisis Perbelanjaan", "pl": "Zobacz analizę wydatków", "pt": "Ver análise de despesas", "ru": "Посмотреть анализ расходов", "es": "Ver análisis de gastos", "th": "ดูการวิเคราะห์รายจ่าย", "tr": "Gider Analizini Görüntüle", "vi": "Xem phân tích chi phí"
+  },
+  "LEDGER_NO_EXPENSE_DATA": {
+    "ar": "لا توجد بيانات نفقات لتحليلها.", "bn": "বিশ্লেষণ করার জন্য কোন ব্যয় ডেটা নেই।", "zh": "没有支出 데이터 可供分析。", "nl": "Geen uitgavengegevens om te analyseren.", "en": "No expense data to analyze.", "fr": "Aucune donnée de dépense à analyser.", "de": "Keine Ausgabendaten zum Analysieren.", "hi": "विश्लेषण के लिए कोई व्यय डेटा नहीं।", "id": "Tidak ada data pengeluaran untuk dianalisis.", "it": "Nessun dato di spesa da analizzare.", "ja": "分析する支出データはありません。", "ko": "분석할 지출 내역이 없습니다.", "ms": "Tiada data perbelanjaan untuk dianalisis.", "pl": "Brak danych o wydatkach do analizy.", "pt": "Nenhum dado de despesa para analisar.", "ru": "Нет данных о расходах для анализа.", "es": "No hay datos de gastos para analizar.", "th": "ไม่มีข้อมูลรายจ่ายเพื่อวิเคราะห์", "tr": "Analiz edilecek gider verisi yok.", "vi": "Không có dữ liệu chi phí để phân tích."
+  },
+  "LEDGER_EXPENSE_RATIO_TITLE": {
+    "ar": "توزيع النفقات", "bn": "ব্যয় ব্রেকডাউন", "zh": "支出占比", "nl": "Uitgavenoverzicht", "en": "Expense Breakdown", "fr": "Répartition des dépenses", "de": "Ausgabenaufschlüsselung", "hi": "व्यय विवरण", "id": "Rincian Pengeluaran", "it": "Ripartizione spese", "ja": "支出の内訳", "ko": "이번 달 지출 항목 비중", "ms": "Pecahan Perbelanjaan", "pl": "Podział wydatków", "pt": "Detalhamento de despesas", "ru": "Распределение расходов", "es": "Desglose de gastos", "th": "รายละเอียดรายจ่าย", "tr": "Gider Dağılımı", "vi": "Phân bổ chi phí"
+  },
+  "COMMON_TODAY": {
+    "ar": "اليوم", "bn": "আজ", "zh": "今天", "nl": "Vandaag", "en": "Today", "fr": "Aujourd'hui", "de": "Heute", "hi": "आज", "id": "Hari Ini", "it": "Oggi", "ja": "今日", "ko": "오늘", "ms": "Hari Ini", "pl": "Dzisiaj", "pt": "Hoje", "ru": "Сегодня", "es": "Hoy", "th": "วันนี้", "tr": "Bugün", "vi": "Hôm nay"
+  },
+  "COMMON_BALANCE": {
+    "ar": "الرصيد", "bn": "ব্যালেন্স", "zh": "余额", "nl": "Saldo", "en": "Balance", "fr": "Solde", "de": "Kontostand", "hi": "संतुलन", "id": "Saldo", "it": "Saldo", "ja": "残高", "ko": "잔액", "ms": "Baki", "pl": "Saldo", "pt": "Saldo", "ru": "Баланс", "es": "Saldo", "th": "ยอดคงเหลือ", "tr": "Bakiye", "vi": "Số dư"
+  },
+
+  "CAT_RENT": {
+    "ar": "إيجار", "bn": "ভাড়া", "zh": "房租", "nl": "Huur", "en": "Rent", "fr": "Loyer", "de": "Miete", "hi": "किराया", "id": "Sewa", "it": "Affitto", "ja": "家賃", "ko": "월세", "ms": "Sewa", "pl": "Czynsz", "pt": "Aluguel", "ru": "Аренда", "es": "Alquiler", "th": "ค่าเช่า", "tr": "Kira", "vi": "Tiền thuê"
+  },
+  "CAT_TAX": {
+    "ar": "الضرائب/الفواتير", "bn": "কর/বিল", "zh": "税费/账单", "nl": "Belastingen", "en": "Tax/Bills", "fr": "Taxes/Factures", "de": "Steuern/Gebühren", "hi": "कर/बिल", "id": "Pajak/Tagihan", "it": "Tasse/Bollette", "ja": "税金/公共料金", "ko": "세금/공과금", "ms": "Cukai/Bil", "pl": "Podatki/Rachunki", "pt": "Impostos/Contas", "ru": "Налоги/Счета", "es": "Impuestos/Facturas", "th": "ภาษี/บิล", "tr": "Vergi/Faturalar", "vi": "Thuế/Hóa đơn"
+  },
+  "CAT_REPAIR": {
+    "ar": "إصلاح", "bn": "মেরামত", "zh": "维修", "nl": "Reparatie", "en": "Repair", "fr": "Réparation", "de": "Reparatur", "hi": "मरामत", "id": "Perbaikan", "it": "Riparazione", "ja": "修理", "ko": "수리보수비", "ms": "Pembaikan", "pl": "Naprawa", "pt": "Reparo", "ru": "Ремонт", "es": "Reparación", "th": "ซ่อมแซม", "tr": "Onarım", "vi": "Sửa chữa"
+  },
+  "CAT_UTILITY": {
+    "ar": "المرافق", "bn": "ইউটিليটি", "zh": "水电费", "nl": "Nutsvoorzieningen", "en": "Utility", "fr": "Services publics", "de": "Nebenkosten", "hi": "उपयोगिता", "id": "Utilitas", "it": "Utenze", "ja": "公共料金", "ko": "전기/수도료", "ms": "Utiliti", "pl": "Media", "pt": "Utilidades", "ru": "Комму나льные услуги", "es": "Servicios públicos", "th": "สาธารณูปโภค", "tr": "Hizmetler", "vi": "Tiện ích"
+  },
+  "CAT_CLEANING": {
+    "ar": "تنظيف", "bn": "পরিষ্কার করা", "zh": "清洁", "nl": "Schoonmaak", "en": "Cleaning", "fr": "Nettoyage", "de": "Reinigung", "hi": "सफाई", "id": "Pembersihan", "it": "Pulizia", "ja": "清掃", "ko": "청소비", "ms": "Pembersihan", "pl": "Sprzątanie", "pt": "Limpeza", "ru": "Уборка", "es": "Limpieza", "th": "ทำความสะอาด", "tr": "Temizlik", "vi": "Dọn dẹp"
+  },
+  "CAT_MAINTENANCE": {
+    "ar": "صيانة", "bn": "রক্ষণাবেক্ষণ", "zh": "维护", "nl": "Onderhoud", "en": "Maintenance", "fr": "Maintenance", "de": "Wartung", "hi": "रखरखाव", "id": "Pemeliharaan", "it": "Manutenzione", "ja": "管理費", "ko": "관리비", "ms": "Penyelenggaraan", "pl": "Konserwacja", "pt": "Manutenção", "ru": "Обслуживание", "es": "Mantenimiento", "th": "ค่าบำรุงรักษา", "tr": "Bakım", "vi": "Bảo trì"
+  },
+  "CAT_INSURANCE": {
+    "ar": "تأمين", "bn": "বীমা", "zh": "保险", "nl": "Verzekering", "en": "Insurance", "fr": "Assurance", "de": "Versicherung", "hi": "बीमा", "id": "Asuransi", "it": "Assicurazione", "ja": "保険料", "ko": "보험료", "ms": "Insurans", "pl": "Ubezpieczenie", "pt": "Seguro", "ru": "Страхование", "es": "Seguro", "th": "ประกันภัย", "tr": "Sigorta", "vi": "Bảo hiểm"
+  },
+  "CAT_DEPOSIT": {
+    "ar": "وديعة", "bn": "আমানত", "zh": "押金", "nl": "Borg", "en": "Deposit", "fr": "Dépôt", "de": "Kaution", "hi": "जما", "id": "Setoran", "it": "Deposito", "ja": "保証金", "ko": "보증금", "ms": "Deposit", "pl": "Kaucja", "pt": "Depósito", "ru": "Депозит", "es": "Depósito", "th": "เงินมัดจำ", "tr": "Depozito", "vi": "Tiền đặt cọc"
+  },
+
+  "STATUS_PAID": {
+    "ar": "مدفوع", "bn": "পরিশোধিত", "zh": "已付", "nl": "Betaald", "en": "Paid", "fr": "Payé", "de": "Bezahlt", "hi": "भुगतान किया", "id": "Dibayar", "it": "Pagato", "ja": "完納", "ko": "완납", "ms": "Dibayar", "pl": "Opłacone", "pt": "Pago", "ru": "Оплачено", "es": "Pagado", "th": "ชำระแล้ว", "tr": "Ödendi", "vi": "Đã thanh toán"
+  },
+  "STATUS_WAITING": {
+    "ar": "انتظار", "bn": "অপেক্ষা করছে", "zh": "待收", "nl": "Wachten", "en": "Waiting", "fr": "En attente", "de": "Wartend", "hi": "प्रतीक्षा", "id": "Menunggu", "it": "In attesa", "ja": "入金待ち", "ko": "입금 대기", "ms": "Menunggu", "pl": "Oczekiwanie", "pt": "Aguardando", "ru": "Ожидание", "es": "Esperando", "th": "รอชำระ", "tr": "Bekliyor", "vi": "Chờ thanh toán"
+  },
+  "STATUS_OVERDUE": {
+    "ar": "متأخر", "bn": "বকেয়া", "zh": "逾期", "nl": "Over tijd", "en": "Overdue", "fr": "En retard", "de": "Überfällig", "hi": "विलंबित", "id": "Terlambat", "it": "In ritardo", "ja": "未納", "ko": "미납/연체", "ms": "Tunggakan", "pl": "Zaległe", "pt": "Atrasado", "ru": "Просрочено", "es": "Atrasado", "th": "ค้างชำระ", "tr": "Gecikmiş", "vi": "Quá hạn"
+  },
+  "LEASE_MONTHLY": {
+    "ar": "إيجار شهري", "bn": "মাসিক ভাড়া", "zh": "月租", "nl": "Maandelijks", "en": "Monthly", "fr": "Mensuel", "de": "Monatlich", "hi": "मासिक", "id": "Bulanan", "it": "Mensile", "ja": "月世", "ko": "월세", "ms": "Bulanan", "pl": "Miesięczny", "pt": "Mensal", "ru": "Ежемесячно", "es": "Mensual", "th": "รายเดือน", "tr": "Aylık", "vi": "Hàng tháng"
+  },
+  "LEASE_HALF_JEONSE": {
+    "ar": "إيجار جزئي", "bn": "অর্ধ-ভাড়া", "zh": "半传贳", "nl": "Half-Jeonse", "en": "Half-Jeonse", "fr": "Semi-Jeonse", "de": "Teil-Jeonse", "hi": "हाफ-जियोन्से", "id": "Setengah-Jeonse", "it": "Semi-Jeonse", "ja": "半伝贳", "ko": "반전세", "ms": "Separuh Jeonse", "pl": "Pół-Jeonse", "pt": "Meio-Jeonse", "ru": "Полу-Чонсе", "es": "Semi-Jeonse", "th": "กึ่งชอนเซ", "tr": "Yarım Jeonse", "vi": "Bán-Jeonse"
+  },
+
+  "SEARCH_HINT_DESC": {
+    "ar": "أدخل مصطلح البحث (مثلاً: إيجار، قهوة)", "bn": "অনুসন্ধান শব্দ লিখুন (যেমন: ভাড়া, কফি)", "zh": "输入搜索词（例如：房租、咖啡）", "nl": "Voer zoekterm in (bijv. Huur, Koffie)", "en": "Enter search term (e.g., Rent, Coffee)", "fr": "Entrez un terme de recherche (ex. Loyer, Café)", "de": "Suchbegriff eingeben (z. B. Miete, Kaffee)", "hi": "खोज शब्द दर्ज करें (जैसे: किराया, कॉफी)", "id": "Masukkan kata kunci pencarian (misal: Sewa, Kopi)", "it": "Inserisci termine di ricerca (es. Affitto, Caffè)", "ja": "検索ワードを入力してください (例: 家賃、コーヒー)", "ko": "검색어를 입력하세요 (예: 월세, 커피)", "ms": "Masukkan kata carian (cth: Sewa, Kopi)", "pl": "Wpisz wyszukiwane hasło (np. Czynsz, Kawa)", "pt": "Digite o termo de busca (ex: Aluguel, Café)", "ru": "Введите запрос (например: Аренда, Кофе)", "es": "Ingrese término de búsqueda (ej. Alquiler, Café)", "th": "ใส่คำค้นหา (เช่น ค่าเช่า, กาแฟ)", "tr": "Arama terimi girin (örn. Kira, Kahve)", "vi": "Nhập từ khóa tìm kiếm (vd: Tiền thuê, Cà phê)"
+  },
+  "SEARCH_NO_RESULTS": {
+    "ar": "لم يتم العثور على نتائج.", "bn": "কোন ফলাফল পাওয়া যায়নি।", "zh": "未找到搜索结果。", "nl": "Geen resultaten gevonden.", "en": "No search results found.", "fr": "Aucun résultat trouvé.", "de": "Keine Suchergebnisse gefunden.", "hi": "कोई खोज परिणाम नहीं मिला।", "id": "Hasil pencarian tidak ditemukan.", "it": "Nessun risultato trovato.", "ja": "検索結果がありません。", "ko": "검색 결과가 없습니다.", "ms": "Keputusan carian tidak dijumpai.", "pl": "Nie znaleziono wyników.", "pt": "Nenhum resultado encontrado.", "ru": "Результатов не найдено.", "es": "No se encontraron resultados.", "th": "ไม่พบผลลัพธ์การค้นหา", "tr": "Arama sonucu bulunamadı.", "vi": "Không tìm thấy kết quả tìm kiếm."
+  },
+
+  "STATS_TITLE": {
+    "ar": "تحليل النفقات", "bn": "ব্যয় বিশ্লেষণ", "zh": "支出分析", "nl": "Uitgavenanalyse", "en": "Expense Analysis", "fr": "Analyse des dépenses", "de": "Ausgabenanalyse", "hi": "व्यय विश्लेषण", "id": "Analisis Pengeluaran", "it": "Analisi delle spese", "ja": "支出分析", "ko": "지출 분석", "ms": "Analisis Perbelanjaan", "pl": "Analiza wydatków", "pt": "Análise de despesas", "ru": "Анализ расходов", "es": "Análisis de gastos", "th": "การวิเคราะห์รายจ่าย", "tr": "Gider Analizi", "vi": "Phân tích chi phí"
+  },
+  "STATS_EMPTY_MSG": {
+    "ar": "لا توجد نفقات.\nلقد وفرت المال! 🎉", "bn": "কোন ব্যয়ের রেকর্ড নেই।\nআপনি টাকা বাঁচিয়েছেন! 🎉", "zh": "没有支出记录。\n你省钱了！ 🎉", "nl": "Geen uitgaven.\nJe hebt geld bespaard! 🎉", "en": "No expense history.\nYou saved money! 🎉", "fr": "Aucune dépense.\nVous avez économisé de l'argent ! 🎉", "de": "Keine Ausgaben.\nSie haben Geld gespart! 🎉", "hi": "कोई व्यय इतिहास नहीं।\nआपने पैसे बचाए! 🎉", "id": "Tidak ada riwayat pengeluaran.\nAnda menghemat uang! 🎉", "it": "Nessuna spesa.\nHai risparmiato denaro! 🎉", "ja": "支出の内訳がありません。\n節約できましたね！ 🎉", "ko": "지출 내역이 없습니다.\n돈을 아끼셨군요! 🎉", "ms": "Tiada rekod perbelanjaan.\nAnda menjimatkan wang! 🎉", "pl": "Brak wydatków.\nZaoszczędziłes pieniądze! 🎉", "pt": "Sem histórico de despesas.\nVocê economizou dinheiro! 🎉", "ru": "Нет расходов.\nВы сэкономили деньги! 🎉", "es": "No hay gastos.\n¡Has ahorrado dinero! 🎉", "th": "ไม่มีประวัติรายจ่าย\nคุณประหยัดเงินได้เยี่ยม! 🎉", "tr": "Gider geçmişi yok.\nPara biriktirdiniz! 🎉", "vi": "Không có lịch sử chi phí.\nBạn đã tiết kiệm được tiền! 🎉"
+  },
+
+  "LEDGER_EMPTY_DESC": {
+    "ar": "لا توجد معاملات بعد.\nاضغط على + لإضافة واحدة!", "bn": "এখনও পর্যন্ত কোন লেনদেন নেই।\nযোগ করতে + এ ট্যাপ করুন!", "zh": "尚无交易。\n点击 + 添加一笔！", "nl": "Nog geen transacties.\nTik op + om er een toe te voegen!", "en": "No transactions yet.\nTap + to add one!", "fr": "Aucune transaction pour le moment.\nAppuyez sur + pour en ajouter une !", "de": "Noch keine Transaktionen.\nTippen Sie auf +, um eine hinzuzufügen!", "hi": "अभी तक कोई लेनदेन नहीं।\nजोड़ने के लिए + टै프 करें!", "id": "Belum ada transaksi.\nKetuk + untuk menambahkan!", "it": "Nessuna transazione ancora.\nTocca + per aggiungerne una!", "ja": "まだ内訳がありません。\n+を押して追加してください！", "ko": "내역이 없습니다.\n+ 버튼을 눌러 추가하세요!", "ms": "Belum ada transaksi.\nKetik + untuk menambah!", "pl": "Brak transakcji.\nDotknij +, aby dodać!", "pt": "Ainda não há transações.\nToque em + para adicionar uma!", "ru": "Транзакций пока нет.\nНажмите +, чтобы добавить!", "es": "Aún no hay transacciones.\n¡Toca + para añadir una!", "th": "ยังไม่มีรายการ\nแตะ + เพื่อเพิ่มรายการใหม่!", "tr": "Henüz işlem yok.\nBir tane eklemek için + simgesine dokunun!", "vi": "Chưa có giao dịch nào.\nNhấn + để thêm mới!"
+  },
+  "COMMON_DELETED_MSG": {
+    "ar": "تم الحذف بنجاح.", "bn": "সফলভাবে মুছে ফেলা হয়েছে।", "zh": "已成功删除。", "nl": "Met succes verwijderd.", "en": "Successfully deleted.", "fr": "Supprimé avec succès.", "de": "Erfolgreich gelöscht.", "hi": "सफलतापूर्वक हटाया गया।", "id": "Berhasil dihapus.", "it": "Eliminato con successo.", "ja": "削除されました。", "ko": "성공적으로 삭제되었습니다.", "ms": "Berjaya dipadam.", "pl": "Pomyślnie usunięto.", "pt": "Excluído com sucesso.", "ru": "Успешно удалено.", "es": "Eliminado con éxito.", "th": "ลบสำเร็จแล้ว", "tr": "Başarıyla silindi.", "vi": "Đã xóa thành công."
+  },
+
+  "NAV_CALENDAR": {
+    "ar": "عرض التقويم", "bn": "ক্যালেন্ডার ভিউ", "zh": "日历视图", "nl": "Kalenderweergave", "en": "Calendar View", "fr": "Vue Calendrier", "de": "Kalenderansicht", "hi": "कैलेंडर दृश्य", "id": "Tampilan Kalender", "it": "Vista calendario", "ja": "カレンダー表示", "ko": "달력 보기", "ms": "Paparan Kalender", "pl": "Widok kalendarza", "pt": "Vista de Calendário", "ru": "Просмотр календаря", "es": "Vista de calendario", "th": "มุมมองปฏิทิน", "tr": "Takvim Görünümü", "vi": "Xem lịch"
+  },
+
+  "COMMON_NEW_RECORD": {
+    "ar": "سجل جديد", "bn": "নতুন রেকর্ড", "zh": "新记录", "nl": "Nieuw record", "en": "New Record", "fr": "Nouvel enregistrement", "de": "Neuer Eintrag", "hi": "नया रिकॉर्ड", "id": "Rekaman Baru", "it": "Nuovo record", "ja": "新規登録", "ko": "내역 추가", "ms": "Rekod Baru", "pl": "Nowy rekord", "pt": "Novo registro", "ru": "Новая запись", "es": "Nuevo registro", "th": "บันทึกใหม่", "tr": "Yeni Kayıt", "vi": "Bản ghi mới"
+  },
+  "COMMON_EDIT_RECORD": {
+    "ar": "تعديل السجل", "bn": "রেকর্ড সম্পাদনা করুন", "zh": "编辑记录", "nl": "Record bewerken", "en": "Edit Record", "fr": "Modifier l'enregistrement", "de": "Eintrag bearbeiten", "hi": "रिकॉर्ड संपादित करें", "id": "Edit Rekaman", "it": "Modifica record", "ja": "内訳を編集", "ko": "내역 수정", "ms": "Edit Rekod", "pl": "Edytuj rekord", "pt": "Editar registro", "ru": "Изменить запись", "es": "Editar registro", "th": "แก้ไขบันทึก", "tr": "Kaydı Düzenle", "vi": "Sửa bản ghi"
+  },
+  "LEDGER_SELECT_CATEGORY": {
+    "ar": "اختر الفئة", "bn": "বিভাগ নির্বাচন করুন", "zh": "选择类别", "nl": "Selecteer categorie", "en": "Select Category", "fr": "Sélectionner la catégorie", "de": "Kategorie wählen", "hi": "श्रेणी चुनें", "id": "Pilih Kategori", "it": "Seleziona categoria", "ja": "カテゴリーを選択", "ko": "카테고리 선택", "ms": "Pilih Kategori", "pl": "Wybierz kategorię", "pt": "Selecionar categoria", "ru": "Выберите категорию", "es": "Seleccionar categoría", "th": "เลือกหมวดหมู่", "tr": "Kategori Seç", "vi": "Chọn danh mục"
+  },
+  "COMMON_CATEGORY": {
+    "ar": "الفئة", "bn": "বিভাগ", "zh": "类别", "nl": "Categorie", "en": "Category", "fr": "Catégorie", "de": "Kategorie", "hi": "श्रेणी", "id": "Kategori", "it": "Categoria", "ja": "カテゴリー", "ko": "카테고리", "ms": "Kategori", "pl": "Kategoria", "pt": "Categoria", "ru": "Категория", "es": "Categoría", "th": "หมวดหมู่", "tr": "Kategori", "vi": "Danh mục"
+  },
+  "COMMON_AMOUNT": {
+    "ar": "المبلغ", "bn": "পরিমাণ", "zh": "金额", "nl": "Bedrag", "en": "Amount", "fr": "Montant", "de": "Betrag", "hi": "राशि", "id": "Jumlah", "it": "Importo", "ja": "金額", "ko": "금액", "ms": "Jumlah", "pl": "Kwota", "pt": "Valor", "ru": "Сумма", "es": "Monto", "th": "จำนวนเงิน", "tr": "Miktar", "vi": "Số tiền"
+  },
+  "COMMON_MEMO_HINT": {
+    "ar": "مذكرة (اختياري)", "bn": "মেমো (ঐচ্ছিক)", "zh": "备注（可选）", "nl": "Memo (optioneel)", "en": "Memo (Optional)", "fr": "Mémo (Optionnel)", "de": "Notiz (optional)", "hi": "मेमो (वैकल्पिक)", "id": "Memo (Opsional)", "it": "Memo (Opzionale)", "ja": "メモ (任意)", "ko": "메모 (선택사항)", "ms": "Memo (Pilihan)", "pl": "Notatka (opcjonalnie)", "pt": "Memo (Opcional)", "ru": "Заметка (опционально)", "es": "Nota (opcional)", "th": "บันทึกช่วยจำ (ไม่บังคับ)", "tr": "Not (İsteğe bağlı)", "vi": "Ghi chú (Tùy chọn)"
+  },
+  "COMMON_RECEIPT_GALLERY": {
+    "ar": "معرض الإيصالات", "bn": "রসিদ গ্যালারি", "zh": "收据图库", "nl": "Bonnenoverzicht", "en": "Receipt Gallery", "fr": "Galerie des reçus", "de": "Beleggalerie", "hi": "रसीद गैलरी", "id": "Galeri Kuitansi", "it": "Galleria ricevute", "ja": "領収書ギャラリー", "ko": "영수증 갤러리", "ms": "Galeri Resit", "pl": "Galeria paragonów", "pt": "Galeria de recibos", "ru": "Галерея чеков", "es": "Galería de recibos", "th": "แกลเลอรีใบเสร็จ", "tr": "Makbuz Galerisi", "vi": "Thư viện hóa đơn"
+  },
+  "COMMON_ADD_PHOTO": {
+    "ar": "إضافة صورة", "bn": "ছবি যোগ করুন", "zh": "添加照片", "nl": "Foto toevoegen", "en": "Add Photo", "fr": "Ajouter photo", "de": "Foto hinzufügen", "hi": "फोटो जोड़ें", "id": "Tambah Foto", "it": "Aggiungi foto", "ja": "写真を追加", "ko": "사진 추가", "ms": "Tambah Foto", "pl": "Dodaj zdjęcie", "pt": "Adicionar foto", "ru": "Добавить фото", "es": "Añadir foto", "th": "เพิ่มรูปภาพ", "tr": "Fotoğraf Ekle", "vi": "Thêm ảnh"
+  },
+  "LEDGER_NO_RECEIPTS": {
+    "ar": "لا توجد إيصالات مرفقة", "bn": "কোন রসিদ সংযুক্ত নেই", "zh": "未附收据", "nl": "Geen bonnen bijgevoegd", "en": "No receipts attached", "fr": "Aucun reçu joint", "de": "Keine Belege angehängt", "hi": "कोई रसीद संलग्न नहीं", "id": "Tidak ada kuitansi terlampir", "it": "Nessuna ricevuta allegata", "ja": "領収書が添付されていません", "ko": "첨부된 영수증이 없습니다.", "ms": "Tiada resit dilampirkan", "pl": "Brak załączonych paragonów", "pt": "Nenhum recibo anexado", "ru": "Чеки не прикреплены", "es": "No hay recibos adjuntos", "th": "ไม่มีใบเสร็จแนบมาด้วย", "tr": "Makbuz eklenmemiş", "vi": "Không có hóa đơn đính kèm"
+  },
+  "COMMON_UPDATE_CHANGES": {
+    "ar": "تحديث التغييرات", "bn": "পরিবর্তন আপডেট করুন", "zh": "更新更改", "nl": "Wijzigingen bijwerken", "en": "Update Changes", "fr": "Mettre à jour", "de": "Änderungen speichern", "hi": "परिवर्तन अपडेट करें", "id": "Perbarui Perubahan", "it": "Aggiorna modifiche", "ja": "変更을 반영", "ko": "변경사항 저장", "ms": "Kemaskini Perubahan", "pl": "Zaktualizuj zmiany", "pt": "Atualizar alterações", "ru": "Обновить изменения", "es": "Actualizar cambios", "th": "อัปเดตการเปลี่ยนแปลง", "tr": "Değişiklikleri Güncelle", "vi": "Cập nhật thay đổi"
+  },
+  "COMMON_ADD_RECORD": {
+    "ar": "إضافة معاملة", "bn": "লেনদেন যোগ করুন", "zh": "添加交易", "nl": "Transactie toevoegen", "en": "Add Transaction", "fr": "Ajouter transaction", "de": "Eintrag hinzufügen", "hi": "लेनदेन जोड़ें", "id": "Tambah Transaksi", "it": "Aggiungi transazione", "ja": "内訳を追加", "ko": "내역 추가하기", "ms": "Tambah Transaksi", "pl": "Dodaj transakcję", "pt": "Adicionar transação", "ru": "Добавить транзакцию", "es": "Añadir transacción", "th": "เพิ่มรายการ", "tr": "İşlem Ekle", "vi": "Thêm giao dịch"
+  },
+  "ERROR_CHECK_AMOUNT_CATEGORY": {
+    "ar": "تحقق من المبلغ والفئة.", "bn": "পরিমাণ এবং বিভাগ পরীক্ষা করুন।", "zh": "请检查金额和类别。", "nl": "Controleer bedrag en categorie.", "en": "Check amount and category.", "fr": "Vérifiez le montant et la catégorie.", "de": "Betrag und Kategorie prüfen.", "hi": "राशि और श्रेणी की जाँच करें।", "id": "Periksa jumlah dan kategori.", "it": "Controlla importo e categoria.", "ja": "金額とカテゴリーを確認してください。", "ko": "금액과 카테고리를 확인하세요.", "ms": "Semak jumlah dan kategori.", "pl": "Sprawdź kwotę i kategorię.", "pt": "Verifique o valor e a categoria.", "ru": "Проверьте сумму и категорию.", "es": "Verifique el monto y la categoría.", "th": "ตรวจสอบจำนวนเงินและหมวดหมู่", "tr": "Miktarı ve kategoriyi kontrol edin.", "vi": "Kiểm tra số tiền và danh mục."
+  },
+  "ERROR_SAVE_FAILED": {
+    "ar": "فشل الحفظ", "bn": "সংরক্ষণ করতে ব্যর্থ হয়েছে", "zh": "保存失败", "nl": "Opslaan mislukt", "en": "Save failed", "fr": "Échec de l'enregistrement", "de": "Speichern fehlgeschlagen", "hi": "सहेजना विफल रहा", "id": "Gagal menyimpan", "it": "Salvataggio fallito", "ja": "保存に失敗しました", "ko": "저장에 실패했습니다", "ms": "Gagal menyimpan", "pl": "Błąd zapisu", "pt": "Falha ao salvar", "ru": "Ошибка сохранения", "es": "Error al guardar", "th": "บันทึกไม่สำเร็จ", "tr": "Kaydetme başarısız", "vi": "Lưu thất bại"
+  },
+  "DIALOG_DELETE_TRANSACTION_DESC": {
+    "ar": "هل تريد حذف هذا السجل؟", "bn": "এই রেকর্ড মুছে ফেলবেন?", "zh": "确定删除此记录吗？", "nl": "Dit record verwijderen?", "en": "Delete this record?", "fr": "Supprimer cet enregistrement ?", "de": "Diesen Eintrag löschen?", "hi": "यह रिकॉर्ड हटाएं?", "id": "Hapus rekaman ini?", "it": "Elimina questo record?", "ja": "この内訳を削除しますか？", "ko": "이 내역을 삭제하시겠습니까?", "ms": "Padam rekod ini?", "pl": "Usunąć ten rekord?", "pt": "Excluir este registro?", "ru": "Удалить эту запись?", "es": "¿Eliminar este registro?", "th": "ลบบันทึกนี้หรือไม่?", "tr": "Bu kaydı silmek istiyor musunuz?", "vi": "Xóa bản ghi này?"
+  },
+
+  "NAV_PROPERTIES": {
+    "ar": "العقارات", "bn": "প্রপার্টি", "zh": "房产", "nl": "Vastgoed", "en": "Properties", "fr": "Propriétés", "de": "Immobilien", "hi": "संपत्तियाँ", "id": "Properti", "it": "Proprietà", "ja": "物件", "ko": "건물 관리", "ms": "Hartanah", "pl": "Nieruchomości", "pt": "Propriedades", "ru": "Недвижимость", "es": "Propiedades", "th": "อสังหาริมทรัพย์", "tr": "Mülkler", "vi": "Bất động산"
+  },
+  "PROP_ADD_BUILDING": {
+    "ar": "إضافة مبنى", "bn": "বিল্ডিং যোগ করুন", "zh": "添加建筑", "nl": "Gebouw toevoegen", "en": "Add Building", "fr": "Ajouter bâtiment", "de": "Gebäude hinzufügen", "hi": "इमारत जोड़ें", "id": "Tambah Bangunan", "it": "Aggiungi edificio", "ja": "建物を追加", "ko": "건물 추가", "ms": "Tambah Bangunan", "pl": "Dodaj budynek", "pt": "Adicionar edifício", "ru": "Добавить здание", "es": "Añadir edificio", "th": "เพิ่มอาคาร", "tr": "Bina Ekle", "vi": "Thêm tòa nhà"
+  },
+  "PROP_NO_BUILDINGS_DESC": {
+    "ar": "لا توجد عقارات بعد.\nانقر فوق + لإضافة مبناك الأول.", "bn": "এখন도 কোনও প্রপার্টি নেই।\nআপনার প্রথম বিল্ডিং যোগ করতে + 에 আলতো চাপুন।", "zh": "尚无房产。\n点击 + 添加您的第一座建筑。", "nl": "Nog geen woningen.\nTik op + om je eerste gebouw toe te voegen.", "en": "No properties yet.\nTap + to add your first building.", "fr": "Aucune propriété pour le moment.\nAppuyez sur + pour ajouter votre premier bâtiment.", "de": "Noch keine Immobilien.\nTippen Sie auf +, um Ihr erstes Gebäude hinzuzufügen.", "hi": "अभी तक कोई संपत्ति नहीं है।\nअपनी पहली इमारत जोड़ने के लिए + टैप करें।", "id": "Belum ada properti.\nKetuk + untuk menambahkan bangunan pertama Anda.", "it": "Ancora nessuna proprietà.\nTocca + per aggiungere il tuo primo edificio.", "ja": "物件がありません。\n+をタップして最初の建物を追加してください。", "ko": "등록된 건물이 없습니다.\n+ 버튼을 눌러 건물을 추가하세요.", "ms": "Belum ada hartanah.\nKetik + untuk menambah bangunan pertama anda.", "pl": "Brak nieruchomości.\nDotknij +, aby dodać swój pierwszy budynek.", "pt": "Ainda não há propriedades.\nToque em + para adicionar seu primeiro edifício.", "ru": "Объектов еще нет.\nНажмите +, чтобы добавить свое первое здание.", "es": "Aún no hay propiedades.\nToca + para añadir tu primer edificio.", "th": "ยังไม่มีอสังหาริมทรัพย์\nแตะ + เพื่อเพิ่มอาคารหลังแรกของคุณ", "tr": "Henüz mülk yok.\nİlk binanızı eklemek için + simgesine dokunun.", "vi": "Chưa có bất động sản nào.\nNhấn + để thêm tòa nhà đầu tiên의 bạn."
+  },
+  "PROP_MY_BUILDINGS": {
+    "ar": "مبانيي", "bn": "আমার बिल्डिंग", "zh": "我的建筑", "nl": "Mijn gebouwen", "en": "My Buildings", "fr": "Mes bâtiments", "de": "Meine Gebäude", "hi": "मेरी इमारतें", "id": "Bangunan Saya", "it": "I miei edifici", "ja": "所有物件", "ko": "내 건물 현황", "ms": "Bangunan Saya", "pl": "Moje budynki", "pt": "Meus edifícios", "ru": "Мои здания", "es": "Mis edificios", "th": "อาคาร의ฉัน", "tr": "Binalarım", "vi": "Tòa nhà의 tôi"
+  },
+  "PROP_MONTHLY_COLLECTION": {
+    "ar": "التحصيل الشهري", "bn": "মাসিক সংগ্রহ", "zh": "每月收款", "nl": "Maandelijkse incasso", "en": "Monthly Collection", "fr": "Collecte mensuelle", "de": "Monatliche Einnahmen", "hi": "मासिक संग्रह", "id": "Penagihan Bulanan", "it": "Incasso mensile", "ja": "今月の回収", "ko": "이번 달 수납 현황", "ms": "Kutipan Bulanan", "pl": "Miesięczne wpływy", "pt": "Cobrança mensal", "ru": "Ежемесячный сбор", "es": "Recaudación mensual", "th": "การเก็บค่าเช่ารายเดือน", "tr": "Aylık Tahsilat", "vi": "Thu tiền hàng tháng"
+  },
+  "PROP_YIELD": {
+    "ar": "العائد", "bn": "ফলন", "zh": "收益率", "nl": "Rendement", "en": "Yield", "fr": "Rendement", "de": "Rendite", "hi": "उपज", "id": "Hasil", "it": "Rendimento", "ja": "利回り", "ko": "수익률", "ms": "Hasil", "pl": "Rentowność", "pt": "Rendimento", "ru": "Доходность", "es": "Rendimiento", "th": "ผลตอบแทน", "tr": "Getiri", "vi": "Tỷ suất lợi nhuận"
+  },
+  "PROP_TOTAL": {
+    "ar": "إجمالي", "bn": "মোট", "zh": "总计", "nl": "Totaal", "en": "Total", "fr": "Total", "de": "Gesamt", "hi": "कुल", "id": "Total", "it": "Totale", "ja": "合計", "ko": "총", "ms": "Jumlah", "pl": "Łącznie", "pt": "Total", "ru": "Всего", "es": "Total", "th": "ทั้งหมด", "tr": "Toplam", "vi": "Tổng số"
+  },
+  "PROP_NO_UNITS_DESC": {
+    "ar": "لم يتم إضافة وحدات بعد.\nانقر فوق + لإضافة غرف.", "bn": "এখনও কোনও ইউনিট যোগ করা হয়নি।\nর움 যোগ하기 위해 + 에 클릭하십시오.", "zh": "尚未添加单元。\n点击 + 添加房间。", "nl": "Nog geen eenheden toegevoegd.\nKlik op + om kamers toe te voegen.", "en": "No units added yet.\nClick + to add rooms.", "fr": "Aucune unité ajoutée.\nCliquez sur + pour ajouter des chambres.", "de": "Noch keine Einheiten hinzugefügt.\nKlicken Sie auf +, um Zimmer hinzuzufügen.", "hi": "अभी तक कोई यूनिट नहीं जोड़ी गई है।\nकमरे जोड़ने के 위해 + पर 클릭하십시오.", "id": "Belum ada unit.\nKlik + untuk menambahkan kamar.", "it": "Nessuna unità aggiunta.\nClicca + per aggiungere stanze.", "ja": "部屋が登録されていません。\n+をタップして部屋を追加してください。", "ko": "등록된 호실이 없습니다.\n+ 버튼을 눌러 호실을 추가하세요.", "ms": "Belum ada unit.\nKlik + untuk menambah bilik.", "pl": "Nie dodano jeszcze lokali.\nKliknij +, aby dodać pokoje.", "pt": "Ainda não há unidades.\nClique em + para adicionar quartos.", "ru": "Помещения еще не добавлены.\nНажмите +, чтобы добавить комнаты.", "es": "Aún no hay unidades.\nHaga clic en + para añadir habitaciones.", "th": "ยังไม่มีห้องพัก\nคลิก + เพื่อเพิ่มห้อง", "tr": "Henüz ünite eklenmedi.\nOda eklemek için + simgesine tıklayın.", "vi": "Chưa có phòng nào.\nNhấn + để thêm phòng."
+  },
+  "LEASE_MONTHLY_SHORT": {
+    "ar": "إيجار شهري", "bn": "মাসিক ভাড়া", "zh": "月租", "nl": "Maandhuur", "en": "Monthly", "fr": "Loyer mensuel", "de": "Monatsmiete", "hi": "मासिक किराया", "id": "Sewa Bulanan", "it": "Affitto mensile", "ja": "月極", "ko": "월세", "ms": "Sewa Bulanan", "pl": "Czynsz miesięczny", "pt": "Aluguel mensal", "ru": "Ежемесячно", "es": "Alquiler mensual", "th": "รายเดือน", "tr": "Aylık Kira", "vi": "Thuê theo tháng"
+  },
+
+  "LEASE_JEONSE_SHORT": {
+    "ar": "تأمين كامل", "bn": "সম্পূর্ণ আমানত", "zh": "全税", "nl": "Volledige borg", "en": "Deposit-based", "fr": "Bail avec caution", "de": "Vollkaution", "hi": "पूर्ण जमा", "id": "Sewa Deposit", "it": "Deposito cauzionale", "ja": "伝貰", "ko": "전세", "ms": "Sewa Deposit", "pl": "Wynajem za kaucją", "pt": "Aluguer com caução", "ru": "Залоговая аренда", "es": "Renta por depósito", "th": "เช่าแบบวางประกัน", "tr": "Depozitolu", "vi": "Thuê đặt cọc"
+  },
+
+  "LEASE_HALF_JEONSE_SHORT": {
+    "ar": "إيجار مع تأمين", "bn": "আমানতসহ ভাড়া", "zh": "半全税", "nl": "Huur met borg", "en": "Deposit + Rent", "fr": "Loyer avec caution", "de": "Miete mit Kaution", "hi": "जमा और किराया", "id": "Sewa + Deposit", "it": "Affitto con deposito", "ja": "半伝貰", "ko": "반전세", "ms": "Sewa + Deposit", "pl": "Czynsz z kaucją", "pt": "Renda com caução", "ru": "Аренда + Залог", "es": "Renta con depósito", "th": "ค่าเช่าบวกประกัน", "tr": "Kira + Depozito", "vi": "Thuê kèm cọc"
+  },
+  "PROP_QUICK_MENU": {
+    "ar": "القائمة السريعة", "bn": "কুইক মেনু", "zh": "快速菜单", "nl": "Snelmenu", "en": "Quick Menu", "fr": "Menu rapide", "de": "Quick-Menü", "hi": "त्वरित 메뉴", "id": "Menu Cepat", "it": "Menu rapido", "ja": "クイックメニュー", "ko": "퀵 메뉴", "ms": "Menu Pantas", "pl": "Szybkie menu", "pt": "Menu rápido", "ru": "Быстрое 메뉴", "es": "Menú rápido", "th": "เมนูย่อย", "tr": "Hızlı Menü", "vi": "Menu nhanh"
+  },
+  "PROP_CALL_TO": {
+    "ar": "اتصال بـ", "bn": "কল করুন:", "zh": "拨打给", "nl": "Bellen naar", "en": "Call to", "fr": "Appeler", "de": "Anrufen", "hi": "कॉल करें:", "id": "Telepon ke", "it": "Chiama", "ja": "電話를 거는", "ko": "전화 걸기", "ms": "Panggil", "pl": "Zadzwoń do", "pt": "Ligar para", "ru": "Позвонить", "es": "Llamar a", "th": "โทรออก", "tr": "Ara", "vi": "Gọi cho"
+  },
+  "PROP_SEND_SMS": {
+    "ar": "إرسال رسالة", "bn": "মেসেজ পাঠান", "zh": "发送短信", "nl": "SMS verzenden", "en": "Send SMS", "fr": "Envoyer SMS", "de": "SMS senden", "hi": "एसएमएस भेजें", "id": "Kirim SMS", "it": "Invia SMS", "ja": "メッセージを送る", "ko": "문자 메시지 보내기", "ms": "Hantar SMS", "pl": "Wyślij SMS", "pt": "Enviar SMS", "ru": "Отправить SMS", "es": "Enviar SMS", "th": "ส่งข้อความ", "tr": "SMS Gönder", "vi": "Gửi tin nhắn"
+  },
+  "PROP_SEND_REMIND_SMS": {
+    "ar": "إرسال إشعار المتأخرات", "bn": "বকেয়া 노티스 পাঠান", "zh": "发送逾期通知", "nl": "Herinnering verzenden", "en": "Send Overdue Notice", "fr": "Envoyer avis de retard", "de": "Mahnung senden", "hi": "बकाया सूचना भेजें", "id": "Kirim Peringatan Bayar", "it": "Invia avviso mora", "ja": "未納案内を送信", "ko": "미납 안내 문자 발송", "ms": "Hantar Notis Tunggakan", "pl": "Wyślij upomnienie", "pt": "Enviar aviso de atraso", "ru": "Напомнить об опла테", "es": "Enviar aviso de impago", "th": "ส่งแจ้งเตือนค้างชำระ", "tr": "Gecikme Bildirimi Gönder", "vi": "Gửi thông báo quá hạn"
+  },
+  "PROP_VIEW_DETAIL": {
+    "ar": "عرض التفاصيل", "bn": "বিস্তারিত দেখুন", "zh": "查看详情", "nl": "Details bekijken", "en": "View Details", "fr": "Voir détails", "de": "Details anzeigen", "hi": "विवरण देखें", "id": "Lihat Detail", "it": "Visualizza dettagli", "ja": "詳細を見る", "ko": "상세 정보 보기", "ms": "Lihat Butiran", "pl": "Zobacz szczegóły", "pt": "Ver detalhes", "ru": "Подробнее", "es": "Ver detalles", "th": "ดูรายละเอียด", "tr": "Detayları Gör", "vi": "Xem chi tiết"
+  },
+  "PROP_DELETE_UNIT": {
+    "ar": "حذف الوحدة", "bn": "ইউনিট মুছুন", "zh": "删除单元", "nl": "Eenheid verwijderen", "en": "Delete Unit", "fr": "Supprimer l'unité", "de": "Einheit löschen", "hi": "यूनิต हटाएं", "id": "Hapus Unit", "it": "Elimina unità", "ja": "部屋を削除", "ko": "호실 삭제", "ms": "Padam Unit", "pl": "Usuń lokal", "pt": "Excluir unidade", "ru": "Удалить помещение", "es": "Eliminar unidade", "th": "ลบห้อง", "tr": "Üniteyi Sil", "vi": "Xóa phòng"
+  },
+  "PROP_DELETE_UNIT_CONFIRM": {
+    "ar": "هل أنت متأكد أنك تريد حذف", "bn": "আপনি কি নিশ্চিত মুছতে চান", "zh": "您确定要删除吗", "nl": "Weet u zeker dat u wilt verwijderen", "en": "Are you sure you want to delete", "fr": "Êtes-vous sûr de vouloir supprimer", "de": "Sind Sie sicher, dass Sie löschen möchten", "hi": "क्या आप वाकई हटाना चाहते हैं", "id": "Apakah Anda yakin ingin menghapus", "it": "Sei sicuro di voler eliminare", "ja": "本当に削除しますか", "ko": "정말 삭제하시겠습니까?", "ms": "Adakah anda pasti mahu padam", "pl": "Czy na pewno chcesz usunąć", "pt": "Tem certeza que deseja excluir", "ru": "Вы уверены, что хотите удалить", "es": "¿Está seguro de que desea eliminar?", "th": "คุณแน่ใจหรือไม่ที่จะลบ", "tr": "Silmek istediğinizden emin misiniz", "vi": "Bạn có chắc muốn xóa"
+  },
+  "PROP_DELETE_BUILDING": {
+    "ar": "حذف المبنى", "bn": "বিল্ডিং মুছুন", "zh": "删除建筑", "nl": "Gebouw verwijderen", "en": "Delete Building", "fr": "Supprimer le bâtiment", "de": "Gebäude löschen", "hi": "इ마رت हटाएं", "id": "Hapus Bangunan", "it": "Elimina edificio", "ja": "建物を削除", "ko": "건물 삭제", "ms": "Padam Bangunan", "pl": "Usuń budynek", "pt": "Excluir edifício", "ru": "Удалить здание", "es": "Eliminar edifício", "th": "ลบอาคาร", "tr": "Binayı Sil", "vi": "Xóa tòa nhà"
+  },
+  "PROP_DELETE_BUILDING_CONFIRM": {
+    "ar": "سيتم حذف جميع الوحدات. حذف", "bn": "সমস্ত ইউনিট মুছে ফেলা হবে। মুছুন", "zh": "所有单元将被删除。删除", "nl": "Alle eenheden worden verwijderd. Verwijderen", "en": "All units will be deleted. Delete", "fr": "Toutes les unités seront supprimées. Supprimer", "de": "Alle Einheiten werden gelöscht. Löschen", "hi": "सभी इकाइयां हटा दी जाएंगी। हटाएं", "id": "Semua unit akan dihapus. Hapus", "it": "Tutte le unità saranno eliminate. Elimina", "ja": "建物と全ての部屋가 삭제됩니다. 삭제합니까", "ko": "건물과 모든 호실이 삭제됩니다. 정말 삭제하시겠습니까?", "ms": "Semua unit akan dipadamkan. Padam", "pl": "Wszystkie lokale zostaną usunięte. Usuń", "pt": "Todas as unidades serão excluídas. Excluir", "ru": "Все помещения будут удалены. Удалить", "es": "Se eliminarán todas las unidades. Eliminar", "th": "ห้องทั้งหมดจะถูกลบ ลบหรือไม่", "tr": "Tüm üniteler silinecek. Sil", "vi": "Tất cả các phòng sẽ bị xóa. Xóa"
+  },
+  "PROP_SMS_REMIND_TEMPLATE": {
+    "ar": "[إشعار الإيجار] مرحبًا {tenant}. نتواصل معك لأن إيجار {month} بمبلغ ({amount} 10k won) لم يتم تأكيده بعد. يرجى التحقق والتحويل. شكرًا لك. 😊", "bn": "[ভাড়া নোটিশ] হ্যালো {tenant}। আমরা আপনার সাথে যোগাযোগ করছি কারণ {month} মাসের ভাড়া ({amount} 10k won) এখনও নিশ্চিত করা হয়নি। অনুগ্রহ করে চেক করে জমা दिन। ধন্যবাদ। 😊", "zh": "[租金通知] 您好 {tenant}。由于尚未确认 {month} 月的租金（{amount} 万韩元），特此联系您。请确认并汇款。谢谢。 😊", "nl": "[Huurnotificatie] Hallo {tenant}. We nemen contact op omdat de huur voor {month} ({amount} 10k won) nog niet is bevestigd. Controleer dit en maak het over. Bedankt. 😊", "en": "[Rent Notice] Hello, {tenant}. We are contacting you because the rent for {month} ({amount} 10k won) has not been confirmed yet. Please check and transfer. Thank you. 😊", "fr": "[Avis de loyer] Bonjour {tenant}. Nous vous contactons car le loyer de {month} ({amount} 10k won) n'a pas encore été confirmé. Veuillez vérifier et effectuer le virement. Merci. 😊", "de": "[Mietbenachrichtigung] Hallo {tenant}. Wir kontaktieren Sie, da die Miete für {month} ({amount} 10k won) noch nicht bestätigt wurde. Bitte prüfen und überweisen. Vielen Dank. 😊", "hi": "[किराया सूचना] नमस्ते {tenant}। हम आपसे संपर्क कर रहे हैं क्योंकि {month} का किराया ({amount} 10k won) अभी तक पुष्ट नहीं हुआ है। कृपया जाँचें और स्थानांतरित करें। धन्यवाद। 😊", "id": "[Pemberitahuan Sewa] Halo {tenant}. Kami menghubungi Anda karena sewa untuk bulan {month} ({amount} 10rb Won) belum dikonfirmasi. Mohon diperiksa dan ditransfer. Terima kasih. 😊", "it": "[Avviso affitto] Ciao {tenant}. Ti contattiamo perché l'افitto di {month} ({amount} 10k won) non è stato ancora confermato. Ti preghiamo di verificare e procedere al bonifico. Grazie. 😊", "ja": "[賃料案内] こんにちは、{tenant}様。{month}月分の賃料({amount}万ウォン)가 아직 확인되지 않아 연락드렸습니다. 확인 후 입금 부탁드립니다. 감사합니다. 😊", "ko": "[임대료 안내] 안녕하세요, {tenant}님. {month}월분 임대료({amount}만원)가 아직 확인되지 않아 연락드립니다. 확인 후 입금 부탁드립니다. 항상 감사합니다. 😊", "ms": "[Notis Sewa] Helo {tenant}. Kami menghubungi anda kerana sewa untuk {month} ({amount} 10rb Won) belum disahkan lagi. Sila semak dan pindahkan. Terima kasih. 😊", "pl": "[Przypomnienie o czynszu] Witaj {tenant}. Kontaktujemy się, ponieważ czynsz za {month} ({amount} 10k won) nie został jeszcze potwierdzony. Prosimy o sprawdzenie i przelew. Dziękujemy. 😊", "pt": "[Aviso de Aluguel] Olá {tenant}. Estamos entrando em contato porque o aluguel de {month} ({amount} 10k won) ainda não foi confirmado. Por favor, verifique et transfira. Obrigado. 😊", "ru": "[Уведомление об аренде] Здравствуйте, {tenant}. Мы связываемся с вами, так как арендная плата за {month} ({amount} 10к вон) еще не подтверждена. Пожалуйста, проверьте и сделайте перевод. Спасибо. 😊", "es": "[Aviso de alquiler] Hola {tenant}. Nos ponemos en contacto con usted porque el alquiler de {month} ({amount} 10k won) aún no ha sido confirmado. Por favor, verifique y transfiera. Gracias. 😊", "th": "[แจ้งเตือนค่าเช่า] สวัสดีคุณ {tenant} เราขอติดต่อเนื่องจากยังไม่พบยอดชำระค่าเช่าเดือน {month} ({amount} หมื่นวอน) รบกวนตรวจสอบและโอนเงินด้วยครับ ขอบคุณครับ 😊", "tr": "[Kira Bildirimi] Merhaba {tenant}. {month} ayına ait kira ({amount} 10k won) henüz onaylanmadığı için sizinle iletişime geçiyoruz. Lütfen kontrol edip havale yapın. Teşekkürler. 😊", "vi": "[Thông báo tiền thuê] Xin chào {tenant}. Chúng tôi liên hệ với bạn vì tiền thuê tháng {month} ({amount} vạn Won) vẫn chưa được xác너 nhận. Vui lòng kiểm tra 및 chuyển khoản. Xin cảm ơn. 😊"
+  },
+
+  "FILTER_TITLE_UNPAID": {
+    "ar": "إدارة المتأخرات", "bn": "বকেয়া ব্যবস্থাপনা", "zh": "未付账单管理", "nl": "Beheer onbetaalde huur", "en": "Unpaid Management", "fr": "Gestion des impayés", "de": "Mietrückstandsverwaltung", "hi": "अवैतनिक प्रबंधन", "id": "Manajemen Belum Bayar", "it": "Gestione insoluti", "ja": "未納者管理", "ko": "전체 미납자 관리", "ms": "Pengurusan Tunggakan", "pl": "Zarządzanie zaległościami", "pt": "Gestão de Inadimplentes", "ru": "Управление задолженностью", "es": "Gestión de impagos", "th": "จัดการยอดค้างชำระ", "tr": "Ödenmemiş Yönetimi", "vi": "Quản lý nợ thuê"
+  },
+  "FILTER_TITLE_VACANT": {
+    "ar": "حالة الوحدات الشاغرة", "bn": "খালি ইউনিটের অবস্থা", "zh": "空置房源状态", "nl": "Leegstandoverzicht", "en": "Vacancy Status", "fr": "État des vacances", "de": "Leerstandstatus", "hi": "रिक्ति की स्थिति", "id": "Status Kosong", "it": "Stato unità vacanti", "ja": "空室状況一覧", "ko": "전체 공실 현황", "ms": "Status Kekosongan", "pl": "Status wolnych lokali", "pt": "Status de Vacância", "ru": "Статус свободных мест", "es": "Estado de vacantes", "th": "รายการห้องว่าง", "tr": "Boşluk Durumu", "vi": "Tình trạng phòng trống"
+  },
+  "FILTER_TITLE_EXPIRING": {
+    "ar": "عقود تنتهي قريباً", "bn": "চুক্তি শেষ হওয়ার কাছাকাছি", "zh": "租约即将到기", "nl": "Contracten lopen af", "en": "Contracts Expiring Soon", "fr": "Contrats expirant bientôt", "de": "Bald endende Verträge", "hi": "अनुबंध जल्द ही समाप्त हो रहे हैं", "id": "Kontrak Segera Berakhir", "it": "Contratti in scadenza", "ja": "契約満了間近", "ko": "계약 만기 임박", "ms": "Kontrak Tamat Tempoh", "pl": "Umowy wygasające", "pt": "Contratos a Vencer", "ru": "Истекающие договоры", "es": "Contratos por vencer", "th": "สัญญาใกล้หมดอายุ", "tr": "Bitecek Sözleşmeler", "vi": "Hợp đồng sắp hết hạn"
+  },
+  "FILTER_EMPTY_DESC": {
+    "ar": "لا توجد سجلات.", "bn": "কোন রেকর্ড নেই।", "zh": "没有记录。", "nl": "geen gegevens.", "en": "no records found.", "fr": "aucun enregistrement.", "de": "keine Einträge.", "hi": "कोई रिकॉर्ड नहीं है।", "id": "tidak ada catatan.", "it": "nessun record.", "ja": "내역이 없습니다.", "ko": "내역이 없습니다.", "ms": "tiada rekod.", "pl": "brak wpisów.", "pt": "nenhum registro.", "ru": "записей нет.", "es": "no hay registros.", "th": "ไม่มีรายการ", "tr": "kayıt bulunamadı.", "vi": "không có bản ghi nào."
+  },
+  "FILTER_VACANT_SUBTITLE": {
+    "ar": "في انتظار مستأجر", "bn": "ভাড়াটের জন্য অপেক্ষা করছে", "zh": "待租中", "nl": "Wachten op huurder", "en": "Waiting for tenant", "fr": "En attente de locataire", "de": "Wartet auf Mieter", "hi": "किरायेदार की प्रतीक्षा", "id": "Menunggu penyewa", "it": "In attesa di inquilino", "ja": "入居待機中", "ko": "입주 대기 중", "ms": "Menunggu penyewa", "pl": "Oczekiwanie na najemcę", "pt": "Aguardando inquilino", "ru": "Ожидание арендатора", "es": "Esperando inquilino", "th": "รอผู้เช่าเข้าพัก", "tr": "Kiracı bekleniyor", "vi": "Đang chờ người thuê"
+  },
+  "FILTER_UNPAID_AMOUNT": {
+    "ar": "المبلغ المتأخر", "bn": "বকেয়া পরিমাণ", "zh": "未付金额", "nl": "Onbetaald bedrag", "en": "Unpaid Amount", "fr": "Montant impayé", "de": "Fälliger Betrag", "hi": "अवैतनिक राशि", "id": "Jumlah Belum Bayar", "it": "Importo non pagato", "ja": "未納金額", "ko": "미납금액", "ms": "Jumlah Tunggakan", "pl": "Kwota zaległa", "pt": "Valor em aberto", "ru": "Сумма задолженности", "es": "Monto impagado", "th": "ยอดค้างชำระ", "tr": "Ödenmemiş Tutar", "vi": "Số tiền chưa trả"
+  },
+  "FILTER_EXPIRY_DATE": {
+    "ar": "تاريخ الانتهاء", "bn": "মেয়াদ শেষ হওয়ার তারিখ", "zh": "到期日", "nl": "Vervaldatum", "en": "Expiry Date", "fr": "Date d'expiration", "de": "Ablaufdatum", "hi": "समाप्ति तिथि", "id": "Tanggal Berakhir", "it": "Data di scadenza", "ja": "満了日", "ko": "만기일", "ms": "Tarikh Tamat", "pl": "Data wygaśnięcia", "pt": "Data de Vencimento", "ru": "Дата окончания", "es": "Fecha de vencimiento", "th": "วันหมดอายุ", "tr": "Bitiş Tarihi", "vi": "Ngày hết hạn"
+  },
+
+  "PROP_MEMO_PHOTO_TITLE": {
+    "ar": "الملاحظات والصور", "bn": "মেমো এবং ছবি", "zh": "备注与照片", "nl": "Notities & Foto's", "en": "Notes & Photos", "fr": "Notes et photos", "de": "Notizen & Fotos", "hi": "नोट्स और तस्वीरें", "id": "Catatan & Foto", "it": "Note e foto", "ja": "メモと写真", "ko": "메모 및 사진", "ms": "Nota & Foto", "pl": "Notatki i zdjęcia", "pt": "Notas e Fotos", "ru": "Заметки и фото", "es": "Notas y fotos", "th": "บันทึกและรูปภาพ", "tr": "Notlar ve Fotoğraflar", "vi": "Ghi chú & Ảnh"
+  },
+  "PROP_ADMIN_MEMO": {
+    "ar": "مذكرة الإدارة", "bn": "অ্যাডমিন মেমো", "zh": "管理备注", "nl": "Beheerdersnotitie", "en": "Admin Memo", "fr": "Mémo admin", "de": "Verwaltungsnotiz", "hi": "एडमिन मेमो", "id": "Memo Admin", "it": "Promemoria amministratore", "ja": "管理メモ", "ko": "관리 메모", "ms": "Memo Admin", "pl": "Notatka administratora", "pt": "Memo de administração", "ru": "Заметка администратора", "es": "Nota del administrador", "th": "บันทึกการดูแล", "tr": "Yönetici Notu", "vi": "Ghi chú quản lý"
+  },
+  "PROP_NO_MEMO": {
+    "ar": "لا توجد ملاحظات.", "bn": "কোন মেমো নেই।", "zh": "没有备注。", "nl": "Geen notities.", "en": "No memos entered.", "fr": "Aucun mémo.", "de": "Keine Notizen.", "hi": "कोई मेमो नहीं।", "id": "Tidak ada memo.", "it": "Nessun promemoria.", "ja": "メモはありません。", "ko": "입력된 메모가 없습니다.", "ms": "Tiada memo.", "pl": "Brak notatek.", "pt": "Sem memorandos.", "ru": "Заметок нет.", "es": "No hay notas.", "th": "ไม่มีบันทึก", "tr": "Not yok.", "vi": "Không có ghi chú."
+  },
+  "PROP_ROOM_GALLERY": {
+    "ar": "معرض الغرف", "bn": "রুম গ্যালারি", "zh": "房间相册", "nl": "Kamergalerij", "en": "Room Gallery", "fr": "Galerie de la chambre", "de": "Zimmergalerie", "hi": "रूम गैलरी", "id": "Galeri Kamar", "it": "Galleria stanza", "ja": "部屋のギャラリー", "ko": "호실 사진 갤러리", "ms": "Galeri Bilik", "pl": "Galeria pokoi", "pt": "Galeria do Quarto", "ru": "Галерея помещений", "es": "Galería de habitaciones", "th": "แกลเลอรีห้อง", "tr": "Oda Galerisi", "vi": "Thư viện ảnh phòng"
+  },
+  "PROP_NO_TENANT": {
+    "ar": "لا يوجد مستأجر", "bn": "কোন ভাড়াটে নেই", "zh": "无租客", "nl": "Geen huurder", "en": "No tenant", "fr": "Aucun locataire", "de": "Kein Mieter", "hi": "कोई किरायेदार नहीं", "id": "Tidak ada penyewa", "it": "Nessun inquilino", "ja": "入居者なし", "ko": "입주자 없음", "ms": "Tiada penyewa", "pl": "Brak najemcy", "pt": "Sem inquilino", "ru": "Нет арендатора", "es": "Sin inquilino", "th": "ไม่มีผู้เช่า", "tr": "Kiracı yok", "vi": "Không có người thuê"
+  },
+  "PROP_NO_CONTRACT_INFO": {
+    "ar": "لا توجد معلومات عقد.", "bn": "চুক্তির তথ্য নেই।", "zh": "无合同信息。", "nl": "Geen contractinformatie.", "en": "No contract info.", "fr": "Aucune info de contrat.", "de": "Keine Vertragsinfo.", "hi": "कोई अनुबंध जानकारी नहीं।", "id": "Tidak ada info kontrak.", "it": "Nessuna info contratto.", "ja": "契約情報なし", "ko": "현재 등록된 계약 정보가 없습니다.", "ms": "Tiada info kontrak.", "pl": "Brak informacji o umowie.", "pt": "Sem informações de contrato.", "ru": "Нет информации о договоре.", "es": "Sin info de contrato.", "th": "ไม่มีข้อมูลสัญญา", "tr": "Sözleşme bilgisi yok.", "vi": "Không có thông tin hợp đồng."
+  },
+  "PROP_CONTRACT_DETAIL_TITLE": {
+    "ar": "تفاصيل العقد", "bn": "চুক্তির বিবরণ", "zh": "合同详情", "nl": "Contractdetails", "en": "Contract Details", "fr": "Détails du contrat", "de": "Vertragsdetails", "hi": "अनुबंध विवरण", "id": "Detail Kontrak", "it": "Dettagli contratto", "ja": "契約詳細", "ko": "계약 상세 내역", "ms": "Butiran Kontrak", "pl": "Szczegóły umowy", "pt": "Detalhes do Contrato", "ru": "Детали договора", "es": "Detalles del contrato", "th": "รายละเอียดสัญญา", "tr": "Sözleşme Detayları", "vi": "Chi tiết hợp đồng"
+  },
+  "PROP_CONTRACT_PERIOD": {
+    "ar": "فترة العقد", "bn": "চুক্তির সময়কাল", "zh": "合同期限", "nl": "Contractperiode", "en": "Contract Period", "fr": "Période de contrat", "de": "Vertragszeitraum", "hi": "अनुबंध की अवधि", "id": "Periode Kontrak", "it": "Periodo contratto", "ja": "契約期間", "ko": "계약 기간", "ms": "Tempoh Kontrak", "pl": "Okres obowiązywania umowy", "pt": "Período do Contrato", "ru": "Срок договора", "es": "Periodo de contrato", "th": "ระยะเวลาสัญญา", "tr": "Sözleşme Süresi", "vi": "Thời hạn hợp đồng"
+  },
+  "PROP_PAYMENT_DAY_LABEL": {
+    "ar": "يوم الدفع", "bn": "পেমেন্ট দিন", "zh": "缴费日", "nl": "Betaaldag", "en": "Payment Day", "fr": "Jour de paiement", "de": "Zahltag", "hi": "भुगतान का दिन", "id": "Hari Pembayaran", "it": "Giorno di pagamento", "ja": "支払日", "ko": "월세 납입일", "ms": "Hari Bayaran", "pl": "Dzień płatności", "pt": "Dia do Pagamento", "ru": "День оплаты", "es": "Día de pago", "th": "วันครบกำหนดชำระ", "tr": "Ödeme Günü", "vi": "Ngày thanh toán"
+  },
+  "PROP_EVERY_MONTH": {
+    "ar": "كل شهر", "bn": "প্রতি মাসে", "zh": "每月", "nl": "Elke maand", "en": "Every month", "fr": "Chaque mois", "de": "Jeden Monat", "hi": "हर महीने", "id": "Setiap bulan", "it": "Ogni mese", "ja": "毎月", "ko": "매월", "ms": "Setiap bulan", "pl": "Co miesiąc", "pt": "Todo mês", "ru": "Каждый месяц", "es": "Cada mes", "th": "ทุกเดือน", "tr": "Her ay", "vi": "Hàng tháng"
+  },
+  "PROP_DAY_UNIT": {
+    "ar": "يوم", "bn": "তারিখ", "zh": "日", "nl": "dag", "en": "th", "fr": "e", "de": ".", "hi": "तारीख", "id": "", "it": "°", "ja": "日", "ko": "일", "ms": "", "pl": ".", "pt": "º", "ru": "-е", "es": "º", "th": "", "tr": ".", "vi": ""
+  },
+  "PROP_PAYMENT_STATUS": {
+    "ar": "حالة الدفع", "bn": "পেমেন্ট অবস্থা", "zh": "收缴状态", "nl": "Betaalstatus", "en": "Payment Status", "fr": "État du paiement", "de": "Zahlungsstatus", "hi": "भुगतान की स्थिति", "id": "Status Pembayaran", "it": "Stato pagamento", "ja": "収容状況", "ko": "수납 현황", "ms": "Status Bayaran", "pl": "Status płatności", "pt": "Status de Pagamento", "ru": "Статус оплаты", "es": "Estado de pago", "th": "สถานะการรับเงิน", "tr": "Ödeme Durumu", "vi": "Tình trạng thu tiền"
+  },
+  "PROP_MONTHLY_RENT_THIS_MONTH": {
+    "ar": "إيجار هذا الشهر", "bn": "এই মাসের ভাড়া", "zh": "本月租金", "nl": "Huur deze maand", "en": "This month's rent", "fr": "Loyer du mois", "de": "Miete diesen Monat", "hi": "इस महीने का किराया", "id": "Sewa bulan ini", "it": "Affitto mese", "ja": "今月の賃料", "ko": "이번 달 임대료", "ms": "Sewa bulan ini", "pl": "Czynsz w tym miesiącu", "pt": "Aluguel deste mês", "ru": "Аренда за месяц", "es": "Alquiler de este mes", "th": "ค่าเช่าเดือนนี้", "tr": "Bu ayın kirası", "vi": "Tiền thuê tháng này"
+  },
+  "PROP_ALREADY_RECORDED_MSG": {
+    "ar": "تم تسجيل الدفع بالفعل.", "bn": "পেমেন্ট ইতিমধ্যে রেকর্ড করা হয়েছে।", "zh": "已记录该月款项。", "nl": "Betaling is al geregistreerd.", "en": "Payment already recorded.", "fr": "Paiement déjà enregistré.", "de": "Zahlung bereits erfasst.", "hi": "भुगतान पहले ही दर्ज हो चुका है।", "id": "Pembayaran sudah dicatat.", "it": "Pagamento già registrato.", "ja": "すでに収容記録があります。", "ko": "이미 수납 처리가 완료되었습니다.", "ms": "Bayaran telah direkodkan.", "pl": "Płatność została już zapisana.", "pt": "Pagamento já registrado.", "ru": "Оплата уже записана.", "es": "Pago ya registrado.", "th": "บันทึกยอดเงินเรียบร้อยแล้ว", "tr": "Ödeme zaten kaydedildi.", "vi": "Đã ghi nhận thanh toán."
+  },
+  "PROP_NO_PHOTO_DESC": {
+    "ar": "لا توجد صور. انقر للإضافة.", "bn": "কোন ছবি নেই। যোগ করতে আলতো চাপুন।", "zh": "没有照片。点击添加。", "nl": "Geen foto's. Tik om toe te voegen.", "en": "No photos. Tap to add.", "fr": "Pas de photos. Appuyez pour ajouter.", "de": "Keine Fotos. Tippen zum Hinzufügen.", "hi": "कोई फोटो नहीं। जोड़ने के लिए टैप करें।", "id": "Tidak ada foto. Ketuk untuk tambah.", "it": "Nessuna foto. Tocca per aggiungere.", "ja": "写真はありません。タップして追加", "ko": "사진이 없습니다. 탭하여 추가하세요.", "ms": "Tiada foto. Ketik untuk tambah.", "pl": "Brak zdjęć. Dotknij, aby dodać.", "pt": "Sem fotos. Toque para adicionar.", "ru": "Нет фото. Нажмите, чтобы добавить.", "es": "No hay fotos. Toca para añadir.", "th": "ไม่มีรูปภาพ แตะเพื่อเพิ่ม", "tr": "Fotoğraf yok. Eklemek için dokunun.", "vi": "Chưa có ảnh. Nhấn để thêm."
+  },
+  "PROP_EDIT_INFO_TITLE": {
+    "ar": "تعديل المعلومات", "bn": "তথ্য সম্পাদনা করুন", "zh": "修改信息", "nl": "Informatie bewerken", "en": "Edit Information", "fr": "Modifier les infos", "de": "Info bearbeiten", "hi": "जानकारी संपादित करें", "id": "Edit Informasi", "it": "Modifica informazioni", "ja": "情報の編集", "ko": "호실 및 계약 정보 수정", "ms": "Edit Maklumat", "pl": "Edytuj informacje", "pt": "Editar Informações", "ru": "Изменить информацию", "es": "Editar información", "th": "แก้ไขข้อมูล", "tr": "Bilgileri Düzenle", "vi": "Sửa thông tin"
+  },
+  "PROP_ROOM_NUMBER_LABEL": {
+    "ar": "رقم الوحدة", "bn": "ইউনিট নম্বর", "zh": "房间号", "nl": "Unitnummer", "en": "Unit Number", "fr": "Numéro d'unité", "de": "Einheitsnummer", "hi": "यूनिट नंबर", "id": "Nomor Unit", "it": "Numero unità", "ja": "号室", "ko": "호수", "ms": "Nombor Unit", "pl": "Numer lokalu", "pt": "Número da Unid.", "ru": "Номер пом.", "es": "Número de unidad", "th": "เลขห้อง", "tr": "Ünite Numarası", "vi": "Số phòng"
+  },
+  "PROP_LEASE_TYPE_LABEL": {
+    "ar": "نوع الإيجار", "bn": "ভাড়ার ধরন", "zh": "租赁类型", "nl": "Lease type", "en": "Lease Type", "fr": "Type de bail", "de": "Mietart", "hi": "पट्टे का प्रकार", "id": "Jenis Sewa", "it": "Tipo di contratto", "ja": "契約種別", "ko": "계약 유형", "ms": "Jenis Pajakan", "pl": "Typ umowy", "pt": "Tipo de Aluguel", "ru": "Тип договора", "es": "Tipo de contrato", "th": "ประเภทสัญญา", "tr": "Kira Türü", "vi": "Loại hợp đồng"
+  },
+  "PROP_TENANT_NAME_LABEL": {
+    "ar": "اسم المستأجر", "bn": "ভাড়াটের নাম", "zh": "租客姓名", "nl": "Naam huurder", "en": "Tenant Name", "fr": "Nom du locataire", "de": "Mietername", "hi": "किरायेदार का नाम", "id": "Nama Penyewa", "it": "Nome inquilino", "ja": "入居者名", "ko": "세입자 성함", "ms": "Nama Penyewa", "pl": "Nazwisko najemcy", "pt": "Nome do Inquilino", "ru": "Имя арендатора", "es": "Nombre del inquilino", "th": "ชื่อผู้เช่า", "tr": "Kiracı Adı", "vi": "Tên người thuê"
+  },
+  "PROP_PHONE_LABEL": {
+    "ar": "رقم الهاتف", "bn": "ফোন নম্বর", "zh": "手机号", "nl": "Telefoon", "en": "Phone Number", "fr": "Téléphone", "de": "Telefonnummer", "hi": "फोन नंबर", "id": "Nomor Telepon", "it": "Telefono", "ja": "電話番号", "ko": "연락처", "ms": "Nombor Telefon", "pl": "Numer telefonu", "pt": "Telefone", "ru": "Телефон", "es": "Teléfono", "th": "เบอร์โทรศัพท์", "tr": "Telefon", "vi": "Số điện thoại"
+  },
+  "PROP_START_DATE": {
+    "ar": "تاريخ البدء", "bn": "শুরুর তারিখ", "zh": "开始日期", "nl": "Startdatum", "en": "Start Date", "fr": "Date de début", "de": "Startdatum", "hi": "शुरू होने की तारीख", "id": "Tanggal Mulai", "it": "Data inizio", "ja": "開始日", "ko": "시작일", "ms": "Tarikh Mula", "pl": "Data rozpoczęcia", "pt": "Data de Início", "ru": "Дата начала", "es": "Fecha de inicio", "th": "วันที่เริ่ม", "tr": "Başlangıç Tarihi", "vi": "Ngày bắt đầu"
+  },
+  "PROP_END_DATE": {
+    "ar": "تاريخ الانتهاء", "bn": "শেষের তারিখ", "zh": "结束日期", "nl": "Einddatum", "en": "End Date", "fr": "Date de fin", "de": "Enddatum", "hi": "समाप्ति तिथि", "id": "Tanggal Selesai", "it": "Data fine", "ja": "終了日", "ko": "종료일", "ms": "Tarikh Tamat", "pl": "Data zakończenia", "pt": "Data de Término", "ru": "Дата окончания", "es": "Fecha de fin", "th": "วันที่สิ้นสุด", "tr": "Bitiş Tarihi", "vi": "Ngày kết thúc"
+  },
+  "PROP_DELETE_CONFIRM_DESC": {
+    "ar": "هل أنت متأكد؟ سيتم حذف جميع الصور أيضًا.", "bn": "আপনি কি নিশ্চিত? সমস্ত ছবিও মুছে ফেলা হবে।", "zh": "确定吗？所有照片也将被删除。", "nl": "Weet u het zeker? Alle foto's worden ook verwijderd.", "en": "Are you sure? All photos will also be deleted.", "fr": "Êtes-vous sûr ? Toutes les photos seront supprimées.", "de": "Sind Sie sicher? Alle Fotos werden ebenfalls gelöscht.", "hi": "क्या आप वाकई? सभी तस्वीरें भी हटा दी जाएंगी।", "id": "Apakah Anda yakin? Semua foto juga akan dihapus.", "it": "Sei sicuro? Anche tutte le foto verranno eliminate.", "ja": "本当に削除しますか？写真もすべて削除されます。", "ko": "정말로 삭제하시겠습니까? 관련 사진 데이터도 모두 삭제됩니다.", "ms": "Adakah anda pasti? Semua foto juga akan dipadamkan.", "pl": "Czy na pewno? Wszystkie zdjęcia zostaną usunięte.", "pt": "Tem certeza? Todas as fotos também serão excluídas.", "ru": "Вы уверены? Все фото также будут удалены.", "es": "¿Está seguro? Todas las fotos se eliminarán.", "th": "คุณแน่ใจหรือไม่? รูปภาพทั้งหมดจะถูกลบด้วย", "tr": "Emin misiniz? Tüm fotoğraflar da silinecektir.", "vi": "Bạn có chắc không? Tất cả ảnh cũng sẽ bị xóa."
+  },
+
+  "PROP_MEMO_PHOTO_TITLE": {
+    "ar": "الملاحظات والصور", "bn": "মেমো এবং ছবি", "zh": "备注与照片", "nl": "Notities & Foto's", "en": "Notes & Photos", "fr": "Notes et photos", "de": "Notizen & Fotos", "hi": "नोट्स और तस्वीरें", "id": "Catatan & Foto", "it": "Note e foto", "ja": "メモと写真", "ko": "메모 및 사진", "ms": "Nota & Foto", "pl": "Notatki i zdjęcia", "pt": "Notas e Fotos", "ru": "Заметки и фото", "es": "Notas y fotos", "th": "บันทึกและรูปภาพ", "tr": "Notlar ve Fotoğraflar", "vi": "Ghi chú & Ảnh"
+  },
+  "PROP_ADMIN_MEMO": {
+    "ar": "مذكرة الإدارة", "bn": "অ্যাডমিন মেমো", "zh": "管理备注", "nl": "Beheerdersnotitie", "en": "Admin Memo", "fr": "Mémo admin", "de": "Verwaltungsnotiz", "hi": "एडमिन मेमो", "id": "Memo Admin", "it": "Promemoria amministratore", "ja": "管理メモ", "ko": "관리 메모", "ms": "Memo Admin", "pl": "Notatka administratora", "pt": "Memo de administração", "ru": "Заметка администратора", "es": "Nota del administrador", "th": "บันทึกการดูแล", "tr": "Yönetici Notu", "vi": "Ghi chú quản lý"
+  },
+  "PROP_NO_MEMO": {
+    "ar": "لا توجد ملاحظات.", "bn": "কোন মেমো নেই।", "zh": "没有备注。", "nl": "Geen notities.", "en": "No memos entered.", "fr": "Aucun mémo.", "de": "Keine Notizen.", "hi": "कोई मेमो नहीं।", "id": "Tidak ada memo.", "it": "Nessun promemoria.", "ja": "メモはありません。", "ko": "입력된 메모가 없습니다.", "ms": "Tiada memo.", "pl": "Brak notatek.", "pt": "Sem memorandos.", "ru": "Заметок нет.", "es": "No hay notas.", "th": "ไม่มีบันทึก", "tr": "Not yok.", "vi": "Không có ghi chú."
+  },
+  "PROP_ROOM_GALLERY": {
+    "ar": "معرض الغرف", "bn": "রুম গ্যালারি", "zh": "房间相册", "nl": "Kamergalerij", "en": "Room Gallery", "fr": "Galerie de la chambre", "de": "Zimmergalerie", "hi": "룸 गैलरी", "id": "Galeri Kamar", "it": "Galleria stanza", "ja": "部屋のギャラリー", "ko": "호실 사진 갤러리", "ms": "Galeri Bilik", "pl": "Galeria pokoi", "pt": "Galeria do Quarto", "ru": "Галерея помещений", "es": "Galería de habitaciones", "th": "แกลเลอรีห้อง", "tr": "Oda Galerisi", "vi": "Thư viện ảnh phòng"
+  },
+  "PROP_NO_TENANT": {
+    "ar": "لا يوجد مستأجر", "bn": "কোন ভাড়াটে নেই", "zh": "无租客", "nl": "Geen huurder", "en": "No tenant", "fr": "Aucun locataire", "de": "Kein Mieter", "hi": "कोई किरायेदार नहीं", "id": "Tidak ada penyewa", "it": "Nessun inquilino", "ja": "入居者なし", "ko": "입주자 없음", "ms": "Tiada penyewa", "pl": "Brak najemcy", "pt": "Sem inquilino", "ru": "Нет арендатора", "es": "Sin inquilino", "th": "ไม่มีผู้เช่า", "tr": "Kiracı yok", "vi": "Không có người thuê"
+  },
+  "PROP_NO_CONTRACT_INFO": {
+    "ar": "لا توجد معلومات عقد.", "bn": "চুক্তির তথ্য নেই।", "zh": "无合同信息。", "nl": "Geen contractinformatie.", "en": "No contract info.", "fr": "Aucune info de contrat.", "de": "Keine Vertragsinfo.", "hi": "कोई अनुबंध जानकारी नहीं।", "id": "Tidak ada info kontrak.", "it": "Nessuna info contratto.", "ja": "契約情報なし", "ko": "현재 등록된 계약 정보가 없습니다.", "ms": "Tiada info kontrak.", "pl": "Brak informacji o umowie.", "pt": "Sem informações de contrato.", "ru": "Нет информации о договоре.", "es": "Sin info de contrato.", "th": "ไม่มีข้อมูลสัญญา", "tr": "Sözleşme bilgisi yok.", "vi": "Không có thông tin hợp đồng."
+  },
+  "PROP_CONTRACT_DETAIL_TITLE": {
+    "ar": "تفاصيل العقد", "bn": "চুক্তির বিবরণ", "zh": "合同详情", "nl": "Contractdetails", "en": "Contract Details", "fr": "Détails du contrat", "de": "Vertragsdetails", "hi": "अनुबंध विवरण", "id": "Detail Kontrak", "it": "Dettagli contratto", "ja": "契約詳細", "ko": "계약 상세 내역", "ms": "Butiran Kontrak", "pl": "Szczegóły umowy", "pt": "Detalhes do Contrato", "ru": "Детали договора", "es": "Detalles del contrato", "th": "รายละเอียดสัญญา", "tr": "Sözleşme Detayları", "vi": "Chi tiết hợp đồng"
+  },
+  "PROP_CONTRACT_PERIOD": {
+    "ar": "فترة العقد", "bn": "চুক্তির সময়কাল", "zh": "合同期限", "nl": "Contractperiode", "en": "Contract Period", "fr": "Période de contrat", "de": "Vertragszeitraum", "hi": "अनुबंध की अवधि", "id": "Periode Kontrak", "it": "Periodo contratto", "ja": "契約期間", "ko": "계약 기간", "ms": "Tempoh Kontrak", "pl": "Okres obowiązywania umowy", "pt": "Período do Contrato", "ru": "Срок договора", "es": "Periodo de contrato", "th": "ระยะเวลาสัญญา", "tr": "Sözleşme Süresi", "vi": "Thời hạn hợp đồng"
+  },
+  "PROP_PAYMENT_DAY_LABEL": {
+    "ar": "يوم الدفع", "bn": "পেমেন্ট দিন", "zh": "缴费日", "nl": "Betaaldag", "en": "Payment Day", "fr": "Jour de paiement", "de": "Zahltag", "hi": "भुगतान का दिन", "id": "Hari Pembayaran", "it": "Giorno di pagamento", "ja": "支払日", "ko": "월세 납입일", "ms": "Hari Bayaran", "pl": "Dzień płatności", "pt": "Dia do Pagamento", "ru": "День оплаты", "es": "Día de pago", "th": "วันครบกำหนดชำระ", "tr": "Ödeme Günü", "vi": "Ngày thanh toán"
+  },
+  "PROP_EVERY_MONTH": {
+    "ar": "كل شهر", "bn": "प्रति মাসে", "zh": "每月", "nl": "Elke maand", "en": "Every month", "fr": "Chaque mois", "de": "Jeden Monat", "hi": "हर महीने", "id": "Setiap bulan", "it": "Ogni mese", "ja": "毎月", "ko": "매월", "ms": "Setiap bulan", "pl": "Co miesiąc", "pt": "Todo mês", "ru": "Каждый месяц", "es": "Cada mes", "th": "ทุกเดือน", "tr": "Her ay", "vi": "Hàng tháng"
+  },
+  "PROP_DAY_UNIT": {
+    "ar": "يوم", "bn": "তারিখ", "zh": "日", "nl": "dag", "en": "th", "fr": "e", "de": ".", "hi": "तारीख", "id": "", "it": "°", "ja": "日", "ko": "일", "ms": "", "pl": ".", "pt": "º", "ru": "-е", "es": "º", "th": "", "tr": ".", "vi": ""
+  },
+  "PROP_PAYMENT_STATUS": {
+    "ar": "حالة الدفع", "bn": "পেমেন্ট অবস্থা", "zh": "收缴状态", "nl": "Betaalstatus", "en": "Payment Status", "fr": "État du paiement", "de": "Zahlungsstatus", "hi": "भुगतान की स्थिति", "id": "Status Pembayaran", "it": "Stato pagamento", "ja": "収容状況", "ko": "수납 현황", "ms": "Status Bayaran", "pl": "Status płatności", "pt": "Status de Pagamento", "ru": "Статус оплаты", "es": "Estado de pago", "th": "สถานะการรับเงิน", "tr": "Ödeme Durumu", "vi": "Tình trạng thu tiền"
+  },
+  "PROP_MONTHLY_RENT_THIS_MONTH": {
+    "ar": "إيجار هذا الشهر", "bn": "এই মাসের ভাড়া", "zh": "本月租金", "nl": "Huur deze maand", "en": "This month's rent", "fr": "Loyer du mois", "de": "Miete diesen Monat", "hi": "इस महीने का किराया", "id": "Sewa bulan ini", "it": "Affitto mese", "ja": "今月の賃料", "ko": "이번 달 임대료", "ms": "Sewa bulan ini", "pl": "Czynsz w tym miesiącu", "pt": "Aluguel deste mês", "ru": "Аренда за месяц", "es": "Alquiler de este mes", "th": "ค่าเช่าเดือนนี้", "tr": "Bu ayın kirası", "vi": "Tiền thuê tháng này"
+  },
+  "PROP_ALREADY_RECORDED_MSG": {
+    "ar": "تم تسجيل الدفع بالفعل.", "bn": "পেমেন্ট ইতিমধ্যে রেকর্ড করা হয়েছে।", "zh": "已记录该月款항。", "nl": "Betaling is al geregistreerd.", "en": "Payment already recorded.", "fr": "Paiement déjà enregistré.", "de": "Zahlung bereits erfasst.", "hi": "भुगतान पहले ही दर्ज हो चुका है।", "id": "Pembayaran sudah dicatat.", "it": "Pagamento già registrato.", "ja": "すでに収容記録があります。", "ko": "이미 수납 처리가 완료되었습니다.", "ms": "Bayaran telah direkodkan.", "pl": "Płatność została już zapisana.", "pt": "Pagamento já registrado.", "ru": "Оплата уже записана.", "es": "Pago ya registrado.", "th": "บันทึกยอดเงินเรียบร้อยแล้ว", "tr": "Ödeme zaten kaydedildi.", "vi": "Đã ghi nhận thanh toán."
+  },
+  "PROP_NO_PHOTO_DESC": {
+    "ar": "لا توجد صور. انقر للإضافة.", "bn": "কোন ছবি নেই। যোগ করতে আলতো চাপুন।", "zh": "没有照片。点击添加。", "nl": "Geen foto's. Tik om toe te voegen.", "en": "No photos. Tap to add.", "fr": "Pas de photos. Appuyez pour ajouter.", "de": "Keine Fotos. Tippen zum Hinzufügen.", "hi": "कोई फोटो नहीं। जोड़ने के लिए टैप करें।", "id": "Tidak ada foto. Ketuk untuk tambah.", "it": "Nessuna foto. Tocca per aggiungere.", "ja": "写真はありません。タップして追加", "ko": "사진이 없습니다. 탭하여 추가하세요.", "ms": "Tiada foto. Ketik untuk tambah.", "pl": "Brak zdjęć. Dotknij, aby dodać.", "pt": "Sem fotos. Toque para adicionar.", "ru": "Нет фото. Нажмите, чтобы добавить.", "es": "No hay fotos. Toca para añadir.", "th": "ไม่มีรูปภาพ แตะเพื่อเพิ่ม", "tr": "Fotoğraf yok. Eklemek için dokunun.", "vi": "Chưa có ảnh. Nhấn để thêm."
+  },
+  "PROP_EDIT_INFO_TITLE": {
+    "ar": "تعديل المعلومات", "bn": "তথ্য সম্পাদনা করুন", "zh": "修改信息", "nl": "Informatie bewerken", "en": "Edit Information", "fr": "Modifier les infos", "de": "Info bearbeiten", "hi": "जानकारी संपादित करें", "id": "Edit Informasi", "it": "Modifica informazioni", "ja": "情報の編集", "ko": "호실 및 계약 정보 수정", "ms": "Edit Maklumat", "pl": "Edytuj informacje", "pt": "Editar Informações", "ru": "Изменить информацию", "es": "Editar información", "th": "แก้ไขข้อมูล", "tr": "Bilgileri Düzenle", "vi": "Sửa thông tin"
+  },
+  "PROP_LEASE_TYPE_LABEL": {
+    "ar": "نوع الإيجار", "bn": "ভাড়ার ধরন", "zh": "租赁类型", "nl": "Lease type", "en": "Lease Type", "fr": "Type de bail", "de": "Mietart", "hi": "पट्टे का प्रकार", "id": "Jenis Sewa", "it": "Tipo di contratto", "ja": "契約種別", "ko": "계약 유형", "ms": "Jenis Pajakan", "pl": "Typ umowy", "pt": "Tipo de Aluguel", "ru": "Тип договора", "es": "Tipo de contrato", "th": "ประเภทสัญญา", "tr": "Kira Türü", "vi": "Loại hợp đồng"
+  },
+  "PROP_TENANT_NAME_LABEL": {
+    "ar": "اسم المستأجر", "bn": "ভাড়াটের নাম", "zh": "租客姓名", "nl": "Naam huurder", "en": "Tenant Name", "fr": "Nom du locataire", "de": "Mietername", "hi": "किरायेदार का नाम", "id": "Nama Penyewa", "it": "Nome inquilino", "ja": "入居者名", "ko": "세입자 성함", "ms": "Nama Penyewa", "pl": "Nazwisko najemcy", "pt": "Nome do Inquilino", "ru": "Имя арендатора", "es": "Nombre del inquilino", "th": "ชื่อผู้เช่า", "tr": "Kiracı Adı", "vi": "Tên người thuê"
+  },
+  "PROP_PHONE_LABEL": {
+    "ar": "رقم الهاتف", "bn": "ফোন নম্বর", "zh": "手机号", "nl": "Telefoon", "en": "Phone Number", "fr": "Téléphone", "de": "Telefonnummer", "hi": "फोन नंबर", "id": "Nomor Telepon", "it": "Telefono", "ja": "電話番号", "ko": "연락처", "ms": "Nombor Telefon", "pl": "Numer telefonu", "pt": "Telefone", "ru": "Телефон", "es": "Teléfono", "th": "เบอร์โทรศัพท์", "tr": "Telefon", "vi": "Số điện thoại"
+  },
+  "PROP_START_DATE": {
+    "ar": "تاريخ البدء", "bn": "শুরুর তারিখ", "zh": "开始日期", "nl": "Startdatum", "en": "Start Date", "fr": "Date de début", "de": "Startdatum", "hi": "शुरू होने की तारीख", "id": "Tanggal Mulai", "it": "Data inizio", "ja": "開始日", "ko": "시작일", "ms": "Tarikh Mula", "pl": "Data rozpoczęcia", "pt": "Data de Início", "ru": "Дата начала", "es": "Fecha de inicio", "th": "วันที่เริ่ม", "tr": "Başlangıç Tarihi", "vi": "Ngày bắt đầu"
+  },
+  "PROP_END_DATE": {
+    "ar": "تاريخ الانتهاء", "bn": "শেষের তারিখ", "zh": "结束日期", "nl": "Einddatum", "en": "End Date", "fr": "Date de fin", "de": "Enddatum", "hi": "समाप्ति तिथि", "id": "Tanggal Selesai", "it": "Data fine", "ja": "終了日", "ko": "종료일", "ms": "Tarikh Tamat", "pl": "Data zakończenia", "pt": "Data de Término", "ru": "Дата окончания", "es": "Fecha de fin", "th": "วันที่สิ้นสุด", "tr": "Bitiş Tarihi", "vi": "Ngày kết thúc"
+  },
+  "PROP_DELETE_CONFIRM_DESC": {
+    "ar": "هل أنت متأكد؟ سيتم حذف جميع الصور أيضًا.", "bn": "আপনি কি নিশ্চিত? সমস্ত ছবি도 মুছে ফেলা হবে।", "zh": "确定吗？所有照片也将被删除。", "nl": "Weet u het zeker? Alle foto's worden ook verwijderd.", "en": "Are you sure? All photos will also be deleted.", "fr": "Êtes-vous sûr ? Toutes les photos seront supprimées.", "de": "Sind Sie sicher? Alle Fotos werden ebenfalls gelöscht.", "hi": "क्या आप वाकई? सभी तस्वीरें भी हटा दी जाएंगी।", "id": "Apakah Anda yakin? Semua foto juga akan dihapus.", "it": "Sei sicuro? Anche tutte le foto verranno eliminate.", "ja": "本当に削除しますか？写真もすべて削除されます。", "ko": "정말로 삭제하시겠습니까? 관련 사진 데이터도 모두 삭제됩니다.", "ms": "Adakah anda pasti? Semua foto juga akan dipadamkan.", "pl": "Czy na pewno? Wszystkie zdjęcia zostaną usunięte.", "pt": "Tem certeza? Todas as fotos também serão excluídas.", "ru": "Вы уверены? Все фото также будут удалены.", "es": "¿Está seguro? Todas las fotos se eliminarán.", "th": "คุณแน่ใจหรือไม่? รูปภาพทั้งหมดจะถูกลบด้วย", "tr": "Emin misiniz? Tüm fotoğraflar da silinecektir.", "vi": "Bạn có chắc không? Tất cả ảnh cũng sẽ bị xóa."
+  },
+  "FILTER_TITLE_UNPAID": {
+    "ar": "إدارة المتأخرات", "bn": "বকেয়া ব্যবস্থাপনা", "zh": "未付账单管理", "nl": "Beheer onbetaalde huur", "en": "Unpaid Management", "fr": "Gestion des impayés", "de": "Mietrückstandsverwaltung", "hi": "अवैतनिक प्रबंधन", "id": "Manajemen Belum Bayar", "it": "Gestione insoluti", "ja": "未納者管理", "ko": "전체 미납자 관리", "ms": "Pengurusan Tunggakan", "pl": "Zarządzanie zaległościami", "pt": "Gestão de Inadimplentes", "ru": "Управление задолженностью", "es": "Gestión de impagos", "th": "จัดการยอดค้างชำระ", "tr": "Ödenmemiş Yönetimi", "vi": "Quản lý nợ thuê"
+  },
+  "FILTER_TITLE_VACANT": {
+    "ar": "حالة الوحدات الشاغرة", "bn": "খালি ইউনিটের অবস্থা", "zh": "空置房源状态", "nl": "Leegstandoverzicht", "en": "Vacancy Status", "fr": "État des vacances", "de": "Leerstandstatus", "hi": "रिक्ति की स्थिति", "id": "Status Kosong", "it": "Stato unità vacanti", "ja": "空室状況一覧", "ko": "전체 공실 현황", "ms": "Status Kekosongan", "pl": "Status wolnych lokali", "pt": "Status de Vacância", "ru": "Статус свободных мест", "es": "Estado de vacantes", "th": "รายการห้องว่าง", "tr": "Boşluk Durumu", "vi": "Tình trạng phòng trống"
+  },
+  "FILTER_TITLE_EXPIRING": {
+    "ar": "عقود تنتهي قريباً", "bn": "চুক্তি শেষ হওয়ার কাছাকাছি", "zh": "租约即将到기", "nl": "Contracten lopen af", "en": "Contracts Expiring Soon", "fr": "Contrats expirant bientôt", "de": "Bald endende Verträge", "hi": "अनुबंध जल्द ही समाप्त हो रहे हैं", "id": "Kontrak Segera Berakhir", "it": "Contratti in scadenza", "ja": "契約満了間近", "ko": "계약 만기 임박", "ms": "Kontrak Tamat Tempoh", "pl": "Umowy wygasające", "pt": "Contratos a Vencer", "ru": "Истекающие договоры", "es": "Contratos por vencer", "th": "สัญญาใกล้หมดอายุ", "tr": "Bitecek Sözleşmeler", "vi": "Hợp đồng sắp hết hạn"
+  },
+  "FILTER_EMPTY_DESC": {
+    "ar": "لا توجد سجلات.", "bn": "কোন রেকর্ড নেই।", "zh": "没有记录。", "nl": "geen gegevens.", "en": "no records found.", "fr": "aucun enregistrement.", "de": "keine Einträge.", "hi": "कोई रिकॉर्ड नहीं है।", "id": "tidak ada catatan.", "it": "nessun record.", "ja": "내역이 없습니다.", "ko": "내역이 없습니다.", "ms": "tiada rekod.", "pl": "brak wpisów.", "pt": "nenhum registro.", "ru": "записей нет.", "es": "no hay registros.", "th": "ไม่มีรายการ", "tr": "kayıt bulunamadı.", "vi": "không có bản ghi nào."
+  },
+  "FILTER_VACANT_SUBTITLE": {
+    "ar": "في انتظار مستأجر", "bn": "ভাড়াটের জন্য অপেক্ষা করছে", "zh": "待租中", "nl": "Wachten op huurder", "en": "Waiting for tenant", "fr": "En attente de locataire", "de": "Wartet auf Mieter", "hi": "किरायेदार की प्रतीक्षा", "id": "Menunggu penyewa", "it": "In attesa di inquilino", "ja": "入居待機中", "ko": "입주 대기 중", "ms": "Menunggu penyewa", "pl": "Oczekiwanie na najemcę", "pt": "Aguardando inquilino", "ru": "Ожидание арендатора", "es": "Esperando inquilino", "th": "รอผู้เช่าเข้าพัก", "tr": "Kiracı bekleniyor", "vi": "Đang chờ người thuê"
+  },
+  "FILTER_UNPAID_AMOUNT": {
+    "ar": "المبلغ المتأخر", "bn": "বকে야 পরিমাণ", "zh": "未付金额", "nl": "Onbetaald bedrag", "en": "Unpaid Amount", "fr": "Montant impayé", "de": "Fälliger Betrag", "hi": "अवैतनिक राशि", "id": "Jumlah Belum Bayar", "it": "Importo non pagato", "ja": "未納金額", "ko": "미납금액", "ms": "Jumlah Tunggakan", "pl": "Kwota zaległa", "pt": "Valor em aberto", "ru": "Сумما задолженности", "es": "Monto impagado", "th": "ยอดค้างชำระ", "tr": "Ödenmemiş Tutar", "vi": "Số tiền chưa trả"
+  },
+  "FILTER_EXPIRY_DATE": {
+    "ar": "تاريخ الانتهاء", "bn": "মেয়াদ শেষ হওয়ার তারিখ", "zh": "到期日", "nl": "Vervaldatum", "en": "Expiry Date", "fr": "Date d'expiration", "de": "Ablaufdatum", "hi": "समाप्ति तिथि", "id": "Tanggal Berakhir", "it": "Data di scadenza", "ja": "満了日", "ko": "만기일", "ms": "Tarikh Tamat", "pl": "Data wygaśnięcia", "pt": "Data de Vencimento", "ru": "Дата окончания", "es": "Fecha de vencimiento", "th": "วันหมดอายุ", "tr": "Bitiş Tarihi", "vi": "Ngày hết hạn"
+  },
+
+  "PROP_EDIT_BUILDING": {
+    "ar": "تعديل المبنى", "bn": "বিল্ডিং সম্পাদনা করুন", "zh": "编辑建筑物", "nl": "Gebouw bewerken", "en": "Edit Building", "fr": "Modifier le bâtiment", "de": "Gebäude bearbeiten", "hi": "इमारत संपादित करें", "id": "Edit Bangunan", "it": "Modifica edificio", "ja": "建物の編集", "ko": "건물 정보 수정", "ms": "Edit Bangunan", "pl": "Edytuj budynek", "pt": "Editar Edifício", "ru": "Изменить здание", "es": "Editar edificio", "th": "แก้ไขอาคาร", "tr": "Binayı Düzenle", "vi": "Sửa tòa nhà"
+  },
+  "PROP_PHOTO_HINT": {
+    "ar": "الصور (انقر لتعيين الأساسية)", "bn": "ফটো (প্রধান ফটো সেট করতে ট্যাপ করুন)", "zh": "照片（点击设置为主图）", "nl": "Foto's (Tik om als hoofdfoto in te stellen)", "en": "Photos (Tap to set Primary)", "fr": "Photos (Appuyez pour définir comme principale)", "de": "Fotos (Tippen, um Hauptbild festzulegen)", "hi": "तस्वीरें (मुख्य सेट करने के लिए टैप करें)", "id": "Foto (Ketuk untuk menyetel Utama)", "it": "Foto (Tocca per impostare come principale)", "ja": "写真 (タップでメイン写真に設定)", "ko": "사진 (클릭하여 대표 사진 설정)", "ms": "Gambar (Ketik untuk tetapkan Utama)", "pl": "Zdjęcia (Dotknij, aby ustawić główne)", "pt": "Fotos (Toque para definir como principal)", "ru": "Фото (Нажмите, чтобы сделать главным)", "es": "Fotos (Toca para establecer como principal)", "th": "รูปภาพ (แตะเพื่อตั้งเป็นรูปหลัก)", "tr": "Fotoğraflar (Ana resim yapmak için dokunun)", "vi": "Ảnh (Nhấn để đặt làm ảnh đại diện)"
+  },
+  "PROP_NAME_LABEL": {
+    "ar": "اسم المبنى", "bn": "বিল্ডিংয়ের নাম", "zh": "建筑物名称", "nl": "Gebouwnaam", "en": "Building Name", "fr": "Nom du bâtiment", "de": "Gebäudename", "hi": "इमारत का नाम", "id": "Nama Bangunan", "it": "Nome edificio", "ja": "建物名", "ko": "건물 이름", "ms": "Nama Bangunan", "pl": "Nazwa budynku", "pt": "Nome do Edifício", "ru": "Название здания", "es": "Nombre del edificio", "th": "ชื่ออาคาร", "tr": "Bina Adı", "vi": "Tên tòa nhà"
+  },
+  "PROP_ADDRESS_LABEL": {
+    "ar": "العنوان", "bn": "ঠিকানা", "zh": "地址", "nl": "Adres", "en": "Address", "fr": "Adresse", "de": "Adresse", "hi": "पता", "id": "Alamat", "it": "Indirizzo", "ja": "住所", "ko": "주소", "ms": "Alamat", "pl": "Adres", "pt": "Endereço", "ru": "Адрес", "es": "Dirección", "th": "ที่อยู่", "tr": "Adres", "vi": "Địa chỉ"
+  },
+  "PROP_PRICE_LABEL": {
+    "ar": "سعر الشراء", "bn": "ক্রয় মূল্য", "zh": "买入价", "nl": "Aankoopprijs", "en": "Purchase Price", "fr": "Prix d'achat", "de": "Kaufpreis", "hi": "खरीद मूल्य", "id": "Harga Beli", "it": "Prezzo d'acquisto", "ja": "購入価格", "ko": "매입가", "ms": "Harga Belian", "pl": "Cena zakupu", "pt": "Preço de Compra", "ru": "Цена покупки", "es": "Precio de compra", "th": "ราคาที่ซื้อมา", "tr": "Satın Alma Fiyatı", "vi": "Giá mua"
+  },
+  "PROP_PRICE_HINT": {
+    "ar": "أدخل المبلغ", "bn": "পরিমাণ লিখুন", "zh": "输入金额", "nl": "Voer bedrag in", "en": "Enter amount", "fr": "Entrez le montant", "de": "Betrag eingeben", "hi": "राशि दर्ज करें", "id": "Masukkan jumlah", "it": "Inserisci importo", "ja": "金額を入力", "ko": "금액을 입력하세요", "ms": "Masukkan jumlah", "pl": "Wpisz kwotę", "pt": "Digite o valor", "ru": "Введите сумму", "es": "Ingresa el monto", "th": "ใส่จำนวนเงิน", "tr": "Miktarı girin", "vi": "Nhập số tiền"
+  },
+
+  "NAV_REPORTS": {
+    "ar": "التقارير", "bn": "রিপোর্ট", "zh": "报告", "nl": "Rapporten", "en": "Reports", "fr": "Rapports", "de": "Berichte", "hi": "रिपोर्ट", "id": "Laporan", "it": "Rapporti", "ja": "レポート", "ko": "보고서", "ms": "Laporan", "pl": "Raporty", "pt": "Relatórios", "ru": "Отчеты", "es": "Informes", "th": "รายงาน", "tr": "Raporlar", "vi": "Báo cáo"
+  },
+  "REPORT_SEC_FINANCIAL": {
+    "ar": "التحليلات المالية", "bn": "আর্থিক विश्लेषण", "zh": "财务分析", "nl": "Financiële analyse", "en": "Financial Analytics", "fr": "Analyses financières", "de": "Finanzanalyse", "hi": "वित्तीय विश्लेषण", "id": "Analisis Keuangan", "it": "Analisi finanziaria", "ja": "財務分析", "ko": "재무 분석", "ms": "Analisis Kewangan", "pl": "Analityka finansowa", "pt": "Análise Financeira", "ru": "Финансовая аналитика", "es": "Análisis financiero", "th": "การวิเคราะห์การเงิน", "tr": "Finansal Analiz", "vi": "Phân tích tài chính"
+  },
+  "REPORT_MONTHLY_TREND_TITLE": {
+    "ar": "الاتجاه الشهري (6 أشهر)", "bn": "মাসিক প্রবণতা (6 মাস)", "zh": "月度趋势（6个月）", "nl": "Maandelijkse trend", "en": "Monthly Trend (6 Months)", "fr": "Tendance mensuelle", "de": "Monatstrend", "hi": "मासिक रुझान", "id": "Tren Bulanan", "it": "Andamento mensile", "ja": "月間推移 (6ヶ月)", "ko": "최근 6개월 수익/지출 추이", "ms": "Trend Bulanan", "pl": "Trend miesięczny", "pt": "Tendência Mensal", "ru": "Месячный тренд", "es": "Tendencia mensual", "th": "แนวโน้มรายเดือน", "tr": "Aylık Trend", "vi": "Xu hướng hàng tháng"
+  },
+  "REPORT_ANNUAL_EXPENSE_TITLE": {
+    "ar": "النفقات السنوية", "bn": "বার্ষিক ব্যয়", "zh": "年度支出", "nl": "Jaarlijkse uitgaven", "en": "Annual Expenses", "fr": "Dépenses annuelles", "de": "Jährliche Ausgaben", "hi": "वार्षिक व्यय", "id": "Pengeluaran Tahunan", "it": "Spese annuali", "ja": "年間支出", "ko": "연간 지출 항목 비중", "ms": "Perbelanjaan Tahunan", "pl": "Roczne wydatki", "pt": "Despesas Anuais", "ru": "Годовые расходы", "es": "Gastos anuales", "th": "รายจ่ายประจำปี", "tr": "Yıllık Giderler", "vi": "Chi phí hàng năm"
+  },
+  "REPORT_SEC_TAX": {
+    "ar": "إدارة البيانات الضريبية", "bn": "ট্যাক্স ডেটা ব্যবস্থাপনা", "zh": "税务数据管理", "nl": "Belastingbeheer", "en": "Tax Data Management", "fr": "Gestion fiscale", "de": "Steuerdatenverwaltung", "hi": "कर डेटा प्रबंधन", "id": "Manajemen Pajak", "it": "Gestione fiscale", "ja": "税務データ管理", "ko": "세무 자료 관리", "ms": "Pengurusan Cukai", "pl": "Zarządzanie podatkami", "pt": "Gestão de Dados Fiscais", "ru": "Налоговые данные", "es": "Gestión de datos fiscales", "th": "จัดการข้อมูลภาษี", "tr": "Vergi Veri Yönetimi", "vi": "Quản lý dữ liệu thuế"
+  },
+  "REPORT_TAX_PERIOD": {
+    "ar": "الفترة", "bn": "সময়কাল", "zh": "期间", "nl": "Periode", "en": "Period", "fr": "Période", "de": "Zeitraum", "hi": "अवधि", "id": "Periode", "it": "Periodo", "ja": "期間", "ko": "조회 기간", "ms": "Tempoh", "pl": "Okres", "pt": "Período", "ru": "Период", "es": "Periodo", "th": "ระยะเวลา", "tr": "Dönem", "vi": "Giai đoạn"
+  },
+  "REPORT_SEC_UNPAID": {
+    "ar": "إدارة المبالغ غير المدفوعة", "bn": "বকেয়া ব্যবস্থাপনা", "zh": "欠款管理", "nl": "Beheer onbetaalde huur", "en": "Unpaid Management", "fr": "Gestion des impayés", "de": "Mietrückstandsverwaltung", "hi": "अवैतनिक प्रबंधन", "id": "Manajemen Belum Bayar", "it": "Gestione insoluti", "ja": "未納관리", "ko": "미납 관리", "ms": "Pengurusan Tunggakan", "pl": "Zarządzanie zaległościami", "pt": "Gestão de Inadimplentes", "ru": "Управление задолженностью", "es": "Gestión de impagos", "th": "จัดการยอดค้างชำระ", "tr": "Ödenmemiş Yönetimi", "vi": "Quản lý nợ thuê"
+  },
+  "REPORT_UNPAID_ALL_COLLECTED": {
+    "ar": "تم تحصيل جميع الإيجارات! 🎉", "bn": "সব ভাড়া সংগ্রহ করা হয়েছে! 🎉", "zh": "所有租金已收齐！ 🎉", "nl": "Huur geïnd! 🎉", "en": "All rent is collected! 🎉", "fr": "Loyers perçus ! 🎉", "de": "Alle Mieten bezahlt! 🎉", "hi": "सारा किराया वसूल! 🎉", "id": "Semua sewa tertagih! 🎉", "it": "Affitti riscossi! 🎉", "ja": "すべての賃料が回収されました！ 🎉", "ko": "모든 임대료가 수납되었습니다! 🎉", "ms": "Semua sewa dikutip! 🎉", "pl": "Czynsz opłacony! 🎉", "pt": "Aluguel recebido! 🎉", "ru": "Аренда собрана! 🎉", "es": "¡Todo cobrado! 🎉", "th": "เก็บค่าเช่าครบแล้ว! 🎉", "tr": "Tüm kiralar toplandı! 🎉", "vi": "Đã thu đủ tiền thuê! 🎉"
+  },
+  "REPORT_BTN_TAX_EXCEL": {
+    "ar": "إكسل الضرائب", "bn": "ট্যাক্স এক্সেল", "zh": "税务 Excel", "nl": "Belasting Excel", "en": "Tax Excel", "fr": "Excel fiscal", "de": "Steuer Excel", "hi": "টैक्स एक्सेल", "id": "Excel Pajak", "it": "Excel fiscale", "ja": "税務用Excel", "ko": "세무용 엑셀 추출", "ms": "Excel Cukai", "pl": "Podatki Excel", "pt": "Excel Fiscal", "ru": "Налоговый Excel", "es": "Excel fiscal", "th": "เอ็กเซลภาษี", "tr": "Vergi Excel", "vi": "Excel thuế"
+  },
+  "REPORT_BTN_UNPAID_EXCEL": {
+    "ar": "إكسل غير المدفوع", "bn": "বকেয়া 정보", "zh": "未付明细 Excel", "nl": "Onbetaald Excel", "en": "Unpaid Excel", "fr": "Excel impayés", "de": "Unbezahlt Excel", "hi": "अवैतनिक एक्सेल", "id": "Excel Belum Bayar", "it": "Excel insoluti", "ja": "未納용Excel", "ko": "미납 명단 엑셀", "ms": "Excel Tunggakan", "pl": "Nieopłacone Excel", "pt": "Excel Inadimplentes", "ru": "Excel по долгам", "es": "Excel impagos", "th": "เอ็กเซลยอดค้าง", "tr": "Ödenmemiş Excel", "vi": "Excel nợ thuê"
+  },
+  "REPORT_BTN_UNPAID_IMAGE": {
+    "ar": "صورة غير المدفوع", "bn": "বকেয়া ছবি", "zh": "未付截图", "nl": "Onbetaald Afbeelding", "en": "Unpaid Image", "fr": "Image impayés", "de": "Unbezahlt Bild", "hi": "अवैतनिक छवि", "id": "Gambar Belum Bayar", "it": "Immagine insoluti", "ja": "未納状況画像", "ko": "미납 명단 이미지", "ms": "Imej Tunggakan", "pl": "Nieopłacone Obraz", "pt": "Imagem Inadimplentes", "ru": "С니мок по долгам", "es": "Imagen impagos", "th": "รูปภาพยอดค้าง", "tr": "Ödenmemiş Resim", "vi": "Ảnh nợ thuê"
+  },
+  "REPORT_SEC_ANNUAL_SUMMARY": {
+    "ar": "الملخص السنوي", "bn": "বার্ষিক সারসংক্ষেপ", "zh": "年度摘要", "nl": "Jaaroverzicht", "en": "Annual Summary", "fr": "Résumé annuel", "de": "Jahreszusammenfassung", "hi": "वार्षिक सारांश", "id": "Ringkasan Tahunan", "it": "Riepilogo annuale", "ja": "年間サマリー", "ko": "당해 연도 요약 표", "ms": "Ringkasan Tahunan", "pl": "Podsumowanie roczne", "pt": "Resumo Anual", "ru": "Годовая сводка", "es": "Resumen anual", "th": "สรุปประจำปี", "tr": "Yıllık Özet", "vi": "Tóm tắt năm"
+  },
+  "REPORT_SHARE_UNPAID_TEXT": {
+    "ar": "تقرير حالة الوحدات غير المدفوعة", "bn": "বকেয়া রুমের স্থিতির রিপোর্ট", "zh": "未付房源状况报告", "nl": "Overzicht onbetaalde huur", "en": "Unpaid Unit Status Report", "fr": "Rapport des impayés", "de": "Mietrückstandsbericht", "hi": "अवैतनिक इकाई स्थिति रिपोर्ट", "id": "Laporan Status Belum Bayar", "it": "Rapporto insoluti", "ja": "未納号室状況レポート", "ko": "미납 호실 현황 리포트", "ms": "Laporan Status Tunggakan", "pl": "Raport zaległości", "pt": "Relatório de Inadimplência", "ru": "Отчет по задолженности", "es": "Informe de impagos", "th": "รายงานสรุปห้องค้างชำระ", "tr": "Ödenmemiş Ünite Raporu", "vi": "Báo cáo tình trạng nợ thuê"
+  },
+
+  "REPORT_MAIN_BUILDING": {
+    "ar": "المبنى الرئيسي", "bn": "প্রধান ভবন", "zh": "主楼", "nl": "Hoofdgebouw", "en": "Main Building", "fr": "Bâtiment principal", "de": "Hauptgebäude", "hi": "मुख्य भवन", "id": "Gedung Utama", "it": "Edificio principale", "ja": "メインビル", "ko": "기본 건물", "ms": "Bangunan Utama", "pl": "Budynek główny", "pt": "Edifício Principal", "ru": "Главное здание", "es": "Edificio principal", "th": "อาคารหลัก", "tr": "Ana Bina", "vi": "Tòa nhà chính"
+  },
+  "REPORT_SIDE_BUILDING": {
+    "ar": "المبنى الجانبي", "bn": "পার্শ্ব ভবন", "zh": "副楼", "nl": "Bijgebouw", "en": "Side Building", "fr": "Bâtiment annexe", "de": "Nebengebäude", "hi": "साइड बिल्डिंग", "id": "Gedung Samping", "it": "Edificio laterale", "ja": "サブビル", "ko": "부속 건물", "ms": "Bangunan Sampingan", "pl": "Budynek boczny", "pt": "Edifício Lateral", "ru": "Дополнительное здание", "es": "Edificio lateral", "th": "อาคารรอง", "tr": "Yan Bina", "vi": "Tòa nhà phụ"
+  },
+
+  "COMMON_ROOMS_SHORT": {
+    "ar": "وحدة", "bn": "রুম", "zh": "号", "nl": "Unit", "en": "Unit", "fr": "Unité", "de": "Einh.", "hi": "यूनिट", "id": "Unit", "it": "Unità", "ja": "号", "ko": "호", "ms": "Unit", "pl": "Lok.", "pt": "Unid.", "ru": "№", "es": "Unid.", "th": "ห้อง", "tr": "Ünite", "vi": "Phòng"
+  },
+
+  "SEC_PIN_SET_TITLE": {
+    "ar": "تعيين رمز PIN الخاص بك", "bn": "আপনার পিন সেট করুন", "zh": "设置您的 PIN 码", "nl": "Stel uw pincode in", "en": "Set Your PIN", "fr": "Définissez votre code PIN", "de": "PIN festlegen", "hi": "अपना पिन सेट करें", "id": "Atur PIN Anda", "it": "Imposta il tuo PIN", "ja": "PINコードを設定", "ko": "비밀번호(PIN) 설정", "ms": "Tetapkan PIN Anda", "pl": "Ustaw kod PIN", "pt": "Defina seu PIN", "ru": "Установите PIN-код", "es": "Establece tu PIN", "th": "ตั้งค่ารหัส PIN ของคุณ", "tr": "PIN'inizi Ayarlayın", "vi": "Thiết lập mã PIN"
+  },
+  "SEC_PIN_ENTER_TITLE": {
+    "ar": "أدخل رمز PIN", "bn": "পিন লিখুন", "zh": "输入 PIN 码", "nl": "Voer pincode in", "en": "Enter PIN", "fr": "Entrez le code PIN", "de": "PIN eingeben", "hi": "पिन दर्ज करें", "id": "Masukkan PIN", "it": "Inserisci il PIN", "ja": "PINコードを入力", "ko": "비밀번호(PIN) 입력", "ms": "Masukkan PIN", "pl": "Wprowadź kod PIN", "pt": "Digite o PIN", "ru": "Введите PIN-код", "es": "Ingresa tu PIN", "th": "ใส่รหัส PIN", "tr": "PIN'i Girin", "vi": "Nhập mã PIN"
+  },
+  "SEC_PIN_INVALID": {
+    "ar": "رمز PIN غير صحيح. حاول ثانية.", "bn": "ভুল পিন। আবার চেষ্টা করুন।", "zh": "PIN 码无效。请重试。", "nl": "Ongeldige pincode. Probeer het opnieuw.", "en": "Invalid PIN. Try again.", "fr": "Code PIN invalide. Réessayez.", "de": "Ungültige PIN. Versuchen Sie es erneut.", "hi": "अमान्य पिन। पुनः प्रयास करें।", "id": "PIN tidak valid. Coba lagi.", "it": "PIN non valido. Riprova.", "ja": "PINコード가 틀렸습니다. 다시 시도하십시오.", "ko": "비밀번호가 일치하지 않습니다. 다시 시도하세요.", "ms": "PIN tidak sah. Cuba lagi.", "pl": "Nieprawidłowy PIN. Spróbuj ponownie.", "pt": "PIN inválido. Tente novamente.", "ru": "Неверный PIN-код. Попробуйте еще раз.", "es": "PIN inválido. Inténtalo de nuevo.", "th": "รหัส PIN ไม่ถูกต้อง โปรดลองอีกครั้ง", "tr": "Geçersiz PIN. Tekrar deneyin.", "vi": "Mã PIN không hợp lệ. Thử lại."
+  },
+
+  "SECURITY_DISABLE_PIN_TITLE": {
+    "ar": "إيقاف رمز PIN", "bn": "পিন নিষ্ক্রিয় করুন", "zh": "禁用 PIN 码", "nl": "PIN uitschakelen", "en": "Disable PIN", "fr": "Désactiver le PIN", "de": "PIN deaktivieren", "hi": "पिन अक्षम करें", "id": "Nonaktifkan PIN", "it": "Disabilita PIN", "ja": "PINを無効にする", "ko": "비밀번호 사용 중단", "ms": "Nyahaktif PIN", "pl": "Wyłącz PIN", "pt": "Desativar PIN", "ru": "Отключить PIN-код", "es": "Desactivar PIN", "th": "ยกเลิกการใช้ PIN", "tr": "PIN'i Devre Dışı Bırak", "vi": "Vô hiệu hóa mã PIN"
+  },
+  "SECURITY_DISABLE_PIN_DESC": {
+    "ar": "هل أنت متأكد أنك تريد إيقاف قفل PIN؟", "bn": "আপনি কি নিশ্চিত যে আপনি পিন লক বন্ধ করতে চান?", "zh": "您确定要关闭 PIN 锁吗？", "nl": "Weet u zeker dat u het PIN-slot wilt uitschakelen?", "en": "Are you sure you want to turn off the PIN lock?", "fr": "Voulez-vous vraiment désactiver le verrouillage par PIN ?", "de": "Sind Sie sicher, dass Sie die PIN-Sperre ausschalten möchten?", "hi": "क्या आप वाकई पिन लॉक बंद करना चाहते हैं?", "id": "Apakah Anda yakin ingin mematikan kunci PIN?", "it": "Sei sicuro di voler disattivare il blocco PIN?", "ja": "PINロックを解除해도 괜찮습니까?", "ko": "비밀번호 잠금을 해제하시겠습니까? 더 이상 보안 잠금이 적용되지 않습니다.", "ms": "Adakah anda pasti mahu mematikan kunci PIN?", "pl": "Czy na pewno chcesz wyłączyć blokadę PIN?", "pt": "Tem certeza de que deseja desativar o bloqueio por PIN?", "ru": "Вы уверены, что хотите отключить блокировку по PIN-коду?", "es": "¿Está seguro de que desea desactivar el bloqueo por PIN?", "th": "คุณแน่ใจหรือไม่ว่าต้องการปิดการล็อกด้วย PIN?", "tr": "PIN kilidini kapatmak istediğinizden emin misiniz?", "vi": "Bạn có chắc chắn muốn tắt khóa PIN không?"
+  },
+  "RESTORE_SUCCESS_TITLE": {
+    "ar": "تمت استعادة البيانات", "bn": "ডেটা পুনরুদ্ধার সফল", "zh": "数据恢复成功", "nl": "Gegevens hersteld", "en": "Data Restored", "fr": "Données restaurées", "de": "Daten wiederhergestellt", "hi": "डेटा बहाल किया गया", "id": "Data Dipulihkan", "it": "Dati ripristinati", "ja": "復元完了", "ko": "데이터 복구 완료", "ms": "Data Dipulihkan", "pl": "Dane przywrócone", "pt": "Dados Restaurados", "ru": "Данные восстановлены", "es": "Datos restaurados", "th": "กู้คืนข้อมูลสำเร็จ", "tr": "Veriler Geri Yükledi", "vi": "Khôi phục dữ liệu thành công"
+  },
+  "RESTORE_SUCCESS_DESC": {
+    "ar": "تمت استعادة قاعدة البيانات بنجاح.", "bn": "ডেটাবেস সফলভাবে পুনরুদ্ধার করা হয়েছে।", "zh": "数据库已成功恢复。", "nl": "Database is succesvol hersteld.", "en": "The database has been successfully restored.", "fr": "La base de données a été restaurée avec succès.", "de": "Die Datenbank wurde erfolgreich wiederhergestellt.", "hi": "डेटाबेस सफलतापूर्वक बहाल कर दिया गया है।", "id": "Database telah berhasil dipulihkan.", "it": "Il database è stato ripristinato con successo.", "ja": "データベースの復元に成功しました。", "ko": "데이터베이스 복구가 완료되었습니다. 앱을 계속 사용하실 수 있습니다.", "ms": "Pangkalan data telah berjaya dipulihkan.", "pl": "Baza danych została pomyślnie przywrócona.", "pt": "O banco de datos foi restaurado com sucesso.", "ru": "База данных успешно восстановлена.", "es": "La base de datos se ha restaurado con éxito.", "th": "กู้คืนฐานข้อมูลสำเร็จแล้ว", "tr": "Veritabanı başarıyla geri yüklendi.", "vi": "Cơ sở dữ liệu đã được khôi phục thành công."
+  },
+  "COMMON_DISABLE": {
+    "ar": "إيقاف", "bn": "নিষ্ক্রিয় করুন", "zh": "禁用", "nl": "Uitschakelen", "en": "Disable", "fr": "Désactiver", "de": "Deaktivieren", "hi": "अक्षम करें", "id": "Nonaktifkan", "it": "Disabilita", "ja": "無効にする", "ko": "해제", "ms": "Nyahaktif", "pl": "Wyłącz", "pt": "Desativar", "ru": "Отключить", "es": "Desactivar", "th": "ปิดใช้งาน", "tr": "Devre Dışı Bırak", "vi": "Vô hiệu hóa"
+  },
+  "ERROR_DB_NOT_FOUND": {
+    "ar": "لم يتم العثور على ملف قاعدة البيانات.", "bn": "ডেটাবেস ফাইল পাওয়া যায়নি।", "zh": "未找到数据库文件。", "nl": "Databasebestand niet gevonden.", "en": "Database file not found.", "fr": "Fichier de base de données non trouvé.", "de": "Datenbankdatei nicht gefunden.", "hi": "डेटाबेस फ़ाइल नहीं मिली।", "id": "File database tidak ditemukan.", "it": "File del database non trovato.", "ja": "データベースファイルが見つかりません。", "ko": "백업할 데이터베이스 파일을 찾을 수 없습니다.", "ms": "Fail pangkalan data tidak dijumpai.", "pl": "Nie znaleziono pliku bazy danych.", "pt": "Arquivo de banco de dados não encontrado.", "ru": "Файл базы данных не найден.", "es": "No se encontró el archivo de la base de datos.", "th": "ไม่พบไฟล์ฐานข้อมูล", "tr": "Veritabanı dosyası bulunamadı.", "vi": "Không tìm thấy tệp cơ sở dữ liệu."
+  },
+  "ERROR_RESTORE_FAILED": {
+    "ar": "فشلت استعادة البيانات.", "bn": "ডেটা পুনরুদ্ধার করতে ব্যর্থ হয়েছে।", "zh": "恢复失败。", "nl": "Herstel mislukt.", "en": "Restore failed.", "fr": "Échec de la restauration.", "de": "Wiederherstellung fehlgeschlagen.", "hi": "पुनर्स्थापना विफल रही।", "id": "Gagal memulihkan.", "it": "Ripristino fallito.", "ja": "復元に失敗しました。", "ko": "복구 중 오류가 발생했습니다. 파일 형식을 확인하세요.", "ms": "Gagal memulihkan.", "pl": "Przywracanie nieudane.", "pt": "Falha na restauração.", "ru": "Ошибка восстановления.", "es": "Fallo en la restauración.", "th": "กู้คืนข้อมูลไม่สำเร็จ", "tr": "Geri yükleme başarısız.", "vi": "Khôi phục thất bại."
+  },
+
+  "SETTINGS_DEFAULT_NICKNAME": {
+    "ar": "صاحب العقار", "bn": "বাড়ির মালিক", "zh": "房东", "nl": "Huisbaas", "en": "Landlord", "fr": "Propriétaire", "de": "Vermieter", "hi": "मकान मालिक", "id": "Tuan Tanah", "it": "Proprietario", "ja": "大家さん", "ko": "임대인", "ms": "Tuan Rumah", "pl": "Właściciel", "pt": "Senhorio", "ru": "Хозяин", "es": "Arrendador", "th": "เจ้าของบ้าน", "tr": "Ev Sahibi", "vi": "Chủ nhà"
+  },
+
+  "SETTINGS_THEME_TITLE": {
+    "ar": "مظهر التطبيق", "bn": "অ্যাপ থিম", "zh": "应用主题", "nl": "App-thema", "en": "App Theme", "fr": "Thème de l'application", "de": "App-Design", "hi": "ऐप थीम", "id": "Tema Aplikasi", "it": "Tema dell'app", "ja": "アプリのテーマ", "ko": "화면 테마 설정", "ms": "Tema Aplikasi", "pl": "Motyw aplikacji", "pt": "Tema do App", "ru": "Тема приложения", "es": "Tema de la aplicación", "th": "ธีมแอป", "tr": "Uygulama Teması", "vi": "Giao diện ứng dụng"
+  },
+  "SETTINGS_THEME_DARK": {
+    "ar": "الوضع الداكن", "bn": "ডার্ক মোড", "zh": "深色模式", "nl": "Donkere modus", "en": "Dark Mode", "fr": "Mode sombre", "de": "Dunkelmodus", "hi": "डार्क मोड", "id": "Mode Gelap", "it": "Modalità scura", "ja": "ダークモード", "ko": "다크 모드", "ms": "Mod Gelap", "pl": "Tryb ciemny", "pt": "Modo Escuro", "ru": "Темный режим", "es": "Modo oscuro", "th": "โหมดมืด", "tr": "Karanlık Mod", "vi": "Chế độ tối"
+  },
+  "SETTINGS_THEME_LIGHT": {
+    "ar": "الوضع الفاتح", "bn": "লাইট মোড", "zh": "浅色模式", "nl": "Lichte modus", "en": "Light Mode", "fr": "Mode clair", "de": "Hellmodus", "hi": "लाइट मोड", "id": "Mode Terang", "it": "Modalità chiara", "ja": "ライトモード", "ko": "라이트 모드", "ms": "Mod Terang", "pl": "Tryb jasny", "pt": "Modo Claro", "ru": "Светлый режим", "es": "Modo claro", "th": "โหมดสว่าง", "tr": "Aydınlık Mod", "vi": "Chế độ sáng"
+  },
+
+  "CAT_MANAGE_TITLE": {
+    "ar": "إدارة الفئات", "bn": "বিভাগ পরিচালনা", "zh": "类别管理", "nl": "Categoriebeheer", "en": "Manage Categories", "fr": "Gérer les catégories", "de": "Kategorien verwalten", "hi": "श्रेणियां प्रबंधित करें", "id": "Kelola Kategori", "it": "Gestisci categorie", "ja": "カテゴリー管理", "ko": "카테고리 관리", "ms": "Urus Kategori", "pl": "Zarządzaj kategoriami", "pt": "Gerenciar Categorias", "ru": "Управление категориями", "es": "Gestionar categorías", "th": "จัดการหมวดหมู่", "tr": "Kategorileri Yönet", "vi": "Quản lý danh mục"
+  },
+  "CAT_ADD_NEW": {
+    "ar": "إضافة فئة جديدة", "bn": "নতুন বিভাগ যোগ করুন", "zh": "添加新类别", "nl": "Nieuwe categorie toevoegen", "en": "Add New Category", "fr": "Ajouter une catégorie", "de": "Neue Kategorie hinzufügen", "hi": "नई श्रेणी जोड़ें", "id": "Tambah Kategori Baru", "it": "Aggiungi nuova categoria", "ja": "新しいカテゴリーを追加", "ko": "새 카테고리 추가", "ms": "Tambah Kategori Baru", "pl": "Dodaj nową kategorię", "pt": "Adicionar Nova Categoria", "ru": "Добавить новую категорию", "es": "Añadir nueva categoría", "th": "เพิ่มหมวดหมู่ใหม่", "tr": "Yeni Kategori Ekle", "vi": "Thêm danh mục mới"
+  },
+  "CAT_DELETE_CONFIRM": {
+    "ar": "هل تريد حذف هذه الفئة؟", "bn": "আপনি কি এই বিভাগটি মুছতে চান?", "zh": "确定要删除此类别吗？", "nl": "Wilt u deze categorie verwijderen?", "en": "Delete this category?", "fr": "Supprimer cette catégorie ?", "de": "Diese Kategorie löschen?", "hi": "क्या आप इस श्रेणी को हटाना चाहते हैं?", "id": "Hapus kategori ini?", "it": "Eliminare questa categoria?", "ja": "このカテゴリーを削除しますか？", "ko": "이 카테고리를 삭제하시겠습니까?", "ms": "Padam kategori ini?", "pl": "Usunąć tę kategorię?", "pt": "Excluir esta categoria?", "ru": "Удалить эту категорию?", "es": "¿Eliminar esta categoría?", "th": "ลบหมวดหมู่นี้หรือไม่?", "tr": "Bu kategoriyi sil?", "vi": "Xóa danh mục này?"
+  },
+
+  "CAT_NAME_LABEL": {
+    "ar": "اسم الفئة", "bn": "বিভাগের নাম", "zh": "类别名称", "nl": "Categorienaam", "en": "Category Name", "fr": "Nom de la catégorie", "de": "Kategoriename", "hi": "श्रेणी का नाम", "id": "Nama Kategori", "it": "Nome categoria", "ja": "カテゴリー名", "ko": "카테고리 명칭", "ms": "Nama Kategori", "pl": "Nazwa kategorii", "pt": "Nome da Categoria", "ru": "Название категории", "es": "Nombre de la categoría", "th": "ชื่อหมวดหมู่", "tr": "Kategori Adı", "vi": "Tên danh mục"
+  },
+  "CAT_NAME_HINT": {
+    "ar": "مثال: التأمين ، الرسوم الإدارية", "bn": "যেমন: বিমা, ব্যবস্থাপনা ফি", "zh": "例如：保险、管理费", "nl": "bijv. Verzekering, administratiekosten", "en": "e.g. Insurance, Admin fee", "fr": "ex: Assurance, frais de gestion", "de": "z. B. Versicherung, Verwaltungsgebühr", "hi": "जैसे: बीमा, प्रबंधन शुल्क", "id": "misal: Asuransi, biaya admin", "it": "es: Assicurazione, spese amm.", "ja": "例：保険料、管理費", "ko": "예: 보험료, 관리비 등", "ms": "cth: Insurans, yuran admin", "pl": "np. Ubezpieczenie, opłata admin.", "pt": "ex: Seguro, taxa de admin.", "ru": "напр., Страховка, комиссия", "es": "ej: Seguro, gastos admin.", "th": "เช่น ประกันภัย, ค่าส่วนกลาง", "tr": "Örn: Sigorta, Yönetim ücreti", "vi": "VD: Bảo hiểm, phí quản lý"
+  },
+
+  "NAV_HOME": {
+    "ar": "الرئيسية", "bn": "হোম", "zh": "首页", "nl": "Home", "en": "Home", "fr": "Accueil", "de": "Start", "hi": "होम", "id": "Beranda", "it": "Home", "ja": "ホーム", "ko": "홈", "ms": "Utama", "pl": "Start", "pt": "Início", "ru": "Главная", "es": "Inicio", "th": "หน้าแรก", "tr": "Anasayfa", "vi": "Trang chủ"
+  },
+  "NAV_BUILDINGS": {
+    "ar": "المباني", "bn": "বিল্ডিং", "zh": "建筑", "nl": "Gebouwen", "en": "Buildings", "fr": "Bâtiments", "de": "Gebäude", "hi": "इमारतें", "id": "Bangunan", "it": "Edifici", "ja": "建物管理", "ko": "건물 관리", "ms": "Bangunan", "pl": "Budynki", "pt": "Edifícios", "ru": "Здания", "es": "Edificios", "th": "จัดการอาคาร", "tr": "Binalar", "vi": "Tòa nhà"
+  },
+  "NAV_LEDGER": {
+    "ar": "دفتر الأستاذ", "bn": "লেজার", "zh": "账本", "nl": "Grootboek", "en": "Ledger", "fr": "Grand livre", "de": "Hauptbuch", "hi": "लेजर", "id": "Buku Besar", "it": "Libro mastro", "ja": "収입/支出", "ko": "장부 관리", "ms": "Lejar", "pl": "Księga", "pt": "Livro Razão", "ru": "Книга", "es": "Libro mayor", "th": "สมุดราย일", "tr": "Defter", "vi": "Sổ cái"
+  },
+
+  "REPORT_NO_DATA": {
+    "ar": "لا توجد بيانات متاحة", "bn": "কোন তথ্য পাওয়া যায়নি", "zh": "暂无数据", "nl": "Geen gegevens beschikbaar", "en": "No data available", "fr": "Aucune donnée disponible", "de": "Keine Daten verfügbar", "hi": "कोई डेटा उपलब्ध नहीं है", "id": "Tidak ada data", "it": "Nessun dato disponibile", "ja": "データがありません", "ko": "데이터가 없습니다", "ms": "Tiada data tersedia", "pl": "Brak danych", "pt": "Nenhum dado disponível", "ru": "Нет данных", "es": "No hay datos disponibles", "th": "ไม่มีข้อมูล", "tr": "Veri yok", "vi": "Không có dữ liệu"
+  },
+  "COMMON_YEAR": {
+    "ar": "سنة", "bn": "বছর", "zh": "年", "nl": "Jaar", "en": "Year", "fr": "Année", "de": "Jahr", "hi": "वर्ष", "id": "Tahun", "it": "Anno", "ja": "年", "ko": "년", "ms": "Tahun", "pl": "Rok", "pt": "Ano", "ru": "Год", "es": "Año", "th": "ปี", "tr": "Yıl", "vi": "Năm"
+  },
+  "REPORT_YEARLY_REVENUE": {
+    "ar": "إجمالي الدخل السنوي", "bn": "বার্ষিক মোট আয়", "zh": "年度总收入", "nl": "Jaarlijkse totale inkomsten", "en": "Yearly Total Income", "fr": "Revenu total annuel", "de": "Jährliches Gesamteinkommen", "hi": "वार्षिक कुल आय", "id": "Total Pendapatan Tahunan", "it": "Reddito totale annuo", "ja": "年間総収入", "ko": "연간 총 수입", "ms": "Jumlah Pendapatan Tahunan", "pl": "Roczny dochód całkowity", "pt": "Receita Total Anual", "ru": "Годовой общий доход", "es": "Ingresos totales anuales", "th": "รายได้รวมต่อปี", "tr": "Yıllık Toplam Gelir", "vi": "Tổng thu nhập năm"
+  },
+  "REPORT_YEARLY_EXPENSES": {
+    "ar": "إجمالي النفقات السنوية", "bn": "বার্ষিক মোট খরচ", "zh": "年度总支出", "nl": "Jaarlijkse totale uitgaven", "en": "Yearly Total Expenses", "fr": "Dépenses totales annuelles", "de": "Jährliche Gesamtausgaben", "hi": "वार्षिक कुल व्यय", "id": "Total Pengeluaran Tahunan", "it": "Spese totali annue", "ja": "年間総支出", "ko": "연간 총 지출", "ms": "Jumlah Perbelanjaan Tahunan", "pl": "Roczne wydatki całkowite", "pt": "Despesas Totais Anuais", "ru": "Годовые общие расходы", "es": "Gastos totales anuales", "th": "ค่าใช้จ่ายรวมต่อปี", "tr": "Yıllık Toplam Gider", "vi": "Tổng chi phí năm"
+  },
+  "REPORT_ANNUAL_NET_PROFIT": {
+    "ar": "صافي الربح السنوي", "bn": "বার্ষিক নিট লাভ", "zh": "年度净利润", "nl": "Jaarlijkse nettowinst", "en": "Annual Net Profit", "fr": "Bénéfice net annuel", "de": "Jährlicher Nettogewinn", "hi": "वार्षिक शुद्ध लाभ", "id": "Laba Bersih Tahunan", "it": "Utile netto annuo", "ja": "年間純利益", "ko": "연간 순이익", "ms": "Untung Bersih Tahunan", "pl": "Roczny zysk netto", "pt": "Lucro Líquido Anual", "ru": "Годовая чистая прибыль", "es": "Beneficio neto anual", "th": "กำไรสุทธิต่อปี", "tr": "Yıllık Net Kar", "vi": "Lợi nhuận ròng năm"
+  },
+  "REPORT_SUMMARY_FOOTNOTE": {
+    "ar": "يستند الملخص إلى بيانات السنة الحالية.", "bn": "সারসংক্ষেপ বর্তমান বছরের তথ্যের উপর ভিত্তি করে।", "zh": "摘要基于本年度数据。", "nl": "Samenvatting is gebaseerd op gegevens van het huidige jaar.", "en": "Summary is based on current year data.", "fr": "Le résumé est basé sur les données de l'année en cours.", "de": "Die Zusammenfassung basiert auf den Daten des aktuellen Jahres.", "hi": "सारांश वर्तमान वर्ष के आंकड़ों पर आधारित है।", "id": "Ringkasan didasarkan pada data tahun berjalan.", "it": "Il riepilogo si basa sui dati dell'anno in corso.", "ja": "要約は当年度のデータに基づいています。", "ko": "요약은 당해 연도 데이터를 기준으로 산출됩니다.", "ms": "Ringkasan adalah berdasarkan data tahun semasa.", "pl": "Podsumowanie opiera się na danych z bieżącego roku.", "pt": "O resumo baseia-se nos dados do ano atual.", "ru": "Сводка основана на данных за текущий год.", "es": "El resumen se basa en los datos del año actual.", "th": "สรุปข้อมูลตามข้อมูลปีปัจจุบัน", "tr": "Özet, cari yıl verilerine dayanmaktadır.", "vi": "Tóm tắt dựa trên dữ liệu năm hiện tại."
+  },
+
+  "CAT_OTHER_INCOME": {
+    "ar": "دخل آخر", "bn": "অন্যান্য আয়", "zh": "其他收入", "nl": "Overige inkomsten", "en": "Other Income", "fr": "Autre revenu", "de": "Sonstige Einnahmen", "hi": "अन्य आय", "id": "Pendapatan Lainnya", "it": "Altre entrate", "ja": "その他収入", "ko": "기타 수입", "ms": "Pendapatan Lain", "pl": "Inne dochody", "pt": "Outras Receitas", "ru": "Прочие доходы", "es": "Otros ingresos", "th": "รายได้อื่น ๆ", "tr": "Diğer Gelirler", "vi": "Thu nhập khác"
+  },
+  "CAT_DEPOSIT": {
+    "ar": "الوديعة", "bn": "আমানত", "zh": "押金", "nl": "Borg", "en": "Deposit", "fr": "Dépôt", "de": "Kaution", "hi": "जमा राशि", "id": "Deposit", "it": "Deposito", "ja": "敷金・保証金", "ko": "보증금", "ms": "Deposit", "pl": "Kaucja", "pt": "Depósito", "ru": "Залог", "es": "Depósito", "th": "เงินประกัน", "tr": "Depozito", "vi": "Tiền đặt cọc"
+  },
+  "COMMON_NEW_RECORD": {
+    "ar": "سجل جديد", "bn": "নতুন রেকর্ড", "zh": "新记录", "nl": "Nieuw record", "en": "New Record", "fr": "Nouvel enregistrement", "de": "Neuer Datensatz", "hi": "नया रिकॉर्ड", "id": "Catatan Baru", "it": "Nuovo record", "ja": "新規記録", "ko": "새 내역 입력", "ms": "Rekod Baru", "pl": "Nowy wpis", "pt": "Novo Registro", "ru": "Новая запись", "es": "Nuevo registro", "th": "บันทึกใหม่", "tr": "Yeni Kayıt", "vi": "Bản ghi mới"
+  },
+  "LEDGER_SELECT_CATEGORY": {
+    "ar": "اختر الفئة", "bn": "বিভাগ নির্বাচন করুন", "zh": "选择类别", "nl": "Selecteer categorie", "en": "Select Category", "fr": "Sélectionner une catégorie", "de": "Kategorie wählen", "hi": "श्रेणी चुनें", "id": "Pilih Kategori", "it": "Seleziona categoria", "ja": "カテゴリーを選択", "ko": "카테고리 선택", "ms": "Pilih Kategori", "pl": "Wybierz kategorię", "pt": "Selecionar Categoria", "ru": "Выберите категорию", "es": "Seleccionar categoría", "th": "เลือกหมวดหมู่", "tr": "Kategori Seç", "vi": "Chọn danh mục"
+  },
+
+  "ERROR_CHECK_AMOUNT_CATEGORY": {
+    "ar": "يرجى التحقق من المبلغ والفئة والمبنى.", "bn": "পরিমাণ, বিভাগ এবং বিল্ডিং চেক করুন।", "zh": "请检查金额、类别和建筑物。", "nl": "Controleer het bedrag, de categorie en het gebouw.", "en": "Please check amount, category, and building.", "fr": "Veuillez vérifier le montant, la catégorie et le bâtiment.", "de": "Bitte Betrag, Kategorie und Gebäude prüfen.", "hi": "कृपया राशि, श्रेणी और भवन की जाँच करें।", "id": "Silakan periksa jumlah, kategori, dan bangunan.", "it": "Si prega di controllare l'importo, la categoria e l'edificio.", "ja": "金額、カテゴリー、建物を確認してください。", "ko": "금액, 카테고리 및 건물을 확인해 주세요.", "ms": "Sila semak jumlah, kategori, dan bangunan.", "pl": "Sprawdź kwotę, kategorię i budynek.", "pt": "Verifique o valor, a categoria e o edifício.", "ru": "Проверьте сумму, категорию и здание.", "es": "Verifique el monto, la categoría y el edificio.", "th": "โปรดตรวจสอบจำนวนเงิน หมวดหมู่ และอาคาร", "tr": "Lütfen tutarı, kategoriyi ve binayı kontrol edin.", "vi": "Vui lòng kiểm tra số tiền, danh mục và tòa nhà."
+  },
+  "ERROR_SAVE_FAILED": {
+    "ar": "فشل الحفظ", "bn": "সংরক্ষণ করতে ব্যর্থ হয়েছে", "zh": "保存失败", "nl": "Opslaan mislukt", "en": "Save failed", "fr": "Échec de l'enregistrement", "de": "Speichern fehlgeschlagen", "hi": "सहेजना विफल रहा", "id": "Gagal menyimpan", "it": "Salvataggio fallito", "ja": "保存に失敗しました", "ko": "저장에 실패했습니다", "ms": "Gagal menyimpan", "pl": "Błąd zapisu", "pt": "Falha ao salvar", "ru": "Ошибка сохранения", "es": "Error al guardar", "th": "บันทึกล้มเหลว", "tr": "Kaydetme başarısız", "vi": "Lưu thất bại"
+  },
+
+  "COMMON_BUILDING_NAME": {
+    "ar": "عام / أخرى", "bn": "সাধারণ / অন্যান্য", "zh": "公共 / 其他", "nl": "Algemeen / Overige", "en": "General / Others", "fr": "Général / Autres", "de": "Allgemein / Sonstiges", "hi": "सामान्य / अन्य", "id": "Umum / Lainnya", "it": "Generale / Altro", "ja": "共通 / その他", "ko": "공통 / 기타", "ms": "Umum / Lain-lain", "pl": "Ogólne / Inne", "pt": "Geral / Outros", "ru": "Общее / Прочее", "es": "General / Otros", "th": "ทั่วไป / อื่นๆ", "tr": "Genel / Diğer", "vi": "Chung / Khác"
+  },
+  "PROP_ADD_UNIT_TITLE": {
+    "ar": "تسجيل الوحدة", "bn": "ইউনিট নিবন্ধন করুন", "zh": "登记单元", "nl": "Unit registreren", "en": "Add Unit", "fr": "Ajouter une unité", "de": "Einheit hinzufügen", "hi": "इकाई पंजीकृत करें", "id": "Daftar Unit", "it": "Aggiungi unità", "ja": "ユニット登録", "ko": "호실 등록", "ms": "Daftar Unit", "pl": "Dodaj lokal", "pt": "Adicionar unidade", "ru": "Добавить помещение", "es": "Añadir unidad", "th": "ลงทะเบียนห้อง", "tr": "Birim Ekle", "vi": "Đăng ký căn hộ"
+  },
+  "PROP_ADD_UNIT_ACTION": {
+    "ar": "تسجيل", "bn": "নিবন্ধন করুন", "zh": "登记", "nl": "Registreren", "en": "Register", "fr": "Enregistrer", "de": "Registrieren", "hi": "पंजीकृत करें", "id": "Daftar", "it": "Registra", "ja": "登録する", "ko": "등록하기", "ms": "Daftar", "pl": "Zarejestruj", "pt": "Registar", "ru": "Зарегистрировать", "es": "Registrar", "th": "ลงทะเบียน", "tr": "Kaydet", "vi": "Đăng ký"
+  },
+  "PROP_SITE_PHOTOS": {
+    "ar": "صور الموقع", "bn": "সাইটের ছবি", "zh": "现场照片", "nl": "Locatiefoto's", "en": "Site Photos", "fr": "Photos du site", "de": "Fotos vor Ort", "hi": "साइट की तस्वीरें", "id": "Foto Lokasi", "it": "Foto del sito", "ja": "現場写真", "ko": "현장 사진", "ms": "Foto Tapak", "pl": "Zdjęcia obiektu", "pt": "Fotos do local", "ru": "Фото объекта", "es": "Fotos del sitio", "th": "ภาพถ่ายสถานที่", "tr": "Saha Fotoğrafları", "vi": "Ảnh hiện trường"
+  },
+
+  "COMMON_ADD": {
+    "ar": "إضافة", "bn": "যোগ করুন", "zh": "添加", "nl": "Toevoegen", "en": "Add", "fr": "Ajouter", "de": "Hinzufügen", "hi": "जोड़ें", "id": "Tambah", "it": "Aggiungi", "ja": "追加", "ko": "추가", "ms": "Tambah", "pl": "Dodaj", "pt": "Adicionar", "ru": "Добавить", "es": "Añadir", "th": "เพิ่ม", "tr": "Ekle", "vi": "Thêm"
+  },
+  "COMMON_DELETE": {
+    "ar": "حذف", "bn": "মুছে ফেলুন", "zh": "删除", "nl": "Verwijderen", "en": "Delete", "fr": "Supprimer", "de": "Löschen", "hi": "हटाएं", "id": "Hapus", "it": "Elimina", "ja": "削除", "ko": "삭제", "ms": "Padam", "pl": "Usuń", "pt": "Excluir", "ru": "Удалить", "es": "Eliminar", "th": "ลบ", "tr": "Sil", "vi": "Xóa"
+  }
+
+}

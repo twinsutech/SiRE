@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import '../property/property_provider.dart';
 import '../ledger/unpaid_provider.dart';
 
@@ -27,18 +28,23 @@ final appAlertProvider = Provider<List<AppAlert>>((ref) {
   final List<AppAlert> alerts = [];
   final now = DateTime.now();
 
+  // 📍 번역을 위한 노티파이어 참조
+  final l10n = ref.read(localizationProvider.notifier);
+
   // 1️⃣ 미납 체크 (whenData 대신 value를 직접 참조하여 순서 보장)
   final unpaidAsync = ref.watch(unpaidListProvider);
   final unpaidList = unpaidAsync.value ?? []; // 데이터가 있으면 가져오고 없으면 빈 리스트
 
   for (var unpaid in unpaidList) {
     if (unpaid.status == 'OVERDUE') {
+      // 📍 다국어 적용: "임대료 미납", "{room}호 임대료가 아직 미납입니다."
+      final String room = unpaid.unit.roomNumber;
       alerts.add(AppAlert(
-        title: "임대료 미납",
-        body: "${unpaid.unit.roomNumber}호 임대료가 아직 미납입니다.",
+        title: l10n.translate("ALERT_OVERDUE_TITLE"),
+        body: "${l10n.translate("COMMON_ROOM_UNIT")}$room ${l10n.translate("ALERT_OVERDUE_BODY")}",
         type: AlertType.overdue,
         date: now,
-        roomNumber: unpaid.unit.roomNumber,
+        roomNumber: room,
         // 📍 tables.dart에 정의된 tenantPhone 필드 연결
         phoneNumber: unpaid.unit.tenantPhone,
       ));
@@ -57,12 +63,14 @@ final appAlertProvider = Provider<List<AppAlert>>((ref) {
 
         // 만료 30일 이내 알림 생성
         if (daysLeft >= 0 && daysLeft <= 30) {
+          // 📍 다국어 적용: "계약 만료 예정", "{room}호 계약 만료가 {days}일 남았습니다."
+          final String room = unit.roomNumber;
           alerts.add(AppAlert(
-            title: "계약 만료 예정",
-            body: "${unit.roomNumber}호 계약 만료가 $daysLeft일 남았습니다.",
+            title: l10n.translate("ALERT_CONTRACT_ENDING_TITLE"),
+            body: "${l10n.translate("COMMON_ROOM_UNIT")}$room ${l10n.translate("ALERT_CONTRACT_ENDING_BODY_1")} $daysLeft${l10n.translate("ALERT_CONTRACT_ENDING_BODY_2")}",
             type: AlertType.contractEnding,
             date: unit.contractEnd!,
-            roomNumber: unit.roomNumber,
+            roomNumber: room,
             // 📍 tables.dart에 정의된 tenantPhone 필드 연결
             phoneNumber: unit.tenantPhone,
           ));

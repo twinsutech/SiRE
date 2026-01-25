@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import '../../core/database/app_database.dart';
 import '../ledger/unpaid_provider.dart';
 import 'property_provider.dart';
@@ -25,20 +26,20 @@ class UnitFilteredListScreen extends ConsumerWidget {
     final unpaidAsync = ref.watch(unpaidListProvider);
     final propertyListAsync = ref.watch(propertyListProvider);
 
-    // 화면 제목 및 테마 색상 결정
+    // 📍 다국어: 화면 제목 및 테마 색상 결정
     String title;
     Color themeColor;
     switch (filterType) {
       case UnitFilterType.unpaid:
-        title = "전체 미납자 관리";
+        title = "FILTER_TITLE_UNPAID".tr(ref); // 📍 다국어: "전체 미납자 관리"
         themeColor = AppColors.expenseRed;
         break;
       case UnitFilterType.vacant:
-        title = "전체 공실 현황";
+        title = "FILTER_TITLE_VACANT".tr(ref); // 📍 다국어: "전체 공실 현황"
         themeColor = Colors.grey;
         break;
       case UnitFilterType.expiring:
-        title = "계약 만기 임박";
+        title = "FILTER_TITLE_EXPIRING".tr(ref); // 📍 다국어: "계약 만기 임박"
         themeColor = Colors.orange;
         break;
     }
@@ -52,7 +53,7 @@ class UnitFilteredListScreen extends ConsumerWidget {
       ),
       body: unpaidAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, _) => Center(child: Text("에러 발생: $err")),
+        error: (err, _) => Center(child: Text("${"COMMON_ERROR".tr(ref)}: $err")),
         data: (unpaidStatusList) {
           // 📍 필터 로직 적용
           List<dynamic> filteredList = [];
@@ -79,7 +80,12 @@ class UnitFilteredListScreen extends ConsumerWidget {
           }
 
           if (filteredList.isEmpty) {
-            return Center(child: Text("$title 내역이 없습니다.", style: const TextStyle(color: Colors.grey)));
+            return Center(
+                child: Text(
+                    "$title ${"FILTER_EMPTY_DESC".tr(ref)}", // 📍 다국어: "{title} 내역이 없습니다."
+                    style: const TextStyle(color: Colors.grey)
+                )
+            );
           }
 
           return ListView.builder(
@@ -88,8 +94,8 @@ class UnitFilteredListScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               final item = filteredList[index];
               // 데이터 타입에 따라 적절한 카드 빌드 (UnpaidStatus 혹은 Unit)
-              if (item is UnpaidStatus) return _buildUnitCard(context, item.unit, overdueStatus: item);
-              return _buildUnitCard(context, item as Unit);
+              if (item is UnpaidStatus) return _buildUnitCard(context, ref, item.unit, overdueStatus: item);
+              return _buildUnitCard(context, ref, item as Unit);
             },
           );
         },
@@ -97,21 +103,31 @@ class UnitFilteredListScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildUnitCard(BuildContext context, dynamic unit, {UnpaidStatus? overdueStatus}) {
+  Widget _buildUnitCard(BuildContext context, WidgetRef ref, dynamic unit, {UnpaidStatus? overdueStatus}) {
     final bool isVacant = unit.tenantName == null || unit.tenantName!.isEmpty;
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+
+    // 📍 [화폐 다국어 처리] 로케일별 통화 포매터 정의
+    final currencyFmt = NumberFormat.simpleCurrency(
+      locale: currentLang,
+      decimalDigits: 0,
+    );
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
-        title: Text("${unit.roomNumber}호 ${unit.tenantName ?? '(공실)'}",
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        title: Text(
+            "${unit.roomNumber}${"COMMON_ROOM_UNIT".tr(ref)} ${unit.tenantName ?? "(${'DASHBOARD_VACANT_UNITS'.tr(ref)})"}",
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)
+        ),
         subtitle: isVacant
-            ? const Text("입주 대기 중")
+            ? Text("FILTER_VACANT_SUBTITLE".tr(ref)) // 📍 다국어: "입주 대기 중"
             : Text(overdueStatus != null
-            ? "미납금액: ${NumberFormat('#,###').format(unit.monthlyRent - overdueStatus.paidAmount)} 만원"
-            : "만기일: ${unit.contractEnd != null ? DateFormat('yyyy.MM.dd').format(unit.contractEnd!) : '-'}"),
+        // 📍 [수정] 하드코딩된 단위를 제거하고 글로벌 표준 통화 포맷 적용
+            ? "${"FILTER_UNPAID_AMOUNT".tr(ref)}: ${currencyFmt.format(unit.monthlyRent - overdueStatus.paidAmount)}"
+            : "${"FILTER_EXPIRY_DATE".tr(ref)}: ${unit.contractEnd != null ? DateFormat.yMd(currentLang).format(unit.contractEnd!) : '-'}"),
         trailing: isVacant ? null : Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -124,7 +140,16 @@ class UnitFilteredListScreen extends ConsumerWidget {
     );
   }
 
-  // 기존 전화/문자 헬퍼 함수들 유지... (생략)
-  Future<void> _makePhoneCall(String phoneNumber) async { /* ... */ }
-  Future<void> _sendSMS(String phoneNumber) async { /* ... */ }
+  // 📍 기존 전화/문자 헬퍼 함수들 유지
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    if (phoneNumber.isEmpty) return;
+    final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(launchUri)) await launchUrl(launchUri);
+  }
+
+  Future<void> _sendSMS(String phoneNumber) async {
+    if (phoneNumber.isEmpty) return;
+    final Uri launchUri = Uri(scheme: 'sms', path: phoneNumber);
+    if (await canLaunchUrl(launchUri)) await launchUrl(launchUri);
+  }
 }

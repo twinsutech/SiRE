@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import '../../core/database/database_provider.dart';
 import '../ledger/unpaid_provider.dart';
 import 'room_detail_screen.dart';
@@ -23,7 +24,6 @@ class PropertyScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final propertyListAsync = ref.watch(propertyListProvider);
-    // 📍 요약 데이터 프로바이더 감시
     final summaryAsync = ref.watch(propertySummaryProvider);
 
     return Scaffold(
@@ -32,14 +32,14 @@ class PropertyScreen extends ConsumerWidget {
         backgroundColor: const Color(0xFF1A237E),
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          "Properties",
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+        title: Text(
+          "NAV_PROPERTIES".tr(ref), // 📍 다국어 적용: "Properties"
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            tooltip: "Add Building",
+            tooltip: "PROP_ADD_BUILDING".tr(ref), // 📍 다국어 적용: "Add Building"
             onPressed: () {
               showDialog(
                 context: context,
@@ -54,15 +54,17 @@ class PropertyScreen extends ConsumerWidget {
         error: (err, stack) => Center(child: Text('Error: $err')),
         data: (buildingList) {
           if (buildingList.isEmpty) {
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.apartment, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text("No properties yet.\nTap + to add your first building.",
+                  const Icon(Icons.apartment, size: 64, color: Colors.grey),
+                  const SizedBox(height: 16),
+                  Text(
+                      "PROP_NO_BUILDINGS_DESC".tr(ref), // 📍 다국어 적용
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey, fontSize: 16)),
+                      style: const TextStyle(color: Colors.grey, fontSize: 16)
+                  ),
                 ],
               ),
             );
@@ -71,19 +73,17 @@ class PropertyScreen extends ConsumerWidget {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
-              // 📍 1. 상단 종합 요약 대시보드 위젯
               summaryAsync.when(
-                data: (summary) => _buildSummaryDashboard(summary, context),
+                data: (summary) => _buildSummaryDashboard(summary, context, ref),
                 loading: () => const SizedBox(height: 150, child: Center(child: CircularProgressIndicator())),
                 error: (_, __) => const SizedBox.shrink(),
               ),
               const SizedBox(height: 8),
-              const Text(
-                "My Buildings",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A237E)),
+              Text(
+                "PROP_MY_BUILDINGS".tr(ref), // 📍 다국어 적용: "My Buildings"
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A237E)),
               ),
               const SizedBox(height: 16),
-              // 📍 2. 기존 빌딩 카드 리스트
               ...buildingList.map((item) => Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: _buildBuildingCard(context, ref, item),
@@ -95,11 +95,10 @@ class PropertyScreen extends ConsumerWidget {
     );
   }
 
-  // 📍 [수정] 종합 요약 대시보드 UI 빌더: 개별 클릭 기능 반영
-  Widget _buildSummaryDashboard(PropertySummary summary, BuildContext context) {
+  // 📍 [수정] 종합 요약 대시보드 UI 빌더 (공간 넘침 해결을 위해 Flexible 적용)
+  Widget _buildSummaryDashboard(PropertySummary summary, BuildContext context, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
-      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -107,77 +106,90 @@ class PropertyScreen extends ConsumerWidget {
           BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Monthly Collection", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-              Text("${(summary.collectionRate * 100).toInt()}%",
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Color(0xFF1A237E))),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("PROP_MONTHLY_COLLECTION".tr(ref), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                  Text("${(summary.collectionRate * 100).toInt()}%",
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Color(0xFF1A237E))),
+                ],
+              ),
+              const SizedBox(height: 12),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: LinearProgressIndicator(
+                  value: summary.collectionRate,
+                  minHeight: 8,
+                  backgroundColor: Colors.grey[200],
+                  valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF1A237E)),
+                ),
+              ),
+              const SizedBox(height: 20),
+              // 📍 [에러 해결] Row 내부 아이템들을 Flexible로 감싸 공간 넘침 방지
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(child: _buildClickableSummaryItem(context, ref, Icons.warning_amber_rounded, "ALERT_OVERDUE_TITLE".tr(ref), "${summary.totalUnpaid}", Colors.red, UnitFilterType.unpaid)),
+                  Flexible(child: _buildClickableSummaryItem(context, ref, Icons.door_front_door_outlined, "DASHBOARD_VACANT_UNITS".tr(ref), "${summary.totalVacancies}", Colors.grey, UnitFilterType.vacant)),
+                  Flexible(child: _buildClickableSummaryItem(context, ref, Icons.event_available_outlined, "ALERT_CONTRACT_ENDING_TITLE".tr(ref), "${summary.expiringSoon}", Colors.orange, UnitFilterType.expiring)),
+                  Flexible(child: _buildSummaryItem(Icons.trending_up, "PROP_YIELD".tr(ref), "${summary.averageYield.toStringAsFixed(1)}%", Colors.green)),
+                ],
+              ),
             ],
           ),
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: LinearProgressIndicator(
-              value: summary.collectionRate,
-              minHeight: 8,
-              backgroundColor: Colors.grey[200],
-              valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF1A237E)),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // 📍 미납(Unpaid) 클릭 시 이동
-              _buildClickableSummaryItem(
-                  context, Icons.warning_amber_rounded, "Unpaid", "${summary.totalUnpaid}", Colors.red, UnitFilterType.unpaid
-              ),
-              // 📍 공실(Vacant) 클릭 시 이동
-              _buildClickableSummaryItem(
-                  context, Icons.door_front_door_outlined, "Vacant", "${summary.totalVacancies}", Colors.grey, UnitFilterType.vacant
-              ),
-              // 📍 만기임박(Expiring) 클릭 시 이동
-              _buildClickableSummaryItem(
-                  context, Icons.event_available_outlined, "Expiring", "${summary.expiringSoon}", Colors.orange, UnitFilterType.expiring
-              ),
-              // 수익률 (단순 표시)
-              _buildSummaryItem(Icons.trending_up, "Yield", "${summary.averageYield.toStringAsFixed(1)}%", Colors.green),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  // 📍 [신규] 클릭 가능한 요약 아이템 헬퍼
-  Widget _buildClickableSummaryItem(BuildContext context, IconData icon, String label, String value, Color color, UnitFilterType type) {
-    return InkWell(
-      onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => UnitFilteredListScreen(filterType: type))
-      ),
-      borderRadius: BorderRadius.circular(8),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-        child: _buildSummaryItem(icon, label, value, color),
+  // 📍 [핵심 수정] InkWell이 Material 레이어 위에서 확실히 보이도록 수정
+  Widget _buildClickableSummaryItem(BuildContext context, WidgetRef ref, IconData icon, String label, String value, Color color, UnitFilterType type) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        splashColor: color.withOpacity(0.2),
+        highlightColor: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        onTap: () async {
+          HapticFeedback.mediumImpact();
+          await Future.delayed(const Duration(milliseconds: 150));
+          if (context.mounted) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UnitFilteredListScreen(filterType: type))
+            );
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+          child: _buildSummaryItem(icon, label, value, color),
+        ),
       ),
     );
   }
 
-  // 📍 요약 항목 빌더 (메서드 부활)
   Widget _buildSummaryItem(IconData icon, String label, String value, Color color) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          children: [
-            Icon(icon, size: 14, color: color),
-            const SizedBox(width: 4),
-            Text(label, style: const TextStyle(color: Colors.grey, fontSize: 11)),
-          ],
+        // 📍 FittedBox를 사용하여 텍스트가 영역을 벗어나지 않도록 강제 축소
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 14, color: color),
+              const SizedBox(width: 4),
+              Text(label, style: const TextStyle(color: Colors.grey, fontSize: 11)),
+            ],
+          ),
         ),
         const SizedBox(height: 4),
         Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
@@ -242,17 +254,19 @@ class PropertyScreen extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              building.name,
+                              // 📍 [핵심 수정] 건물 이름이 시스템 키(COMMON_BUILDING_NAME)인 경우 번역 처리
+                              building.name.startsWith('COMMON_') ? building.name.tr(ref) : building.name,
                               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Text("Total ${item.units.length} Units",
+                            Text("${"PROP_TOTAL".tr(ref)} ${item.units.length} ${"COMMON_ROOMS".tr(ref)}",
                                 style: const TextStyle(fontSize: 14, color: Colors.white70)),
                           ],
                         ),
                       ),
                       _buildAdminPopupMenu(
                         context,
+                        ref,
                         onEdit: () {
                           showDialog(
                             context: context,
@@ -284,13 +298,13 @@ class PropertyScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Occupancy Status", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey[700])),
-                    Text("Yield: $yieldVal%", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primaryNavy)),
+                    Text("DASHBOARD_OCCUPANCY".tr(ref), style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey[700])),
+                    Text("${"PROP_YIELD".tr(ref)}: $yieldVal%", style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.primaryNavy)),
                   ],
                 ),
                 const SizedBox(height: 12),
                 if (item.units.isEmpty)
-                  _buildEmptyUnitPlaceholder()
+                  _buildEmptyUnitPlaceholder(ref)
                 else
                   _buildRoomGrid(context, ref, item.units),
               ],
@@ -301,7 +315,7 @@ class PropertyScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildAdminPopupMenu(BuildContext context, {required VoidCallback onEdit, required VoidCallback onDelete}) {
+  Widget _buildAdminPopupMenu(BuildContext context, WidgetRef ref, {required VoidCallback onEdit, required VoidCallback onDelete}) {
     return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert, color: Colors.white),
       offset: const Offset(0, 45),
@@ -312,23 +326,23 @@ class PropertyScreen extends ConsumerWidget {
         if (value == 'delete') onDelete();
       },
       itemBuilder: (context) => [
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'edit',
           child: Row(
             children: [
-              Icon(Icons.edit_note_rounded, size: 22, color: Color(0xFF1A237E)),
-              SizedBox(width: 12),
-              Text("Edit", style: TextStyle(color: Color(0xFF1A237E), fontWeight: FontWeight.w500)),
+              const Icon(Icons.edit_note_rounded, size: 22, color: Color(0xFF1A237E)),
+              const SizedBox(width: 12),
+              Text("COMMON_EDIT".tr(ref), style: const TextStyle(color: Color(0xFF1A237E), fontWeight: FontWeight.w500)),
             ],
           ),
         ),
-        const PopupMenuItem(
+        PopupMenuItem(
           value: 'delete',
           child: Row(
             children: [
-              Icon(Icons.delete_outline_rounded, size: 22, color: Colors.redAccent),
-              SizedBox(width: 12),
-              Text("Delete", style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w500)),
+              const Icon(Icons.delete_outline_rounded, size: 22, color: Colors.redAccent),
+              const SizedBox(width: 12),
+              Text("COMMON_DELETE".tr(ref), style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w500)),
             ],
           ),
         ),
@@ -336,7 +350,7 @@ class PropertyScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildEmptyUnitPlaceholder() {
+  Widget _buildEmptyUnitPlaceholder(WidgetRef ref) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 20),
@@ -345,9 +359,9 @@ class PropertyScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.grey[200]!),
       ),
-      child: const Center(
-        child: Text("No units added yet.\nClick + to add rooms.",
-            textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 13)),
+      child: Center(
+        child: Text("PROP_NO_UNITS_DESC".tr(ref),
+            textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey, fontSize: 13)),
       ),
     );
   }
@@ -371,8 +385,8 @@ class PropertyScreen extends ConsumerWidget {
     final unpaidAsync = ref.watch(unpaidListProvider);
 
     return unpaidAsync.when(
-      loading: () => _buildBaseRoomContainer(unit, Colors.grey, "로딩 중", null),
-      error: (err, _) => _buildBaseRoomContainer(unit, Colors.red, "에러", null),
+      loading: () => _buildBaseRoomContainer(unit, Colors.grey, "COMMON_LOADING".tr(ref), null),
+      error: (err, _) => _buildBaseRoomContainer(unit, Colors.red, "COMMON_ERROR".tr(ref), null),
       data: (unpaidList) {
         final myStatus = unpaidList.firstWhere(
               (s) => s.unit.id == unit.id,
@@ -385,16 +399,16 @@ class PropertyScreen extends ConsumerWidget {
         );
 
         Color statusColor = AppColors.incomeGreen;
-        String statusText = "완납";
-        Widget? leaseBadge = _buildLeaseBadge(unit.leaseType);
+        String statusText = "STATUS_PAID".tr(ref);
+        Widget? leaseBadge = _buildLeaseBadge(unit.leaseType, ref);
 
         if (unit.tenantName == null || unit.tenantName!.isEmpty) {
           statusColor = Colors.grey;
-          statusText = "공실";
+          statusText = "DASHBOARD_VACANT_UNITS".tr(ref);
           leaseBadge = null;
         } else if (myStatus.status == 'OVERDUE' && (unit.leaseType == '월세' || unit.leaseType == '반전세')) {
           statusColor = AppColors.expenseRed;
-          statusText = "미납";
+          statusText = "ALERT_OVERDUE_TITLE".tr(ref);
         } else {
           bool isExpiring = false;
           if (unit.contractEnd != null) {
@@ -404,13 +418,13 @@ class PropertyScreen extends ConsumerWidget {
 
           if (isExpiring) {
             statusColor = Colors.orange;
-            statusText = "만기임박";
+            statusText = "ALERT_CONTRACT_ENDING_TITLE".tr(ref);
           } else if (myStatus.status == 'PAID') {
             statusColor = const Color(0xFF1A237E);
-            statusText = "완납";
+            statusText = "STATUS_PAID".tr(ref);
           } else {
             statusColor = AppColors.incomeGreen;
-            statusText = unit.leaseType == '전세' ? "전세" : "대기";
+            statusText = unit.leaseType == '전세' ? "LEASE_JEONSE".tr(ref) : "STATUS_WAITING".tr(ref);
           }
         }
 
@@ -426,7 +440,7 @@ class PropertyScreen extends ConsumerWidget {
     );
   }
 
-  Widget? _buildLeaseBadge(String? leaseType) {
+  Widget? _buildLeaseBadge(String? leaseType, WidgetRef ref) {
     if (leaseType == null || leaseType == '공실') return null;
 
     Color badgeColor;
@@ -435,15 +449,15 @@ class PropertyScreen extends ConsumerWidget {
     switch (leaseType) {
       case '월세':
         badgeColor = const Color(0xFF2196F3);
-        label = "월";
+        label = "LEASE_MONTHLY_SHORT".tr(ref); // 📍 다국어: "월"
         break;
       case '전세':
         badgeColor = const Color(0xFF9C27B0);
-        label = "전";
+        label = "LEASE_JEONSE_SHORT".tr(ref); // 📍 다국어: "전"
         break;
       case '반전세':
         badgeColor = const Color(0xFFFF9800);
-        label = "반";
+        label = "LEASE_HALF_JEONSE_SHORT".tr(ref); // 📍 다국어: "반"
         break;
       default:
         return null;
@@ -470,7 +484,14 @@ class PropertyScreen extends ConsumerWidget {
               children: [
                 Text(unit.roomNumber, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 15)),
                 const SizedBox(height: 2),
-                Text(text, style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w500)),
+                // 📍 텍스트 길이에 따라 자동 조절
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    child: Text(text, style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.w500)),
+                  ),
+                ),
               ],
             ),
           ),
@@ -488,28 +509,32 @@ class PropertyScreen extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(padding: const EdgeInsets.all(20), child: Text("${unit.roomNumber}호 퀵 메뉴", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+            Padding(
+                padding: const EdgeInsets.all(20),
+                child: Text("${unit.roomNumber}${"COMMON_ROOM_UNIT".tr(ref)} ${"PROP_QUICK_MENU".tr(ref)}",
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
+            ),
             if (unit.tenantName != null && unit.tenantName!.isNotEmpty) ...[
               ListTile(
                 leading: const CircleAvatar(backgroundColor: Colors.green, child: Icon(Icons.phone, color: Colors.white)),
-                title: Text("${unit.tenantName}님에게 전화"),
+                title: Text("${"PROP_CALL_TO".tr(ref)} ${unit.tenantName}"),
                 onTap: () { Navigator.pop(context); _makePhoneCall(unit.tenantPhone ?? ""); },
               ),
               ListTile(
                 leading: CircleAvatar(backgroundColor: isOverdue ? Colors.orange : Colors.blue, child: Icon(isOverdue ? Icons.notification_important : Icons.message, color: Colors.white)),
-                title: Text(isOverdue ? "미납 안내 문자 발송" : "문자 메시지 보내기"),
-                onTap: () { Navigator.pop(context); if (isOverdue) { _sendRemindSMS(unit, context); } else { _sendSMS(unit.tenantPhone ?? ""); } },
+                title: Text(isOverdue ? "PROP_SEND_REMIND_SMS".tr(ref) : "PROP_SEND_SMS".tr(ref)),
+                onTap: () { Navigator.pop(context); if (isOverdue) { _sendRemindSMS(unit, context, ref); } else { _sendSMS(unit.tenantPhone ?? ""); } },
               ),
               const Divider(),
             ],
             ListTile(
               leading: const CircleAvatar(backgroundColor: Color(0xFF1A237E), child: Icon(Icons.info_outline, color: Colors.white)),
-              title: const Text("상세 정보 보기"),
+              title: Text("PROP_VIEW_DETAIL".tr(ref)),
               onTap: () { Navigator.pop(context); Navigator.push(context, MaterialPageRoute(builder: (context) => RoomDetailScreen(unit: unit))); },
             ),
             ListTile(
               leading: const CircleAvatar(backgroundColor: Colors.redAccent, child: Icon(Icons.delete_outline, color: Colors.white)),
-              title: const Text("호실 삭제"),
+              title: Text("PROP_DELETE_UNIT".tr(ref)),
               onTap: () { Navigator.pop(context); _showDeleteUnitConfirm(context, ref, unit); },
             ),
             const SizedBox(height: 10),
@@ -519,16 +544,27 @@ class PropertyScreen extends ConsumerWidget {
     );
   }
 
-  // 📍 독촉 문자/전화 기능
-  Future<void> _sendRemindSMS(Unit unit, BuildContext context) async {
+  Future<void> _sendRemindSMS(Unit unit, BuildContext context, WidgetRef ref) async {
     if (unit.tenantPhone == null || unit.tenantPhone!.isEmpty) return;
     final now = DateTime.now();
-    final String message = "[임대료 안내]\n안녕하세요, ${unit.tenantName}님.\n${now.month}월분 임대료(${NumberFormat('#,###').format(unit.monthlyRent)}만원)가 아직 확인되지 않아 연락드립니다.\n\n확인 후 입금 부탁드립니다.\n항상 감사합니다. 😊";
+    final lang = ref.read(localizationProvider.notifier).currentLang;
+
+    // 📍 [화폐 다국어] 국가별 통화 포맷터 적용 (SMS 템플릿용)
+    final currencyFmt = NumberFormat.simpleCurrency(locale: lang, decimalDigits: 0);
+
+    // 📍 SMS 템플릿 다국어 적용
+    final String msgTemplate = "PROP_SMS_REMIND_TEMPLATE".tr(ref);
+    final String message = msgTemplate
+        .replaceAll("{tenant}", unit.tenantName ?? "")
+        .replaceAll("{month}", "${now.month}")
+    // 📍 [수정] 독촉 문자 내 금액 표시를 로케일에 맞게 다국어 포맷으로 변경
+        .replaceAll("{amount}", currencyFmt.format(unit.monthlyRent));
+
     final String encodedMessage = Uri.encodeComponent(message).replaceAll('+', '%20');
     final String smsUrl = Platform.isAndroid ? "sms:${unit.tenantPhone}?body=$encodedMessage" : "sms:${unit.tenantPhone}&body=$encodedMessage";
     final Uri uri = Uri.parse(smsUrl);
     if (await canLaunchUrl(uri)) { await launchUrl(uri); }
-    else if (context.mounted) { ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("문자 앱을 실행할 수 없습니다."))); }
+    else if (context.mounted) { ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("ALERT_SMS_APP_ERROR".tr(ref)))); }
   }
 
   Future<void> _makePhoneCall(String phoneNumber) async { if (phoneNumber.isEmpty) return; final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber); if (await canLaunchUrl(launchUri)) await launchUrl(launchUri); }
@@ -536,13 +572,23 @@ class PropertyScreen extends ConsumerWidget {
 
   Future<void> _showDeleteUnitConfirm(BuildContext context, WidgetRef ref, Unit unit) {
     return showDialog(
-        context: context, builder: (context) => AlertDialog(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), title: const Text("Delete Unit"), content: Text("Are you sure you want to delete room '${unit.roomNumber}'?"),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")), ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white), onPressed: () async { final db = ref.read(databaseProvider); await (db.delete(db.units)..where((t) => t.id.equals(unit.id))).go(); ref.invalidate(propertyListProvider); if (context.mounted) Navigator.pop(context); }, child: const Text("Delete"))]));
+        context: context, builder: (context) => AlertDialog(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text("PROP_DELETE_UNIT".tr(ref)),
+        content: Text("${"PROP_DELETE_UNIT_CONFIRM".tr(ref)} '${unit.roomNumber}'?"),
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text("COMMON_CANCEL".tr(ref))),
+          ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+              onPressed: () async { final db = ref.read(databaseProvider); await (db.delete(db.units)..where((t) => t.id.equals(unit.id))).go(); ref.invalidate(propertyListProvider); if (context.mounted) Navigator.pop(context); },
+              child: Text("COMMON_DELETE".tr(ref)))]));
   }
 
   Future<void> _showDeleteBuildingConfirm(BuildContext context, WidgetRef ref, Building building) {
     return showDialog(
-        context: context, builder: (context) => AlertDialog(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), title: const Text("Delete Building"), content: Text("Delete '${building.name}' and all its units?"),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")), ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white), onPressed: () async { final db = ref.read(databaseProvider); await (db.delete(db.buildings)..where((t) => t.id.equals(building.id))).go(); ref.invalidate(propertyListProvider); if (context.mounted) Navigator.pop(context); }, child: const Text("Delete"))]));
+        context: context, builder: (context) => AlertDialog(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text("PROP_DELETE_BUILDING".tr(ref)),
+        content: Text("${"PROP_DELETE_BUILDING_CONFIRM".tr(ref)} '${building.name}'?"),
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text("COMMON_CANCEL".tr(ref))),
+          ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+              onPressed: () async { final db = ref.read(databaseProvider); await (db.delete(db.buildings)..where((t) => t.id.equals(building.id))).go(); ref.invalidate(propertyListProvider); if (context.mounted) Navigator.pop(context); },
+              child: Text("COMMON_DELETE".tr(ref)))]));
   }
 }

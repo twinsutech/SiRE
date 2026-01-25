@@ -48,13 +48,16 @@ Future<List<UnpaidStatus>> unpaidList(UnpaidListRef ref) async {
     final dueDate = DateTime(now.year, now.month, dueDay);
 
     // 4. 해당 호실의 이번 달 입금액 합산
-    // 📍 수정 포인트: 카테고리가 '월세' 혹은 '반전세'인 수입(INC) 내역을 모두 합산합니다.
+    // 📍 다국어 최적화: 특정 언어 텍스트가 아닌 '고정 키'나 포함 여부로 판별합니다.
     final paidAmount = transactions
-        .where((t) =>
-    t.transaction.unitId == unit.id &&
-        t.transaction.type == 'INC' &&
-        (t.transaction.category == '월세' || t.transaction.category == '반전세')
-    )
+        .where((t) {
+      final tx = t.transaction;
+      final cat = tx.category.toUpperCase();
+      return tx.unitId == unit.id &&
+          tx.type == 'INC' &&
+          // 📍 카테고리가 월세 관련 키워드(CAT_RENT 등)를 포함하는지 확인
+          (cat.contains('RENT') || cat.contains('월세') || cat.contains('임대료') || cat.contains('家賃'));
+    })
         .fold(0, (sum, t) => sum + t.transaction.amount.toInt());
 
     // 5. 상태 판별 로직

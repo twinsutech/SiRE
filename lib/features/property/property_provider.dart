@@ -22,7 +22,7 @@ class BuildingWithUnits {
     int totalMonthlyRent = units.fold(0, (sum, unit) => sum + unit.monthlyRent);
     int totalDeposit = units.fold(0, (sum, unit) => sum + unit.deposit);
 
-    double investment = building.purchasePrice! - totalDeposit;
+    double investment = building.purchasePrice!.toDouble() - totalDeposit;
     if (investment <= 0) return 0.0;
 
     return ((totalMonthlyRent * 12) / investment) * 100;
@@ -72,6 +72,7 @@ Future<List<BuildingWithUnits>> propertyList(PropertyListRef ref) async {
 @riverpod
 Future<PropertySummary> propertySummary(PropertySummaryRef ref) async {
   // 📍 건물 리스트와 미납 리스트를 모두 구독합니다.
+  // 📍 다국어 대응: 미납 리스트는 내부적으로 CAT_RENT 등 고정 키를 사용하여 계산되므로 안전합니다.
   final propertyList = await ref.watch(propertyListProvider.future);
   final unpaidList = await ref.watch(unpaidListProvider.future);
 
@@ -97,8 +98,8 @@ Future<PropertySummary> propertySummary(PropertySummaryRef ref) async {
     sumYield += item.yieldRate;
 
     for (var unit in item.units) {
-      // 공실 체크
-      if (unit.tenantName == null || unit.tenantName!.isEmpty) {
+      // 공실 체크 (tenantName이 비어있으면 공실로 판단)
+      if (unit.tenantName == null || unit.tenantName!.trim().isEmpty) {
         vacantUnits++;
       } else {
         totalTenantUnits++;
@@ -113,6 +114,7 @@ Future<PropertySummary> propertySummary(PropertySummaryRef ref) async {
 
   // 📍 2. 미납 데이터 처리 (unpaidListProvider 활용)
   // status가 'OVERDUE'인 호실의 개수를 셉니다.
+  // 이 로직은 언어 설정과 관계없이 고정된 ENUM 성격의 문자열 'OVERDUE'를 기준으로 작동합니다.
   final overdueUnits = unpaidList.where((s) => s.status == 'OVERDUE').toList();
   final int unpaidCount = overdueUnits.length;
 

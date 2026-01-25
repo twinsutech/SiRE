@@ -7,15 +7,18 @@ part 'security_provider.g.dart';
 @riverpod
 class SecurityNotifier extends _$SecurityNotifier {
   // 📍 보안 저장소 인스턴스 (iOS: Keychain, Android: KeyStore 사용)
+  // 다국어 환경에서도 데이터 키값은 고정되어야 하므로 'user_pin_secure'를 유지합니다.
   static const _storage = FlutterSecureStorage();
   static const _pinKey = 'user_pin_secure';
 
   // 현재 세션에서 인증이 되었는지 여부 (앱 실행 중 메모리에서만 관리)
+  // 다국어 설정 페이지 진입 시나 민감한 리포트 열람 시 이 상태를 체크합니다.
   final isAuthenticatedProvider = StateProvider<bool>((ref) => false);
 
   @override
   Future<bool> build() async {
     // 📍 앱 시작 시 보안 저장소에 PIN이 있는지 확인합니다.
+    // 이 값의 존재 유무에 따라 초기 다국어 환영 메시지나 잠금 화면 노출 여부가 결정됩니다.
     final savedPin = await _storage.read(key: _pinKey);
     return savedPin != null; // PIN이 존재하면 true 반환
   }

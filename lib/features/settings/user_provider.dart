@@ -1,6 +1,7 @@
 // lib/src/features/settings/user_provider.dart
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 
 part 'user_provider.g.dart';
 
@@ -17,14 +18,20 @@ class UserNickname extends _$UserNickname {
   @override
   UserProfileData build() {
     _loadProfile();
-    return UserProfileData(nickname: "Landlord"); // 초기 기본값
+    // 📍 초기 기본값: 다국어 지원을 위해 임시 값을 넣고 _loadProfile에서 실제 번역본을 적용합니다.
+    return UserProfileData(nickname: "Landlord");
   }
 
   // 📍 로컬에서 닉네임과 이미지 경로를 함께 불러오기
   Future<void> _loadProfile() async {
     final prefs = await SharedPreferences.getInstance();
-    final name = prefs.getString('user_nickname') ?? "Landlord";
+    final l10n = ref.read(localizationProvider.notifier);
+
+    // 📍 다국어 적용: 저장된 이름이 없으면 각 언어별 "건물주" 기본칭호 사용
+    final defaultNickname = l10n.translate("SETTINGS_DEFAULT_NICKNAME");
+    final name = prefs.getString('user_nickname') ?? defaultNickname;
     final path = prefs.getString('user_image_path');
+
     state = UserProfileData(nickname: name, imagePath: path);
   }
 

@@ -5,9 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import '../../core/database/database_provider.dart';
 import '../../core/database/app_database.dart';
 import 'property_provider.dart';
+
+// 📍 [핵심 수정] 비즈니스 로직 및 DB 저장을 위한 고정 키값 정의 (언어 변경에 무관)
+const String LEASE_TYPE_MONTHLY = '월세';
+const String LEASE_TYPE_JEONSE = '전세';
+const String LEASE_TYPE_HALF = '반전세';
+const String LEASE_TYPE_VACANT = '공실';
 
 class AddUnitDialog extends ConsumerStatefulWidget {
   final int buildingId;
@@ -29,7 +36,8 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
   final List<XFile> _selectedImages = [];
   final ImagePicker _picker = ImagePicker();
 
-  String _selectedLeaseType = '공실';
+  // 📍 초기값을 고정 키값으로 설정
+  String _selectedLeaseType = LEASE_TYPE_VACANT;
   DateTime? _startDate;
   DateTime? _endDate;
 
@@ -46,11 +54,14 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
   }
 
   Future<void> _selectDate(BuildContext context, bool isStart) async {
+    // 📍 현재 설정된 언어 코드를 가져와 달력 로케일에 적용
+    final currentLang = ref.read(localizationProvider.notifier).currentLang;
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
+      locale: Locale(currentLang), // 📍 달력 언어 설정 적용
     );
     if (picked != null) {
       setState(() {
@@ -62,10 +73,16 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
 
   @override
   Widget build(BuildContext context) {
+    // 📍 [화폐 다국어 처리] 현재 언어 설정에 따른 통화 심볼 추출 ($ 또는 ₩ 등)
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+    final format = NumberFormat.simpleCurrency(locale: currentLang);
+    final String currencySymbol = format.currencySymbol;
+
     return AlertDialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: const Text("신규 호실 등록", style: TextStyle(fontWeight: FontWeight.bold)),
+      // 📍 PROP_ADD_UNIT_TITLE 키 번역 적용 확인
+      title: Text("PROP_ADD_UNIT_TITLE".tr(ref), style: const TextStyle(fontWeight: FontWeight.bold)),
       content: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: ConstrainedBox(
@@ -75,42 +92,67 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("현장 사진", style: TextStyle(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.bold)),
+                // 📍 PROP_SITE_PHOTOS 키 번역 적용
+                Text("PROP_SITE_PHOTOS".tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 _buildPhotoGallery(),
                 const SizedBox(height: 24),
-                _buildTextField(_roomController, "호수"),
+                // 📍 PROP_ROOM_NUMBER_LABEL 키 번역 적용
+                _buildTextField(_roomController, "PROP_ROOM_NUMBER_LABEL".tr(ref)),
                 const SizedBox(height: 20),
                 _buildLeaseTypeToggle(),
-                if (_selectedLeaseType != '공실') ...[
+
+                // 📍 [수정] 고정 키값을 비교하여 다국어 환경에서도 로직 유지
+                if (_selectedLeaseType != LEASE_TYPE_VACANT) ...[
                   const SizedBox(height: 20),
-                  _buildTextField(_tenantNameController, "세입자 성함"),
+                  // 📍 PROP_TENANT_NAME_LABEL 키 번역 적용
+                  _buildTextField(_tenantNameController, "PROP_TENANT_NAME_LABEL".tr(ref)),
                   const SizedBox(height: 12),
-                  _buildTextField(_phoneController, "연락처", isNumber: true),
+                  // 📍 PROP_PHONE_LABEL 키 번역 적용
+                  _buildTextField(_phoneController, "PROP_PHONE_LABEL".tr(ref), isNumber: true),
                   const SizedBox(height: 12),
-                  _buildTextField(_depositController, "보증금 (만원)", isNumber: true),
-                  if (_selectedLeaseType == '월세' || _selectedLeaseType == '반전세') ...[
+
+                  // 📍 [수정] 보증금 입력 필드: CAT_DEPOSIT 번역과 화폐 심볼 동적 결합
+                  _buildTextField(
+                      _depositController,
+                      "${'CAT_DEPOSIT'.tr(ref)} ($currencySymbol)",
+                      isNumber: true
+                  ),
+
+                  // 📍 [수정] 고정 키값 비교 (월세 또는 반전세인 경우만 임대료 필드 노출)
+                  if (_selectedLeaseType == LEASE_TYPE_MONTHLY || _selectedLeaseType == LEASE_TYPE_HALF) ...[
                     const SizedBox(height: 12),
-                    _buildTextField(_rentController, "월세 (만원)", isNumber: true),
+
+                    // 📍 [수정] 임대료 입력 필드: CAT_RENT 번역과 화폐 심볼 동적 결합
+                    _buildTextField(
+                        _rentController,
+                        "${'CAT_RENT'.tr(ref)} ($currencySymbol)",
+                        isNumber: true
+                    ),
+
                     const SizedBox(height: 12),
-                    _buildTextField(_paymentDayController, "납입 예정일", isNumber: true),
+                    // 📍 PROP_PAYMENT_DAY_LABEL 키 번역 적용
+                    _buildTextField(_paymentDayController, "PROP_PAYMENT_DAY_LABEL".tr(ref), isNumber: true),
                   ],
                   const SizedBox(height: 20),
                   _buildDateSection(),
                 ],
                 const SizedBox(height: 20),
-                _buildTextField(_memoController, "메모", maxLines: 2),
+                // 📍 COMMON_MEMO_HINT 키 번역 적용
+                _buildTextField(_memoController, "COMMON_MEMO_HINT".tr(ref), maxLines: 2),
               ],
             ),
           ),
         ),
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text("취소")),
+        // 📍 COMMON_CANCEL 키 번역 적용
+        TextButton(onPressed: () => Navigator.pop(context), child: Text("COMMON_CANCEL".tr(ref))),
         ElevatedButton(
           onPressed: _saveUnit,
           style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white, minimumSize: const Size(100, 45)),
-          child: const Text("호실 추가"),
+          // 📍 PROP_ADD_UNIT_ACTION 키 번역 적용 확인
+          child: Text("PROP_ADD_UNIT_ACTION".tr(ref)),
         ),
       ],
     );
@@ -123,7 +165,11 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
       maxLines: maxLines,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       inputFormatters: isNumber ? [FilteringTextInputFormatter.digitsOnly] : null,
-      decoration: InputDecoration(labelText: label, border: const OutlineInputBorder(), isDense: true),
+      decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          isDense: true
+      ),
     );
   }
 
@@ -131,27 +177,78 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("계약 유형", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-        const SizedBox(height: 8),
+        Text(
+          "PROP_LEASE_TYPE_LABEL".tr(ref),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+        const SizedBox(height: 12),
         LayoutBuilder(builder: (context, constraints) {
-          return ToggleButtons(
-            isSelected: ['월세', '전세', '반전세', '공실'].map((e) => _selectedLeaseType == e).toList(),
-            onPressed: (index) => setState(() => _selectedLeaseType = ['월세', '전세', '반전세', '공실'][index]),
-            borderRadius: BorderRadius.circular(8),
-            constraints: BoxConstraints(minWidth: (constraints.maxWidth - 5) / 4, minHeight: 45),
-            children: const [Text('월세'), Text('전세'), Text('반전세'), Text('공실')],
+          final types = [LEASE_TYPE_MONTHLY, LEASE_TYPE_JEONSE, LEASE_TYPE_HALF, LEASE_TYPE_VACANT];
+          final labels = [
+            'LEASE_MONTHLY_SHORT'.tr(ref),
+            'LEASE_JEONSE_SHORT'.tr(ref),
+            'LEASE_HALF_JEONSE_SHORT'.tr(ref),
+            'DASHBOARD_VACANT_UNITS'.tr(ref)
+          ];
+
+          // 📍 전체 가용 너비 (334.6px 등)
+          final double totalWidth = constraints.maxWidth;
+
+          return Container(
+            width: totalWidth,
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: ToggleButtons(
+              isSelected: types.map((e) => _selectedLeaseType == e).toList(),
+              onPressed: (index) => setState(() => _selectedLeaseType = types[index]),
+              borderRadius: BorderRadius.circular(10),
+              selectedColor: Colors.white,
+              fillColor: const Color(0xFF1A237E),
+              color: Colors.grey[700],
+              // 📍 핵심: constraints를 null로 설정하거나 아주 작게 주어
+              // 아래의 SizedBox가 실제 너비를 결정하게 합니다.
+              constraints: const BoxConstraints(minHeight: 48),
+              renderBorder: true,
+              children: List.generate(labels.length, (index) {
+                return SizedBox(
+                  // 📍 전체 너비를 버튼 개수(4개)로 정확히 나눔 (테두리 두께 고려)
+                  width: (totalWidth - (labels.length + 1)) / labels.length,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown, // 📍 텍스트가 길면 자동으로 크기를 줄임
+                      alignment: Alignment.center,
+                      child: Text(
+                        labels[index],
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ),
           );
         }),
       ],
     );
   }
 
+
   Widget _buildDateSection() {
+    final lang = ref.watch(localizationProvider.notifier).currentLang;
     return Row(
       children: [
-        Expanded(child: OutlinedButton(onPressed: () => _selectDate(context, true), child: Text(_startDate == null ? '시작일' : DateFormat('yy-MM-dd').format(_startDate!)))),
+        // 📍 PROP_START_DATE 및 선택된 날짜 다국어 포맷 적용
+        Expanded(child: OutlinedButton(onPressed: () => _selectDate(context, true), child: Text(_startDate == null ? 'PROP_START_DATE'.tr(ref) : DateFormat.yMd(lang).format(_startDate!)))),
         const Padding(padding: EdgeInsets.symmetric(horizontal: 4), child: Text('~')),
-        Expanded(child: OutlinedButton(onPressed: () => _selectDate(context, false), child: Text(_endDate == null ? '종료일' : DateFormat('yy-MM-dd').format(_endDate!)))),
+        // 📍 PROP_END_DATE 및 선택된 날짜 다국어 포맷 적용
+        Expanded(child: OutlinedButton(onPressed: () => _selectDate(context, false), child: Text(_endDate == null ? 'PROP_END_DATE'.tr(ref) : DateFormat.yMd(lang).format(_endDate!)))),
       ],
     );
   }
@@ -167,7 +264,10 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
             return GestureDetector(
               onTap: () async {
                 final picked = await _picker.pickMultiImage(imageQuality: 70);
-                if (picked.isNotEmpty) setState(() => _selectedImages.addAll(picked));
+                if (picked.isNotEmpty) {
+                  HapticFeedback.mediumImpact(); // 📍 이미지 선택 피드백
+                  setState(() => _selectedImages.addAll(picked));
+                }
               },
               child: Container(width: 100, margin: const EdgeInsets.only(right: 8), decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.grey[300]!)), child: const Icon(Icons.add_a_photo, color: Colors.grey)),
             );
@@ -186,6 +286,7 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
   Future<void> _saveUnit() async {
     if (_roomController.text.isEmpty) return;
     final db = ref.read(databaseProvider);
+    // 📍 [DB 저장] 언어와 상관없이 고정된 키값(_selectedLeaseType)이 저장됩니다.
     final unitId = await db.into(db.units).insert(UnitsCompanion.insert(
       buildingId: widget.buildingId,
       roomNumber: _roomController.text,

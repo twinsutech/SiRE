@@ -1,9 +1,12 @@
 import 'dart:math';
 import 'dart:io'; // 📍 File 사용을 위해 추가
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:fl_chart/fl_chart.dart';
+
+import '../../core/localization/localization_provider.dart'; // 📍 다국어 임포트
 import '../../core/theme/app_colors.dart';
 import '../ledger/add_transaction_sheet.dart';
 import '../ledger/ledger_provider.dart';
@@ -21,6 +24,10 @@ class DashboardScreen extends ConsumerWidget {
     final dashboardAsync = ref.watch(dashboardDataProvider);
     final unpaidAsync = ref.watch(unpaidListProvider);
     final alerts = ref.watch(appAlertProvider);
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+
+    // 📍 [추가] 글로벌 화폐 포매터 정의 (국가별 통화 기호 자동 포함)
+    final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -44,8 +51,10 @@ class DashboardScreen extends ConsumerWidget {
                         children: [
                           Expanded(
                             child: _buildSummaryCard(
-                              "This Month",
-                              "${NumberFormat('#,###').format(data.totalIncome)} 만원",
+                              ref,
+                              "DASHBOARD_THIS_MONTH", // 📍 다국어: "This Month"
+                              // 📍 [수정] 이번 달 수익 금액에 다국어 화폐 포맷 적용
+                              currencyFmt.format(data.totalIncome),
                               Icons.monetization_on,
                               AppColors.incomeGreen,
                             ),
@@ -53,29 +62,32 @@ class DashboardScreen extends ConsumerWidget {
                           const SizedBox(width: 12),
                           Expanded(
                             child: _buildSummaryCard(
-                              "Occupancy",
+                              ref,
+                              "DASHBOARD_OCCUPANCY", // 📍 다국어: "Occupancy"
                               "${(data.occupancyRate * 100).toStringAsFixed(0)}%",
                               Icons.home,
                               data.occupancyRate >= 0.9 ? AppColors.primaryNavy : Colors.orange,
-                              subtitle: "${data.vacantUnits} Vacant",
+                              subtitle: "${data.vacantUnits} ${"DASHBOARD_VACANT_UNITS".tr(ref)}",
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 24),
 
-                      const Text("Revenue Trend", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text("DASHBOARD_REVENUE_TREND".tr(ref), // 📍 다국어: "Revenue Trend"
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 12),
-                      _buildRevenueChart(data),
+                      _buildRevenueChart(data, ref),
                       const SizedBox(height: 24),
 
-                      const Text("Recent Activity", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text("DASHBOARD_RECENT_ACTIVITY".tr(ref), // 📍 다국어: "Recent Activity"
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 8),
 
                       if (data.recentTransactions.isEmpty)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 40),
-                          child: Center(child: Text("No recent activities", style: TextStyle(color: Colors.grey))),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 40),
+                          child: Center(child: Text("DASHBOARD_NO_RECENT_ACTIVITY".tr(ref), style: const TextStyle(color: Colors.grey))),
                         )
                       else
                         ...data.recentTransactions.map((item) { // 📍 item(TransactionWithImages)으로 순회
@@ -108,7 +120,11 @@ class DashboardScreen extends ConsumerWidget {
                                 ),
                                 title: Row(
                                   children: [
-                                    Text(tx.category, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                                    // 📍 [핵심 수정] 카테고리 명칭이 시스템 키(CAT_)일 경우 번역 처리
+                                    Text(
+                                        tx.category.startsWith('CAT_') ? tx.category.tr(ref) : tx.category,
+                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)
+                                    ),
                                     // 📍 영수증 아이콘 추가 (장부와 일관성)
                                     if (item.hasImages) ...[
                                       const SizedBox(width: 4),
@@ -118,7 +134,8 @@ class DashboardScreen extends ConsumerWidget {
                                 ),
                                 subtitle: Text("${DateFormat('MM.dd').format(tx.transactionDate)} ${tx.memo ?? ''}", style: const TextStyle(fontSize: 12)),
                                 trailing: Text(
-                                  "${isIncome ? '+' : '-'}${NumberFormat('#,###').format(tx.amount)} 만",
+                                  // 📍 [수정] 최근 활동 리스트 금액에 다국어 화폐 포맷 적용
+                                  "${isIncome ? '+' : '-'}${currencyFmt.format(tx.amount)}",
                                   style: TextStyle(color: themeColor, fontWeight: FontWeight.bold, fontSize: 15),
                                 ),
                               ),
@@ -160,17 +177,23 @@ class DashboardScreen extends ConsumerWidget {
                 : null,
           ),
           const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text("Welcome back,", style: TextStyle(color: Colors.white70, fontSize: 14)),
-              Text(
-                profile.nickname, // 📍 profile 객체 내부의 nickname 사용
-                style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text("DASHBOARD_WELCOME".tr(ref), style: const TextStyle(color: Colors.white70, fontSize: 14)),
+                ),
+                Text(
+                  // 📍 [핵심 수정] 닉네임이 시스템 키(SETTINGS_)인 경우 번역 처리
+                  profile.nickname.startsWith('SETTINGS_') ? profile.nickname.tr(ref) : profile.nickname,
+                  style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
-          const Spacer(),
           ShakingBellIcon(
             alertCount: alerts.length,
             onTap: () {
@@ -182,8 +205,6 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  // ... (이하 _buildUnpaidBanner, _showUnpaidActionSheet, _buildRevenueChart 등 기존 코드 완전 동일하게 유지)
-
   Widget _buildUnpaidBanner(BuildContext context, WidgetRef ref, AsyncValue<List<UnpaidStatus>> unpaidAsync) {
     return unpaidAsync.when(
       data: (list) {
@@ -191,7 +212,10 @@ class DashboardScreen extends ConsumerWidget {
         if (overdueUnits.isEmpty) return const SizedBox.shrink();
 
         return InkWell(
-          onTap: () => _showUnpaidActionSheet(context, ref, overdueUnits),
+          onTap: () {
+            HapticFeedback.mediumImpact(); // 📍 터치 피드백 추가
+            _showUnpaidActionSheet(context, ref, overdueUnits);
+          },
           child: Container(
             margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
             padding: const EdgeInsets.all(16),
@@ -208,8 +232,8 @@ class DashboardScreen extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Unpaid Rent Detected!", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
-                      Text("Rooms: ${overdueUnits.map((u) => u.unit.roomNumber).join(', ')}", style: const TextStyle(color: Colors.white, fontSize: 13)),
+                      Text("DASHBOARD_UNPAID_DETECTED".tr(ref), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                      Text("${"COMMON_ROOMS".tr(ref)}: ${overdueUnits.map((u) => u.unit.roomNumber).join(', ')}", style: const TextStyle(color: Colors.white, fontSize: 13)),
                     ],
                   ),
                 ),
@@ -225,6 +249,10 @@ class DashboardScreen extends ConsumerWidget {
   }
 
   void _showUnpaidActionSheet(BuildContext context, WidgetRef ref, List<UnpaidStatus> overdueUnits) {
+    // 📍 팝업 내부에서도 국가 설정을 가져옴
+    final currentLang = ref.read(localizationProvider.notifier).currentLang;
+    final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -240,11 +268,11 @@ class DashboardScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("미납 수납 처리", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Text("DASHBOARD_UNPAID_TITLE".tr(ref), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
                   ],
                 ),
-                const Text("입금이 확인된 호실의 버튼을 눌러주세요.", style: TextStyle(color: Colors.grey, fontSize: 13)),
+                Text("DASHBOARD_UNPAID_SUBTITLE".tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 13)),
                 const SizedBox(height: 16),
                 Flexible(
                   child: ListView.separated(
@@ -263,8 +291,9 @@ class DashboardScreen extends ConsumerWidget {
                           backgroundColor: Colors.redAccent.withOpacity(0.1),
                           child: Text(roomNo, style: const TextStyle(color: Colors.redAccent, fontSize: 12, fontWeight: FontWeight.bold)),
                         ),
-                        title: Text("$roomNo호 수납 확인"),
-                        subtitle: Text("$tenant / ${NumberFormat('#,###').format(rentAmount)}원"),
+                        title: Text("$roomNo${"COMMON_ROOM_UNIT".tr(ref)} ${"DASHBOARD_PAYMENT_CONFIRM".tr(ref)}"),
+                        // 📍 [수정] 팝업 내부 월세 금액에 다국어 화폐 포맷 적용
+                        subtitle: Text("$tenant / ${currencyFmt.format(rentAmount)}"),
                         trailing: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF1A237E),
@@ -284,11 +313,11 @@ class DashboardScreen extends ConsumerWidget {
                             if (context.mounted) {
                               Navigator.pop(context);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('$roomNo호 수납 처리가 완료되었습니다.')),
+                                SnackBar(content: Text('$roomNo${"DASHBOARD_PAYMENT_COMPLETE".tr(ref)}')),
                               );
                             }
                           },
-                          child: const Text("확인"),
+                          child: Text("COMMON_CONFIRM".tr(ref)),
                         ),
                       );
                     },
@@ -302,7 +331,11 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildRevenueChart(dynamic data) {
+  Widget _buildRevenueChart(dynamic data, WidgetRef ref) {
+    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+    // 📍 차트 툴팁용 축약 포맷 (예: 1,000,000 -> 1M)
+    final compactFmt = NumberFormat.compact(locale: currentLang);
+
     return Container(
       height: 260,
       padding: const EdgeInsets.fromLTRB(16, 40, 16, 12),
@@ -325,15 +358,6 @@ class DashboardScreen extends ConsumerWidget {
                     }
                     return null;
                   }).whereType<ShowingTooltipIndicators>(),
-                  if (data.expenseSpots != null)
-                    ...(data.expenseSpots as List<FlSpot>).asMap().entries.map((entry) {
-                      if (entry.value.y > 0) {
-                        return ShowingTooltipIndicators([
-                          LineBarSpot(LineChartBarData(spots: data.expenseSpots), 1, entry.value),
-                        ]);
-                      }
-                      return null;
-                    }).whereType<ShowingTooltipIndicators>(),
                 ],
                 lineTouchData: LineTouchData(
                   enabled: false,
@@ -346,7 +370,8 @@ class DashboardScreen extends ConsumerWidget {
                       return touchedBarSpots.map((barSpot) {
                         final bool isRevenue = barSpot.barIndex == 0;
                         return LineTooltipItem(
-                          '${NumberFormat('#,###').format(barSpot.y)}',
+                          // 📍 [수정] 차트 툴팁 금액에 로케일별 축약 포맷 적용
+                          compactFmt.format(barSpot.y),
                           TextStyle(
                             color: isRevenue ? const Color(0xFF1A237E) : Colors.red[700],
                             fontWeight: FontWeight.bold,
@@ -375,9 +400,10 @@ class DashboardScreen extends ConsumerWidget {
                       getTitlesWidget: (value, meta) {
                         final now = DateTime.now();
                         final date = DateTime(now.year, now.month - (5 - value.toInt()), 1);
+                        // 📍 월 표시 다국어 (단순화: '월' 접미사 처리)
                         return SideTitleWidget(
                           axisSide: meta.axisSide,
-                          child: Text('${date.month}월', style: const TextStyle(color: Colors.grey, fontSize: 10)),
+                          child: Text('${date.month}${"COMMON_MONTH_UNIT".tr(ref)}', style: const TextStyle(color: Colors.grey, fontSize: 10)),
                         );
                       },
                     ),
@@ -412,9 +438,9 @@ class DashboardScreen extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _buildLegendItem("수익", const Color(0xFF1A237E)),
+              _buildLegendItem(ref, "COMMON_INCOME", const Color(0xFF1A237E)), // 📍 "수익"
               const SizedBox(width: 16),
-              _buildLegendItem("지출", Colors.red[300]!.withOpacity(0.6)),
+              _buildLegendItem(ref, "COMMON_EXPENSE", Colors.red[300]!.withOpacity(0.6)), // 📍 "지출"
             ],
           ),
         ],
@@ -422,7 +448,7 @@ class DashboardScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildLegendItem(String label, Color color) {
+  Widget _buildLegendItem(WidgetRef ref, String labelKey, Color color) {
     return Row(
       children: [
         Container(
@@ -431,26 +457,26 @@ class DashboardScreen extends ConsumerWidget {
           decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2)),
         ),
         const SizedBox(width: 4),
-        Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+        Text(labelKey.tr(ref), style: const TextStyle(fontSize: 11, color: Colors.grey)),
       ],
     );
   }
 
   IconData _getCategoryIcon(String category) {
     switch (category) {
-      case 'Rent': case '월세': case '임대료 수입': return Icons.home_work_rounded;
-      case 'Tax': case '세금/공과금': return Icons.request_quote_rounded;
-      case 'Repair': case '수리보수비': return Icons.build_circle_rounded;
-      case 'Utility': case '전기/수도료': return Icons.lightbulb_circle_rounded;
-      case 'Cleaning': case '청소비': return Icons.cleaning_services_rounded;
-      case 'Maintenance': case '관리비': return Icons.settings_suggest_rounded;
-      case '보험료': return Icons.verified_user_rounded;
-      case 'Deposit': case '보증금': return Icons.vpn_key_rounded;
+      case 'Rent': case '월세': case '임대료 수입': case 'CAT_RENT': return Icons.home_work_rounded;
+      case 'Tax': case '세금/공과금': case 'CAT_TAX': return Icons.request_quote_rounded;
+      case 'Repair': case '수리보수비': case 'CAT_REPAIR': return Icons.build_circle_rounded;
+      case 'Utility': case '전기/수도료': case 'CAT_UTILITY': return Icons.lightbulb_circle_rounded;
+      case 'Cleaning': case '청소비': case 'CAT_CLEANING': return Icons.cleaning_services_rounded;
+      case 'Maintenance': case '관리비': case 'CAT_MAINTENANCE': return Icons.settings_suggest_rounded;
+      case '보험료': case 'CAT_INSURANCE': return Icons.verified_user_rounded;
+      case 'Deposit': case '보증금': case 'CAT_DEPOSIT': return Icons.vpn_key_rounded;
       default: return Icons.receipt_long_rounded;
     }
   }
 
-  Widget _buildSummaryCard(String title, String value, IconData icon, Color color, {String? subtitle}) {
+  Widget _buildSummaryCard(WidgetRef ref, String titleKey, String value, IconData icon, Color color, {String? subtitle}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -463,12 +489,21 @@ class DashboardScreen extends ConsumerWidget {
         children: [
           Icon(icon, color: color, size: 28),
           const SizedBox(height: 12),
-          Text(title, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(titleKey.tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 12)),
+          ),
           const SizedBox(height: 4),
-          Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          ),
           if (subtitle != null) ...[
             const SizedBox(height: 4),
-            Text(subtitle, style: const TextStyle(color: Colors.redAccent, fontSize: 12, fontWeight: FontWeight.w500)),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(subtitle, style: const TextStyle(color: Colors.redAccent, fontSize: 12, fontWeight: FontWeight.w500)),
+            ),
           ]
         ],
       ),

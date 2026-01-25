@@ -5,83 +5,39 @@ import 'app_database.dart';
 Future<void> seedDatabase(AppDatabase db) async {
   print("🚀 데이터 확인 및 초기화를 시작합니다...");
 
-  // --- 1. 건물 및 유닛 데이터 시딩 ---
+  // --- 1. 건물 및 유닛 데이터 시딩 (배포 시 삭제) ---
   final buildingCount = await db.select(db.buildings).get();
   if (buildingCount.isEmpty) {
-    print("🏢 건물 데이터가 없어 생성을 시작합니다...");
-
-    // 건물 추가 (Villa Sunrise)
-    final buildingId = await db.into(db.buildings).insert(
-      BuildingsCompanion.insert(
-        name: 'Villa Sunrise',
-        address: const Value('Seoul, Gangnam-gu, 123-45'),
-        purchasePrice: const Value(1200000),
-      ),
-    );
-
-    // 101호: 정상 납부
-    await db.into(db.units).insert(
-      UnitsCompanion.insert(
-        buildingId: buildingId,
-        roomNumber: '101',
-        tenantName: const Value('John Doe'),
-        tenantPhone: const Value('010-1234-5678'),
-        deposit: const Value(5000),
-        monthlyRent: const Value(500),
-        contractStart: Value(DateTime(2023, 1, 1)),
-        contractEnd: Value(DateTime(2025, 1, 1)),
-      ),
-    );
-
-    // 201호: 연체 중
-    await db.into(db.units).insert(
-      UnitsCompanion.insert(
-        buildingId: buildingId,
-        roomNumber: '201',
-        tenantName: const Value('Jane Smith'),
-        deposit: const Value(5000),
-        monthlyRent: const Value(600),
-        contractStart: Value(DateTime(2023, 1, 1)),
-        contractEnd: Value(DateTime(2025, 1, 1)),
-        memo: const Value('월세 자주 밀림'),
-      ),
-    );
-
-    // 202호: 공실
-    await db.into(db.units).insert(
-      UnitsCompanion.insert(
-        buildingId: buildingId,
-        roomNumber: '202',
-        deposit: const Value(0),
-        monthlyRent: const Value(550),
-      ),
-    );
-    print("✅ 건물/유닛 데이터 생성 완료");
+    // 📍 배포용 클린업: 실제 사용자가 자신의 건물을 직접 등록할 수 있도록
+    // 기존의 Villa Sunrise 등 테스트 데이터 생성 로직을 제거했습니다.
+    print("🏢 등록된 건물 데이터가 없습니다. (새 사용자 상태)");
   } else {
     print("👉 건물 데이터가 이미 존재합니다.");
   }
 
-  // --- 2. 카테고리 데이터 시딩 (새로 추가된 부분) ---
+  // --- 2. 카테고리 데이터 시딩 ---
   final categoryCount = await db.select(db.categories).get();
   if (categoryCount.isEmpty) {
-    print("📂 카테고리 데이터가 없어 생성을 시작합니다...");
+    print("📂 카테고리 데이터가 없어 필수 시스템 항목 생성을 시작합니다...");
 
+    // 📍 다국어 대응을 위해 카테고리 이름을 시스템 키(Key) 형태로 저장합니다.
+    // UI에서 이 키를 감지하여 사용자의 언어로 번역해 보여줍니다.
     await db.batch((batch) {
       batch.insertAll(db.categories, [
-        // 수입 항목
-        CategoriesCompanion.insert(name: '임대료 수입', type: 'INCOME'),
-        CategoriesCompanion.insert(name: '기타 수입', type: 'INCOME'),
+        // 수입 항목 (INC)
+        CategoriesCompanion.insert(name: 'CAT_RENT', type: 'INC'),
+        CategoriesCompanion.insert(name: 'CAT_OTHER_INCOME', type: 'INC'),
 
-        // 지출 항목
-        CategoriesCompanion.insert(name: '수리보수비', type: 'EXPENSE'),
-        CategoriesCompanion.insert(name: '관리비', type: 'EXPENSE'),
-        CategoriesCompanion.insert(name: '전기/수도료', type: 'EXPENSE'),
-        CategoriesCompanion.insert(name: '청소비', type: 'EXPENSE'),
-        CategoriesCompanion.insert(name: '보험료', type: 'EXPENSE'),
-        CategoriesCompanion.insert(name: '세금/공과금', type: 'EXPENSE'),
+        // 지출 항목 (EXP)
+        CategoriesCompanion.insert(name: 'CAT_REPAIR', type: 'EXP'),
+        CategoriesCompanion.insert(name: 'CAT_MAINTENANCE', type: 'EXP'),
+        CategoriesCompanion.insert(name: 'CAT_UTILITY', type: 'EXP'),
+        CategoriesCompanion.insert(name: 'CAT_CLEANING', type: 'EXP'),
+        CategoriesCompanion.insert(name: 'CAT_INSURANCE', type: 'EXP'),
+        CategoriesCompanion.insert(name: 'CAT_TAX', type: 'EXP'),
       ]);
     });
-    print("✅ 카테고리 초기 데이터 생성 완료");
+    print("✅ 카테고리 초기 데이터(시스템 키) 생성 완료");
   } else {
     print("👉 카테고리 데이터가 이미 존재합니다.");
   }
