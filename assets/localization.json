@@ -346,7 +346,9 @@
   "LEASE_MONTHLY_SHORT": {
     "ar": "إيجار شهري", "bn": "মাসিক ভাড়া", "zh": "月租", "nl": "Maandhuur", "en": "Monthly", "fr": "Loyer mensuel", "de": "Monatsmiete", "hi": "मासिक किराया", "id": "Sewa Bulanan", "it": "Affitto mensile", "ja": "月極", "ko": "월세", "ms": "Sewa Bulanan", "pl": "Czynsz miesięczny", "pt": "Aluguel mensal", "ru": "Ежемесячно", "es": "Alquiler mensual", "th": "รายเดือน", "tr": "Aylık Kira", "vi": "Thuê theo tháng"
   },
-
+  "LEASE_JEONSE": {
+    "ar": "تأمين كامل", "bn": "সম্পূর্ণ আমানত", "zh": "全税", "nl": "Volledige borg", "en": "Deposit-based", "fr": "Bail avec caution", "de": "Vollkaution", "hi": "पूर्ण जमा", "id": "Sewa Deposit", "it": "Deposito cauzionale", "ja": "伝貰", "ko": "전세", "ms": "Sewa Deposit", "pl": "Wynajem za kaucją", "pt": "Aluguer com caução", "ru": "Залоговая аренда", "es": "Renta por depósito", "th": "เช่าแบบวางประกัน", "tr": "Depozitolu", "vi": "Thuê đặt cọc"
+  },
   "LEASE_JEONSE_SHORT": {
     "ar": "تأمين كامل", "bn": "সম্পূর্ণ আমানত", "zh": "全税", "nl": "Volledige borg", "en": "Deposit-based", "fr": "Bail avec caution", "de": "Vollkaution", "hi": "पूर्ण जमा", "id": "Sewa Deposit", "it": "Deposito cauzionale", "ja": "伝貰", "ko": "전세", "ms": "Sewa Deposit", "pl": "Wynajem za kaucją", "pt": "Aluguer com caução", "ru": "Залоговая аренда", "es": "Renta por depósito", "th": "เช่าแบบวางประกัน", "tr": "Depozitolu", "vi": "Thuê đặt cọc"
   },

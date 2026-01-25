@@ -440,34 +440,46 @@ class PropertyScreen extends ConsumerWidget {
     );
   }
 
+  // 📍 [핵심 수정] 20개 언어별 첫 글자 추출 로직 적용
   Widget? _buildLeaseBadge(String? leaseType, WidgetRef ref) {
     if (leaseType == null || leaseType == '공실') return null;
 
     Color badgeColor;
-    String label;
+    String fullLabel;
 
     switch (leaseType) {
       case '월세':
         badgeColor = const Color(0xFF2196F3);
-        label = "LEASE_MONTHLY_SHORT".tr(ref); // 📍 다국어: "월"
+        fullLabel = "LEASE_MONTHLY_SHORT".tr(ref); // 다국어 원본 (예: "Monthly", "월세")
         break;
       case '전세':
         badgeColor = const Color(0xFF9C27B0);
-        label = "LEASE_JEONSE_SHORT".tr(ref); // 📍 다국어: "전"
+        fullLabel = "LEASE_JEONSE_SHORT".tr(ref); // 다국어 원본 (예: "Jeonse", "전세")
         break;
       case '반전세':
         badgeColor = const Color(0xFFFF9800);
-        label = "LEASE_HALF_JEONSE_SHORT".tr(ref); // 📍 다국어: "반"
+        fullLabel = "LEASE_HALF_JEONSE_SHORT".tr(ref); // 다국어 원본 (예: "Half-Jeonse", "반전세")
         break;
       default:
         return null;
     }
 
+    // 📍 다국어 텍스트에서 첫 글자만 추출 (이모지나 특수문자 대응을 위해 characters 사용 권장되나 일반적으론 substring)
+    // 텍스트가 비어있지 않은 경우에만 첫 글자 추출
+    String firstChar = fullLabel.isNotEmpty ? fullLabel.substring(0, 1).toUpperCase() : "";
+
     return Container(
       width: 22, height: 22,
-      decoration: BoxDecoration(color: badgeColor, shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.12), blurRadius: 2, offset: const Offset(0, 1))]),
+      decoration: BoxDecoration(
+          color: badgeColor,
+          shape: BoxShape.circle,
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.12), blurRadius: 2, offset: const Offset(0, 1))]
+      ),
       alignment: Alignment.center,
-      child: Text(label, style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.normal, letterSpacing: -0.5)),
+      child: Text(
+          firstChar,
+          style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: -0.5)
+      ),
     );
   }
 
