@@ -767,6 +767,31 @@
   },
   "COMMON_DELETE": {
     "ar": "حذف", "bn": "মুছে ফেলুন", "zh": "删除", "nl": "Verwijderen", "en": "Delete", "fr": "Supprimer", "de": "Löschen", "hi": "हटाएं", "id": "Hapus", "it": "Elimina", "ja": "削除", "ko": "삭제", "ms": "Padam", "pl": "Usuń", "pt": "Excluir", "ru": "Удалить", "es": "Eliminar", "th": "ลบ", "tr": "Sil", "vi": "Xóa"
+  },
+
+  "CAT_RENT_INCOME": {
+    "ar": "إيرادات الإيجار", "bn": "ভাড়া আয়", "zh": "房租收入", "nl": "Huuroptbrengst", "en": "Rent Income", "fr": "Revenus locatifs", "de": "Mieteinnahmen", "hi": "कि라야 आय", "id": "Pendapatan Sewa", "it": "Rendita locativa", "ja": "家賃収入", "ko": "임대료 수입", "ms": "Pendapatan Sewa", "pl": "Przychód z wynajmu", "pt": "Rendimento de aluguel", "ru": "Доход от аренды", "es": "Ingresos por alquiler", "th": "รายได้ค่าเช่า", "tr": "Kira Geliri", "vi": "Thu nhập cho thuê"
+  },
+  "CAT_OTHER_INCOME": {
+    "ar": "دخل آخر", "bn": "অন্যান্য আয়", "zh": "其他收入", "nl": "Overige inkomsten", "en": "Other Income", "fr": "Autres revenus", "de": "Sonstige Einnahmen", "hi": "अन्य आय", "id": "Pendapatan Lainnya", "it": "Altre entrate", "ja": "その他収入", "ko": "기타 수입", "ms": "Pendapatan Lain", "pl": "Inne przychody", "pt": "Outras rendas", "ru": "Прочий доход", "es": "Otros ingresos", "th": "รายได้อื่น ๆ", "tr": "Diğer Gelirler", "vi": "Thu nhập khác"
+  },
+  "CAT_MAINTENANCE": {
+    "ar": "تكاليف الصيانة", "bn": "রক্ষণাবেক্ষণ খরচ", "zh": "维修费用", "nl": "Onderhoudskosten", "en": "Repair/Maintenance", "fr": "Frais d'entretien", "de": "Instandhaltung", "hi": "रखरखाव खर्च", "id": "Biaya Pemeliharaan", "it": "Spese di manutenzione", "ja": "修繕維持費", "ko": "수리보수비", "ms": "Kos Penyelenggaraan", "pl": "Koszty utrzymania", "pt": "Custos de manutenção", "ru": "Расходы на ремонт", "es": "Gastos de mantenimiento", "th": "ค่าบำ르รักษา", "tr": "Bakım Onarım", "vi": "Chi phí bảo trì"
+  },
+  "CAT_MANAGEMENT_FEE": {
+    "ar": "رسوم الإدارة", "bn": "ব্যবস্থাপনা ফি", "zh": "管理费", "nl": "Beheerskosten", "en": "Management Fee", "fr": "Frais de gestion", "de": "Verwaltungsgebühr", "hi": "प्रबंधन शुल्क", "id": "Biaya Pengelolaan", "it": "Spese di gestione", "ja": "管理費", "ko": "관리비", "ms": "Yuran Pengurusan", "pl": "Opłata za zarządzanie", "pt": "Taxa de administração", "ru": "Управленческие расходы", "es": "Gastos de gestión", "th": "ค่าส่วนกลาง", "tr": "Yönetim Gideri", "vi": "Phí quản lý"
+  },
+  "CAT_UTILITIES": {
+    "ar": "المرافق", "bn": "ইউ틸িলিটি", "zh": "水电费", "nl": "Nutsvoorzieningen", "en": "Electricity/Water", "fr": "Services publics", "de": "Nebenkosten", "hi": "उपयोगिताएँ", "id": "Biaya Utilitas", "it": "Utenze", "ja": "電気/水道代", "ko": "전기/수도료", "ms": "Utiliti", "pl": "Media", "pt": "Utilidades", "ru": "Коммунальные услуги", "es": "Servicios públicos", "th": "ค่าน้ำค่าไฟ", "tr": "Faturalar", "vi": "Điện nước"
+  },
+  "CAT_CLEANING_FEE": {
+    "ar": "رسوم التنظيف", "bn": "পরিচ্ছন্নতা ফি", "zh": "清洁费", "nl": "Schoonmaakkosten", "en": "Cleaning Fee", "fr": "Frais de nettoyage", "de": "Reinigungsgebühr", "hi": "सफाई शुल्क", "id": "Biaya Kebersihan", "it": "Spese di pulizia", "ja": "清掃費", "ko": "청소비", "ms": "Kos Pembersihan", "pl": "Opłata za sprzątanie", "pt": "Taxa de limpeza", "ru": "Расходы на уборку", "es": "Gastos de limpieza", "th": "ค่าทำความสะอาด", "tr": "Temizlik Gideri", "vi": "Phí vệ sinh"
+  },
+  "CAT_INSURANCE": {
+    "ar": "التأمين", "bn": "বীমা", "zh": "保险费", "nl": "Verzekering", "en": "Insurance", "fr": "Assurance", "de": "Versicherung", "hi": "बीमा", "id": "Asuransi", "it": "Assicurazione", "ja": "保険料", "ko": "보험료", "ms": "Insurans", "pl": "Ubezpieczenie", "pt": "Seguro", "ru": "Страхование", "es": "Seguro", "th": "ประกันภัย", "tr": "Sigorta", "vi": "Bảo hiểm"
+  },
+  "CAT_TAX_BILL": {
+    "ar": "الضرائب والفواتير", "bn": "কর/বিল", "zh": "税金/公用事业费", "nl": "Belastingen", "en": "Tax/Bills", "fr": "Taxes et factures", "de": "Steuern/Rechnungen", "hi": "कर/बिल", "id": "Pajak/Tagihan", "it": "Tasse e imposte", "ja": "税金/公課金", "ko": "세금/공과금", "ms": "Cukai/Bil", "pl": "Podatki/Rachunki", "pt": "Impostos/Contas", "ru": "Налоги и сборы", "es": "Impuestos y tasas", "th": "ภาษี/ค่าธรรมเนียม", "tr": "Vergi/Harç", "vi": "Thuế/Hóa đơn"
   }
 
 }

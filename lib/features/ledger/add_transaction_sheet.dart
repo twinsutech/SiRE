@@ -194,7 +194,7 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
             ),
             const SizedBox(height: 15),
 
-            // 📍 카테고리 드롭다운
+            // 📍 [핵심 수정] 카테고리 드롭다운 (다국어 실시간 대응)
             categoriesAsync.when(
               data: (categories) {
                 final filtered = categories.where((c) {
@@ -217,8 +217,13 @@ class _AddTransactionSheetState extends ConsumerState<AddTransactionSheet> {
                   ),
                   items: filtered.map((c) => DropdownMenuItem(
                       value: c.name,
-                      // 📍 카테고리명이 키(CAT_...)인 경우 번역해서 보여줌
-                      child: Text(c.name.startsWith('CAT_') ? c.name.tr(ref) : c.name)
+                      // 📍 [핵심] 카테고리명이 키(CAT_...)인 경우 .tr(ref)를 호출하여 언어 설정에 맞게 실시간 번역
+                      child: Text(
+                        c.name.startsWith('CAT_')
+                            ? c.name.tr(ref)
+                            : c.name,
+                        style: const TextStyle(fontSize: 15),
+                      )
                   )).toList(),
                   onChanged: (val) => setState(() => _category = val),
                 );
