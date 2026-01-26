@@ -50,6 +50,8 @@ dependencies:
   file_picker: ^8.3.2
 
   image_picker: ^1.0.7  # 📍 이 라인을 추가하세요
+  package_info_plus: ^8.1.2
+  device_info_plus: ^11.2.2
 
 dev_dependencies:
   flutter_test:

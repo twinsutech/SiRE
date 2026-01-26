@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +14,7 @@ import '../security/security_provider.dart';
 import '../security/pin_screen.dart';
 import 'category_management_screen.dart';
 import 'user_provider.dart';
+import 'support_service.dart'; // 📍 유료 앱 문의 및 환불 서비스를 위해 추가
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -41,7 +43,7 @@ class SettingsScreen extends ConsumerWidget {
       ),
       body: ListView(
         children: [
-          // --- User Profile Section ---
+          // --- 1. User Profile Section (사용자 프로필: 최상단 배치) ---
           _buildSectionTitle("SETTINGS_USER_PROFILE".tr(ref)),
           _buildCard([
             ListTile(
@@ -71,7 +73,6 @@ class SettingsScreen extends ConsumerWidget {
                 fit: BoxFit.scaleDown,
                 child: Text("SETTINGS_LANDLORD_NICKNAME".tr(ref)),
               ),
-              // 📍 닉네임이 번역 키(SETTINGS_DEFAULT_NICKNAME)인 경우를 대비해 .tr(ref) 적용
               subtitle: Text(
                   profile.nickname.startsWith('SETTINGS_') ? profile.nickname.tr(ref) : profile.nickname,
                   maxLines: 1,
@@ -82,23 +83,7 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ]),
 
-          // --- Language Section ---
-          _buildSectionTitle("SETTINGS_LANGUAGE_SECTION".tr(ref)),
-          _buildCard([
-            ListTile(
-              leading: const Icon(Icons.language, color: Color(0xFF1A237E)),
-              title: FittedBox(
-                alignment: Alignment.centerLeft,
-                fit: BoxFit.scaleDown,
-                child: Text("SETTINGS_SELECT_LANGUAGE".tr(ref)),
-              ),
-              subtitle: Text(languages[ref.read(localizationProvider.notifier).currentLang] ?? ""),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => _showLanguageDialog(context, ref, languages),
-            ),
-          ]),
-
-          // --- Security Section ---
+          // --- 2. Security Section (보안: PIN 설정) ---
           _buildSectionTitle("SETTINGS_SECURITY".tr(ref)),
           _buildCard([
             ListTile(
@@ -138,7 +123,41 @@ class SettingsScreen extends ConsumerWidget {
             ],
           ]),
 
-          // --- Data Management Section ---
+          // --- 3. Language Section (언어 설정: 다국어) ---
+          _buildSectionTitle("SETTINGS_LANGUAGE_SECTION".tr(ref)),
+          _buildCard([
+            ListTile(
+              leading: const Icon(Icons.language, color: Color(0xFF1A237E)),
+              title: FittedBox(
+                alignment: Alignment.centerLeft,
+                fit: BoxFit.scaleDown,
+                child: Text("SETTINGS_SELECT_LANGUAGE".tr(ref)),
+              ),
+              subtitle: Text(languages[ref.read(localizationProvider.notifier).currentLang] ?? ""),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => _showLanguageDialog(context, ref, languages),
+            ),
+          ]),
+
+          // --- 4. Customization Section (맞춤 설정: 카테고리 관리) ---
+          _buildSectionTitle("SETTINGS_CUSTOMIZATION".tr(ref)),
+          _buildCard([
+            ListTile(
+              leading: const Icon(Icons.category_outlined, color: Colors.teal),
+              title: FittedBox(
+                alignment: Alignment.centerLeft,
+                fit: BoxFit.scaleDown,
+                child: Text("SETTINGS_MANAGE_CATEGORIES".tr(ref)),
+              ),
+              subtitle: Text("SETTINGS_CATEGORIES_DESC".tr(ref), maxLines: 1, overflow: TextOverflow.ellipsis),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryManagementScreen()));
+              },
+            ),
+          ]),
+
+          // --- 5. Data Management Section (데이터 관리: 백업 및 복구) ---
           _buildSectionTitle("SETTINGS_DATA_MANAGEMENT".tr(ref)),
           _buildCard([
             ListTile(
@@ -164,23 +183,32 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ]),
 
-          // --- Customization Section ---
-          _buildSectionTitle("SETTINGS_CUSTOMIZATION".tr(ref)),
+          // --- 6. App Support Section (지원: 문의 및 환불 정책) ---
+          _buildSectionTitle("SETTINGS_SUPPORT_SECTION".tr(ref)),
           _buildCard([
             ListTile(
-              leading: const Icon(Icons.category_outlined, color: Colors.teal),
+              leading: const Icon(Icons.help_outline, color: Color(0xFF1A237E)),
               title: FittedBox(
                 alignment: Alignment.centerLeft,
                 fit: BoxFit.scaleDown,
-                child: Text("SETTINGS_MANAGE_CATEGORIES".tr(ref)),
+                child: Text("SETTINGS_SUPPORT".tr(ref)),
               ),
-              subtitle: Text("SETTINGS_CATEGORIES_DESC".tr(ref), maxLines: 1, overflow: TextOverflow.ellipsis),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const CategoryManagementScreen()));
+              subtitle: Text("SETTINGS_SUPPORT_DESC".tr(ref), maxLines: 1, overflow: TextOverflow.ellipsis),
+              trailing: const Icon(Icons.mail_outline, size: 20),
+              onTap: () async {
+                try {
+                  await SupportService.sendSupportEmail();
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("ERROR_NO_EMAIL_APP".tr(ref))),
+                    );
+                  }
+                }
               },
             ),
           ]),
+
           const SizedBox(height: 40),
         ],
       ),
@@ -237,13 +265,8 @@ class SettingsScreen extends ConsumerWidget {
                     title: Text(value, style: TextStyle(fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, color: isSelected ? const Color(0xFF1A237E) : Colors.black)),
                     trailing: isSelected ? const Icon(Icons.check, color: Color(0xFF1A237E)) : null,
                     onTap: () async {
-                      // 📍 1. 언어 변경 대기 (await)
                       await ref.read(localizationProvider.notifier).changeLanguage(key);
-
-                      // 📍 2. 다이얼로그 닫기
                       if (context.mounted) Navigator.pop(context);
-
-                      // 📍 3. 바뀐 언어로 스낵바 표시
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -271,7 +294,6 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   void _showEditNicknameDialog(BuildContext context, WidgetRef ref) {
-    // 📍 닉네임 수정 창을 띄울 때도 번역 키 여부를 판단하여 텍스트 표시
     final currentNickname = ref.read(userNicknameProvider).nickname;
     final displayNickname = currentNickname.startsWith('SETTINGS_') ? currentNickname.tr(ref) : currentNickname;
 

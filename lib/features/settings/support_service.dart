@@ -1,0 +1,79 @@
+import 'dart:io';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+
+class SupportService {
+  // 📍 실제 관리자 이메일 주소를 입력하세요.
+  static const String adminEmail = 'yskim10007@gmail.com';
+
+  /// 이메일 문의하기 실행
+  static Future<void> sendSupportEmail() async {
+    final PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    final String version = packageInfo.version;
+    final String buildNumber = packageInfo.buildNumber;
+
+    // 기기 정보 가져오기
+    String deviceInfo = await _getDeviceInfo();
+
+    // 📍 제목 구성
+    final String subject = _encodeQuery('[SiRE Support] Inquiry / Refund Request');
+
+    // 📍 본문 구성: 환불 안내 문구(영/한 병기) 및 기기 정보 포함
+    final String body = _encodeQuery(
+        '--- Please write your inquiry below ---\n\n\n\n'
+            '--------------------------------------\n'
+            '* Important for Refund:\n'
+            'Please attach a screenshot of your Google Play receipt or copy the Order ID (GPA.XXXX-XXXX-XXXX-XXXXX).\n'
+            '--------------------------------------\n'
+            'App Version: $version ($buildNumber)\n'
+            'Device Info: $deviceInfo\n'
+            '--------------------------------------'
+    );
+
+    // 📍 queryParameters 대신 query 속성에 직접 인코딩된 문자열을 넣어 + 기호 발생을 방지합니다.
+    final Uri emailUri = Uri(
+      scheme: 'mailto',
+      path: adminEmail,
+      query: 'subject=$subject&body=$body',
+    );
+
+    try {
+      // 📍 외부 애플리케이션 모드로 실행하여 이메일 앱 선택창이 잘 뜨도록 유도합니다.
+      if (await canLaunchUrl(emailUri)) {
+        await launchUrl(
+          emailUri,
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        // 📍 canLaunchUrl이 실패하더라도 강제 실행 시도 (많은 안드로이드 기기 대응)
+        await launchUrl(emailUri);
+      }
+    } catch (e) {
+      // 📍 이메일 앱이 없거나 실행 불가능한 경우 상위 위젯으로 에러를 던집니다.
+      throw 'Could not launch email client';
+    }
+  }
+
+  /// 공백을 + 대신 %20으로 인코딩하는 헬퍼 함수
+  static String _encodeQuery(String text) {
+    return Uri.encodeComponent(text).replaceAll('+', '%20');
+  }
+
+  /// 기기 정보를 문자열로 요약
+  static Future<String> _getDeviceInfo() async {
+    final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    try {
+      if (Platform.isAndroid) {
+        final androidInfo = await deviceInfoPlugin.androidInfo;
+        return 'Android ${androidInfo.version.release} (SDK ${androidInfo.version.sdkInt}), ${androidInfo.model}';
+      } else if (Platform.isIOS) {
+        final iosInfo = await deviceInfoPlugin.iosInfo;
+        return 'iOS ${iosInfo.systemVersion}, ${iosInfo.utsname.machine}';
+      }
+    } catch (e) {
+      return 'Unknown Device (Error: $e)';
+    }
+    return 'Unknown Device';
+  }
+}

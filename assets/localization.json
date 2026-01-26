@@ -792,6 +792,19 @@
   },
   "CAT_TAX_BILL": {
     "ar": "الضرائب والفواتير", "bn": "কর/বিল", "zh": "税金/公用事业费", "nl": "Belastingen", "en": "Tax/Bills", "fr": "Taxes et factures", "de": "Steuern/Rechnungen", "hi": "कर/बिल", "id": "Pajak/Tagihan", "it": "Tasse e imposte", "ja": "税金/公課金", "ko": "세금/공과금", "ms": "Cukai/Bil", "pl": "Podatki/Rachunki", "pt": "Impostos/Contas", "ru": "Налоги и сборы", "es": "Impuestos y tasas", "th": "ภาษี/ค่าธรรมเนียม", "tr": "Vergi/Harç", "vi": "Thuế/Hóa đơn"
+  },
+
+  "SETTINGS_SUPPORT_SECTION": {
+    "ar": "الدعم والمساعدة", "bn": "সহায়তা এবং সমর্থন", "zh": "支持与帮助", "nl": "Ondersteuning & Help", "en": "Support & Help", "fr": "Support et aide", "de": "Support & Hilfe", "hi": "सहायता और मदद", "id": "Dukungan & Bantuan", "it": "Supporto e aiuto", "ja": "サポートとヘルプ", "ko": "지원 및 도움말", "ms": "Sokongan & Bantuan", "pl": "Wsparcie i pomoc", "pt": "Suporte e ajuda", "ru": "Поддержка и помощь", "es": "Soporte y ayuda", "th": "การสนับสนุนและความช่วยเหลือ", "tr": "Destek ve Yardım", "vi": "Hỗ trợ & Trợ giúp"
+  },
+  "SETTINGS_SUPPORT": {
+    "ar": "استفسار وسياسة الاسترداد", "bn": "অনুসন্ধান এবং ফেরত নীতি", "zh": "咨询与退款政策", "nl": "Aanvraag & Terugbetalingsbeleid", "en": "Inquiry & Refund Policy", "fr": "Demande et politique de remboursement", "de": "Anfrage & Rückerstattungsrichtlinie", "hi": "पूछताछ और धनवाप시 नीति", "id": "Pertanyaan & Kebijakan Pengembalian Dana", "it": "Richiesta e politica di rimborso", "ja": "お問い合わせと払い戻しポリシー", "ko": "문의 및 환불 정책", "ms": "Pertanyaan & Dasar Bayaran Balik", "pl": "Zapytanie i polityka zwrotów", "pt": "Consulta e política de reembolso", "ru": "Запрос и политика возврата", "es": "Consulta y política de reembolso", "th": "สอบถาม 및 นโยบายการคืนเงิน", "tr": "Sorgulama ve İade Politikası", "vi": "Liên hệ & Chính sách hoàn tiền"
+  },
+  "SETTINGS_SUPPORT_DESC": {
+    "ar": "اتصل بالمطور عبر البريد الإلكتروني", "bn": "ইমেলের মাধ্যমে বিকাশকারীর সাথে যোগাযোগ করুন", "zh": "通过电子邮件联系开发人员", "nl": "Neem contact op met de ontwikkelaar via e-mail", "en": "Contact developer via email", "fr": "Contacter le développeur par e-mail", "de": "Entwickler per E-Mail kontaktieren", "hi": "ईमेल के माध्यम से डेवल퍼 से संपर्क करें", "id": "Hubungi pengembang melalui email", "it": "Contatta lo sviluppatore via e-mail", "ja": "デベロッ퍼にメールで連絡する", "ko": "개발자에게 이메일로 문의하기", "ms": "Hubungi pemaju melalui e-mel", "pl": "Skontaktuj się z deweloperem przez e-mail", "pt": "Contate o desenvolvedor por e-mail", "ru": "Связаться с разработчиком по электронной почте", "es": "Contactar al desarrollador por correo electrónico", "th": "ติดต่อผู้พัฒนาผ่านอีเมล", "tr": "Geliştiriciyle e-posta yoluyla iletişime geçin", "vi": "Liên hệ với nhà phát triển qua email"
+  },
+  "ERROR_NO_EMAIL_APP": {
+    "ar": "لم يتم العثور على تطبيق بريد إلكتروني.", "bn": "কোন 이멜 애플리케이션 পাওয়া যায়니।", "zh": "未找到电子邮件应用。", "nl": "Geen e-mailapp gevonden.", "en": "No email app found.", "fr": "Aucune application de messagerie trouvée.", "de": "Keine E-Mail-App gefunden.", "hi": "कोई ईमेल ऐप नहीं मिला।", "id": "Aplikasi email tidak ditemukan.", "it": "Nessuna app di posta elettronica trovata.", "ja": "メールアプリが見つかりません。", "ko": "이메일 앱을 찾을 수 없습니다.", "ms": "Tiada aplikasi e-mel ditemui.", "pl": "Nie znaleziono aplikacji e-mail.", "pt": "Nenhum aplicativo de e-mail encontrado.", "ru": "Приложение для электронной почты не найдено.", "es": "No se encontró ninguna aplicación de correo electrónico.", "th": "ไม่พบแอปอี멜", "tr": "E-posta uygulaması bulunamadı.", "vi": "Không tìm thấy ứng dụng email."
   }
 
 }
