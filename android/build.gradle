@@ -1,7 +1,31 @@
-allprojects {
+// 1. buildscript 블록이 반드시 맨 위로 와야 합니다.
+buildscript {
+    ext.kotlin_version = '1.9.0'
     repositories {
         google()
         mavenCentral()
+    }
+//    dependencies {
+//        // 8.1.0 대신 아래 버전으로 수정
+//        classpath 'com.android.tools.build:gradle:7.4.2'
+//        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+//    }
+    dependencies {
+        // 8.1.0 보다 더 안정적인 8.3.2 또는 8.4 버전으로 추천합니다.
+        classpath 'com.android.tools.build:gradle:8.4.0'
+        //classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22"
+    }
+}
+
+allprojects {
+    repositories {
+        google()       // 반드시 첫 번째
+        mavenCentral() // 두 번째
+        maven { url "https://jitpack.io" }
+    }
+    // 📍 이 부분을 추가하여 최신 aapt2를 강제로 사용하게 합니다.
+    configurations.all {
+        resolutionStrategy.force 'com.android.tools.build:aapt2:8.4.0-11315950'
     }
 }
 

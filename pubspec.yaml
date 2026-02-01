@@ -3,7 +3,7 @@ description: "Solo Investor Real Estate App"
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 1.0.0+23
 
 environment:
   sdk: '>=3.4.1 <4.0.0'
@@ -11,9 +11,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   # 📍 다국어 표준 라이브러리 추가 (에러 해결 핵심)
   flutter_localizations:
     sdk: flutter
+
+  # 안드로이드 전용 기능을 명시적으로 제어하고 싶을 때(환불 처리)
+  in_app_purchase_android: ^0.3.6+7
+  # 인앤결제(IAP)
+  in_app_purchase: ^3.2.0
 
   # 1. 상태 관리
   flutter_riverpod: ^2.6.1

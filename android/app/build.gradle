@@ -1,6 +1,7 @@
 plugins {
     id "com.android.application"
-    id "kotlin-android"
+    //id "kotlin-android"
+    id "org.jetbrains.kotlin.android"
     // Flutter Gradle 플러그인은 반드시 Android 및 Kotlin 플러그인 뒤에 와야 합니다.
     id "dev.flutter.flutter-gradle-plugin"
 }
@@ -31,34 +32,37 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     // 📍 유료 출시용 패키지명 설정
-    namespace = "com.obj.sire"
+    namespace "com.obj.sire"
 
     // 📍 구형 플러그인(package_info_plus 등) 에러 방지를 위해 숫자로 명시
-    compileSdkVersion 34
-    compileSdk = 34
+    compileSdk 35
+    buildToolsVersion "35.0.0"
 
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        // SDK 35 및 Gradle 8 대응을 위해 Java 17 사용 권장
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        // 최신 라이브러리(bcprov 등)와의 호환성을 위해 17로 설정
+        jvmTarget = "17"
     }
 
     defaultConfig {
         // 📍 실제 구글 플레이 스토어에 등록될 고유 ID (중복 불가)
-        applicationId = "com.obj.sire"
+        applicationId "com.obj.sire"
 
         // 📍 최신 보안 패키지 요구사항에 맞춘 최소/대상 SDK 설정
-        minSdk = 24
-        targetSdk = 34
+        minSdkVersion 24
+        targetSdkVersion 35
 
-        versionCode = flutterVersionCode.toInteger()
-        versionName = flutterVersionName
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
     }
+
     signingConfigs {
         release {
             keyAlias keystoreProperties['keyAlias']
@@ -67,6 +71,7 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
+
     buildTypes {
         release {
             // 출시용 앱의 경우 향후 별도의 signingConfig 설정이 필요합니다.
@@ -77,6 +82,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+//dependencies {
+//    // 기존 licensing 1.7.0 이나 1.5.0은 지우고 아래로 교체해 보세요
+//    implementation 'com.google.android.play:review:2.0.1' // play 관련 서비스 의존성 확보
+//    implementation 'com.google.android.play:app-update:2.1.0'
+//
+//    // 라이선스 라이브러리는 현재 이 경로가 가장 안정적입니다.
+//    implementation 'org.chromium.net:cronet-embedded:119.6045.31' // 네트워크 의존성
+//    implementation 'com.google.android.play:integrity:1.3.0' // 최신 보안 무결성 라이브러리 (권장)
+//}
+dependencies {
+    // 기존의 licensing, review, app-update 등은 삭제하고 아래 한 줄만 넣습니다.
+    //implementation project(':lvl_library')
+    implementation "com.google.android.play:integrity:1.6.0"
 }
 
 flutter {
