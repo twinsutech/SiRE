@@ -154,3 +154,4 @@ class AlertListScreen extends ConsumerWidget {
     );
   }
 }
+

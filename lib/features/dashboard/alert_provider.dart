@@ -81,3 +81,4 @@ final appAlertProvider = Provider<List<AppAlert>>((ref) {
 
   return alerts;
 });
+
