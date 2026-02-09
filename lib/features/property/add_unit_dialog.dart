@@ -308,6 +308,7 @@
 //   }
 // }
 
+
 import 'dart:io';
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
@@ -338,10 +339,15 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
   final _roomController = TextEditingController();
   final _tenantNameController = TextEditingController();
   final _phoneController = TextEditingController();
-  final _depositController = TextEditingController(text: '0');
-  final _rentController = TextEditingController(text: '0');
+  // final _depositController = TextEditingController(text: '0');
+  // final _rentController = TextEditingController(text: '0');
+  final _depositController = TextEditingController();
+  final _rentController = TextEditingController();
   final _paymentDayController = TextEditingController();
   final _memoController = TextEditingController();
+
+  final _roomFocusNode = FocusNode(); // 📍 추가
+  String? _roomErrorText;
 
   final List<XFile> _selectedImages = [];
   final ImagePicker _picker = ImagePicker();
@@ -360,6 +366,8 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
     _rentController.dispose();
     _paymentDayController.dispose();
     _memoController.dispose();
+
+    _roomFocusNode.dispose(); // 📍 추가
     super.dispose();
   }
 
@@ -497,6 +505,7 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
     );
   }
 
+
   // 일관된 디자인을 위한 헬퍼 위젯들
   Widget _buildTextField(
       TextEditingController controller,
@@ -504,16 +513,46 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
         bool isNumber = false,
         int maxLines = 1,
       }) {
+    final isRoomField = label == "PROP_ROOM_NUMBER_LABEL".tr(ref);
+
     return TextField(
       controller: controller,
+      focusNode: isRoomField ? _roomFocusNode : null, // 📍 호수 필드일 때 노드 연결
       maxLines: maxLines,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-      inputFormatters: isNumber ? [FilteringTextInputFormatter.digitsOnly] : null,
+      //inputFormatters: isNumber ? [FilteringTextInputFormatter.digitsOnly] : null,
+      // [수정 코드]
+      inputFormatters: isNumber ? [
+        FilteringTextInputFormatter.digitsOnly,
+        TextInputFormatter.withFunction((oldValue, newValue) {
+          if (newValue.text.isEmpty) return newValue;
+          final intValue = int.parse(newValue.text);
+          final newText = NumberFormat('#,###').format(intValue); // 콤마 포맷 적용
+          return newValue.copyWith(
+            text: newText,
+            selection: TextSelection.collapsed(offset: newText.length),
+          );
+        }),
+      ] : null,
+
+
+      // decoration: InputDecoration(
+      //   labelText: label,
+      //   border: const OutlineInputBorder(),
+      //   isDense: true,
+      // ),
       decoration: InputDecoration(
         labelText: label,
+        errorText: label == "PROP_ROOM_NUMBER_LABEL".tr(ref) ? _roomErrorText : null, // 📍 호수 필드일 때만 에러 표시
         border: const OutlineInputBorder(),
         isDense: true,
       ),
+      onChanged: (value) {
+        if (label == "PROP_ROOM_NUMBER_LABEL".tr(ref) && value.isNotEmpty) {
+          setState(() => _roomErrorText = null); // 📍 입력 시작하면 에러 메시지 삭제
+        }
+      },
+
     );
   }
 
@@ -677,6 +716,31 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
   }
 
   Future<void> _saveUnit() async {
+    // if (_roomController.text.trim().isEmpty) {
+    //   setState(() {
+    //     _roomErrorText = "VALIDATION_REQUIRED_ROOM".tr(ref); // 📍 에러 메시지 설정
+    //   });
+    //
+    //   // 📍 스낵바로 직접적인 피드백 제공
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(
+    //       content: Text("VALIDATION_REQUIRED_ROOM".tr(ref)),
+    //       backgroundColor: Colors.redAccent,
+    //     ),
+    //   );
+    //   return; // 📍 여기서 중단하여 저장을 막음
+    // }
+    // 📍 1. 호수 입력 확인
+    if (_roomController.text.trim().isEmpty) {
+      HapticFeedback.heavyImpact(); // 📍 강력한 진동으로 "안 됨"을 알림
+      setState(() {
+        _roomErrorText = "VALIDATION_REQUIRED_ROOM".tr(ref);
+      });
+      // 📍 핵심: 호수 입력창으로 커서(포커스) 강제 이동
+      _roomFocusNode.requestFocus();
+      return; // 중단
+    }
+
     if (_roomController.text.isEmpty) return;
     final db = ref.read(databaseProvider);
     // 📍 [DB 저장] 언어와 상관없이 고정된 키값(_selectedLeaseType)이 저장됩니다.
@@ -687,8 +751,12 @@ class _AddUnitDialogState extends ConsumerState<AddUnitDialog> {
         leaseType: Value(_selectedLeaseType),
         tenantName: Value(_tenantNameController.text),
         tenantPhone: Value(_phoneController.text),
-        deposit: Value(int.tryParse(_depositController.text) ?? 0),
-        monthlyRent: Value(int.tryParse(_rentController.text) ?? 0),
+        //deposit: Value(int.tryParse(_depositController.text) ?? 0),
+        //monthlyRent: Value(int.tryParse(_rentController.text) ?? 0),
+        // 콤마(,)를 제거한 뒤 숫자로 변환하여 저장합니다.
+        deposit: Value(int.tryParse(_depositController.text.replaceAll(',', '')) ?? 0),
+        monthlyRent: Value(int.tryParse(_rentController.text.replaceAll(',', '')) ?? 0),
+
         paymentDay: Value(int.tryParse(_paymentDayController.text)),
         contractStart: Value(_startDate),
         contractEnd: Value(_endDate),

@@ -940,9 +940,13 @@ class RoomDetailScreen extends ConsumerWidget {
 
     final startDate = currentUnit.contractStart != null ? DateFormat.yMd(lang).format(currentUnit.contractStart!) : "-";
     final endDate = currentUnit.contractEnd != null ? DateFormat.yMd(lang).format(currentUnit.contractEnd!) : "-";
+    // final paymentDay = currentUnit.paymentDay != null
+    //     ? "${'PROP_EVERY_MONTH'.tr(ref)} ${currentUnit.paymentDay}${'PROP_DAY_UNIT'.tr(ref)}"
+    //     : "COMMON_ERROR".tr(ref);
+    // [수정 코드]
     final paymentDay = currentUnit.paymentDay != null
         ? "${'PROP_EVERY_MONTH'.tr(ref)} ${currentUnit.paymentDay}${'PROP_DAY_UNIT'.tr(ref)}"
-        : "COMMON_ERROR".tr(ref);
+        : "PROP_NO_PAYMENT_DAY".tr(ref); // 📍 "미지정" 혹은 "미입력" 다국어 키로 변경
 
     return Container(
       padding: const EdgeInsets.all(20),
