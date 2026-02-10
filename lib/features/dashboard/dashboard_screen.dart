@@ -1857,7 +1857,6 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final ScrollController _chartScrollController = ScrollController();
 
-  // 📍 버튼 가시성 상태 (초기값은 true로 설정하여 데이터 로드 전에도 공간 확보 가능)
   bool _canScrollLeft = true;
   bool _canScrollRight = false;
 
@@ -1866,19 +1865,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     super.initState();
     _chartScrollController.addListener(_scrollListener);
 
-    // 📍 초기 상태 체크는 최초 1회만 수행
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _scrollListener();
+      if (mounted) {
+        _scrollListener();
+      }
     });
   }
 
   void _scrollListener() {
-    if (!_chartScrollController.hasClients) return;
+    if (!_chartScrollController.hasClients) { return; }
 
     final maxScroll = _chartScrollController.position.maxScrollExtent;
     final currentScroll = _chartScrollController.offset;
 
-    // 📍 불필요한 setState 방지를 위해 값이 변할 때만 호출
     final newCanScrollLeft = currentScroll < maxScroll - 5;
     final newCanScrollRight = currentScroll > 5;
 
@@ -1899,10 +1898,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 📍 타입을 dynamic으로 처리하여 'Type not found' 에러를 방지합니다.
+    final l10n = ref.watch(localizationProvider.notifier);
+
     final dashboardAsync = ref.watch(dashboardDataProvider);
     final unpaidAsync = ref.watch(unpaidListProvider);
     final alerts = ref.watch(appAlertProvider);
-    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+
+    // l10n 객체의 currentLang 속성이 있는지 확인하고 사용
+    final String currentLang = (l10n as dynamic).currentLang ?? 'ko';
     final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
 
     return Scaffold(
@@ -1911,13 +1915,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         loading: () { return const Center(child: CircularProgressIndicator()); },
         error: (err, stack) { return Center(child: Text('Error: $err')); },
         data: (data) {
-          // 📍 절대 build 메서드 안에서 setState를 유발하는 콜백을 직접 실행하지 마세요. (삭제됨)
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildHeader(context, ref, alerts),
-                _buildUnpaidBanner(context, ref, unpaidAsync),
+                _buildHeader(context, ref, l10n, alerts),
+                _buildUnpaidBanner(context, ref, l10n, unpaidAsync),
 
                 Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -1928,7 +1931,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         children: [
                           Expanded(
                             child: _buildSummaryCard(
-                              ref, "DASHBOARD_THIS_MONTH",
+                              l10n, "DASHBOARD_THIS_MONTH",
                               currencyFmt.format(data.totalIncome),
                               Icons.monetization_on, AppColors.incomeGreen,
                             ),
@@ -1936,32 +1939,32 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: _buildSummaryCard(
-                              ref, "DASHBOARD_OCCUPANCY",
+                              l10n, "DASHBOARD_OCCUPANCY",
                               "${(data.occupancyRate * 100).toStringAsFixed(0)}%",
                               Icons.home,
                               data.occupancyRate >= 0.9 ? AppColors.primaryNavy : Colors.orange,
-                              subtitle: "${data.vacantUnits} ${"DASHBOARD_VACANT_UNITS".tr(ref)}",
+                              subtitle: "${data.vacantUnits} ${(l10n as dynamic).translate("DASHBOARD_VACANT_UNITS")}",
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 24),
-                      Text("DASHBOARD_REVENUE_TREND".tr(ref),
+                      Text((l10n as dynamic).translate("DASHBOARD_REVENUE_TREND"),
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 12),
-                      _buildRevenueChart(data, ref),
+                      _buildRevenueChart(data, l10n),
                       const SizedBox(height: 24),
-                      Text("DASHBOARD_RECENT_ACTIVITY".tr(ref),
+                      Text((l10n as dynamic).translate("DASHBOARD_RECENT_ACTIVITY"),
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 8),
                       if (data.recentTransactions.isEmpty)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 40),
-                          child: Center(child: Text("DASHBOARD_NO_RECENT_ACTIVITY".tr(ref), style: const TextStyle(color: Colors.grey))),
+                          child: Center(child: Text((l10n as dynamic).translate("DASHBOARD_NO_RECENT_ACTIVITY"), style: const TextStyle(color: Colors.grey))),
                         )
                       else
                         ...data.recentTransactions.map((item) {
-                          return _buildTransactionItem(context, ref, item, currencyFmt);
+                          return _buildTransactionItem(context, ref, l10n, item, currencyFmt);
                         }),
                       const SizedBox(height: 80),
                     ],
@@ -1975,7 +1978,33 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  Widget _buildRevenueChart(dynamic data, WidgetRef ref) {
+  // ✅ 타입을 dynamic으로 수정하여 컴파일 에러 해결
+  Widget _buildTransactionItem(BuildContext context, WidgetRef ref, dynamic l10n, dynamic item, NumberFormat fmt) {
+    final tx = item.transaction;
+    final bool isIncome = tx.type == 'INC';
+    final Color color = isIncome ? AppColors.incomeGreen : AppColors.expenseRed;
+
+    final String categoryDisplayName = tx.category.startsWith('CAT_')
+        ? l10n.translate(tx.category)
+        : tx.category;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Card(
+        elevation: 0.5, color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: ListTile(
+          dense: true,
+          onTap: () { showModalBottomSheet(context: context, isScrollControlled: true, backgroundColor: Colors.transparent, builder: (context) { return AddTransactionSheet(transaction: tx); }); },
+          leading: CircleAvatar(backgroundColor: color.withOpacity(0.1), child: Icon(_getCategoryIcon(tx.category), color: color, size: 20)),
+          title: Text(categoryDisplayName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          subtitle: Text("${DateFormat('MM.dd').format(tx.transactionDate)} ${tx.memo ?? ''}", style: const TextStyle(fontSize: 12)),
+          trailing: Text("${isIncome ? '+' : '-'}${fmt.format(tx.amount)}", style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 15)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRevenueChart(dynamic data, dynamic l10n) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double availableWidth = screenWidth - 32;
     final double singlePointWidth = availableWidth / 5.5;
@@ -1983,11 +2012,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
     return Container(
       height: 280,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)]
-      ),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)]),
       child: Stack(
         children: [
           Padding(
@@ -2020,7 +2045,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                   final int spotCount = (data.revenueSpots as List).length;
                                   final int monthOffset = (spotCount - 1 - value.toInt()).toInt();
                                   final date = DateTime(now.year, now.month - monthOffset, 1);
-
                                   return SideTitleWidget(
                                     axisSide: meta.axisSide,
                                     space: 8,
@@ -2030,7 +2054,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                       parentAxisSize: meta.parentAxisSize,
                                       distanceFromEdge: 0,
                                     ),
-                                    child: Text('${date.month}${"COMMON_MONTH_UNIT".tr(ref)}', style: const TextStyle(color: Colors.grey, fontSize: 10)),
+                                    child: Text('${date.month}${l10n.translate("COMMON_MONTH_UNIT")}', style: const TextStyle(color: Colors.grey, fontSize: 10)),
                                   );
                                 },
                               ),
@@ -2052,9 +2076,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
                 const SizedBox(height: 12),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  _buildLegendItem(ref, "COMMON_INCOME", const Color(0xFF1A237E)),
+                  _buildLegendItem(l10n, "COMMON_INCOME", const Color(0xFF1A237E)),
                   const SizedBox(width: 16),
-                  _buildLegendItem(ref, "COMMON_EXPENSE", Colors.red[300]!.withOpacity(0.6)),
+                  _buildLegendItem(l10n, "COMMON_EXPENSE", Colors.red[300]!.withOpacity(0.6)),
                 ]),
               ],
             ),
@@ -2085,38 +2109,117 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  // --- 기존 스타일 헬퍼 메서드 ---
-  Widget _buildTransactionItem(BuildContext context, WidgetRef ref, dynamic item, NumberFormat fmt) {
-    final tx = item.transaction;
-    final bool isIncome = tx.type == 'INC';
-    final Color color = isIncome ? AppColors.incomeGreen : AppColors.expenseRed;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Card(
-        elevation: 0.5, color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: ListTile(
-          dense: true,
-          onTap: () { showModalBottomSheet(context: context, isScrollControlled: true, backgroundColor: Colors.transparent, builder: (context) { return AddTransactionSheet(transaction: tx); }); },
-          leading: CircleAvatar(backgroundColor: color.withOpacity(0.1), child: Icon(_getCategoryIcon(tx.category), color: color, size: 20)),
-          title: Text(tx.category.startsWith('CAT_') ? tx.category.tr(ref) : tx.category, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-          subtitle: Text("${DateFormat('MM.dd').format(tx.transactionDate)} ${tx.memo ?? ''}", style: const TextStyle(fontSize: 12)),
-          trailing: Text("${isIncome ? '+' : '-'}${fmt.format(tx.amount)}", style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 15)),
-        ),
-      ),
+  Widget _buildHeader(BuildContext context, WidgetRef ref, dynamic l10n, List<AppAlert> alerts) {
+    final profile = ref.watch(userNicknameProvider);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
+      decoration: const BoxDecoration(color: Color(0xFF1A237E), borderRadius: BorderRadius.vertical(bottom: Radius.circular(24))),
+      child: Row(children: [
+        CircleAvatar(backgroundColor: Colors.white24, backgroundImage: profile.imagePath != null ? FileImage(File(profile.imagePath!)) : null, child: profile.imagePath == null ? const Icon(Icons.person, color: Colors.white) : null),
+        const SizedBox(width: 12),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(l10n.translate("DASHBOARD_WELCOME"), style: const TextStyle(color: Colors.white70, fontSize: 14)),
+          Text(profile.nickname.startsWith('SETTINGS_') ? l10n.translate(profile.nickname) : profile.nickname, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold))
+        ])),
+        ShakingBellIcon(alertCount: alerts.length, onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) { return const AlertListScreen(); })); }),
+      ]),
     );
   }
 
-  Widget _buildLegendItem(WidgetRef ref, String labelKey, Color color) {
-    return Row(children: [Container(width: 12, height: 3, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))), const SizedBox(width: 4), Text(labelKey.tr(ref), style: const TextStyle(fontSize: 11, color: Colors.grey))]);
+  Widget _buildUnpaidBanner(BuildContext context, WidgetRef ref, dynamic l10n, AsyncValue<List<UnpaidStatus>> unpaidAsync) {
+    return unpaidAsync.when(
+      data: (list) {
+        final overdueUnits = list.where((u) { return u.status == 'OVERDUE'; }).toList();
+        if (overdueUnits.isEmpty) { return const SizedBox.shrink(); }
+        final roomsText = overdueUnits.map((u) { return u.unit.roomNumber; }).join(', ');
+        return InkWell(
+          onTap: () { HapticFeedback.mediumImpact(); _showUnpaidActionSheet(context, ref, l10n, overdueUnits); },
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(16, 16, 16, 0), padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: Colors.redAccent.withOpacity(0.9), borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.red.withOpacity(0.2), blurRadius: 8)]),
+            child: Row(children: [
+              const Icon(Icons.warning_amber_rounded, color: Colors.white, size: 28),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(l10n.translate("DASHBOARD_UNPAID_DETECTED"), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                Text("${l10n.translate("COMMON_ROOMS")}: $roomsText", style: const TextStyle(color: Colors.white, fontSize: 13)),
+              ])),
+              const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+            ]),
+          ),
+        );
+      },
+      loading: () { return const SizedBox.shrink(); },
+      error: (_, __) { return const SizedBox.shrink(); },
+    );
   }
 
-  Widget _buildSummaryCard(WidgetRef ref, String titleKey, String value, IconData icon, Color color, {String? subtitle}) {
+  void _showUnpaidActionSheet(BuildContext context, WidgetRef ref, dynamic l10n, List<UnpaidStatus> overdueUnits) {
+    final currencyFmt = NumberFormat.simpleCurrency(locale: (l10n as dynamic).currentLang, decimalDigits: 0);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Expanded(child: Text(l10n.translate("DASHBOARD_UNPAID_TITLE"), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                  IconButton(onPressed: () { Navigator.pop(context); }, icon: const Icon(Icons.close)),
+                ]),
+                Text(l10n.translate("DASHBOARD_UNPAID_SUBTITLE"), style: const TextStyle(color: Colors.grey, fontSize: 13), maxLines: 2, overflow: TextOverflow.ellipsis),
+                const SizedBox(height: 16),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: overdueUnits.length,
+                    separatorBuilder: (context, index) { return const Divider(height: 1); },
+                    itemBuilder: (context, index) {
+                      final unpaid = overdueUnits[index];
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: CircleAvatar(backgroundColor: Colors.redAccent.withOpacity(0.1), child: FittedBox(fit: BoxFit.scaleDown, child: Text(unpaid.unit.roomNumber, style: const TextStyle(color: Colors.redAccent, fontSize: 12, fontWeight: FontWeight.bold)))),
+                        title: Text("${unpaid.unit.roomNumber}${l10n.translate("COMMON_ROOM_UNIT")} ${l10n.translate("DASHBOARD_PAYMENT_CONFIRM")}", maxLines: 1, overflow: TextOverflow.ellipsis),
+                        subtitle: Text("${unpaid.unit.tenantName ?? '세입자'} / ${currencyFmt.format(unpaid.unit.monthlyRent)}", maxLines: 1, overflow: TextOverflow.ellipsis),
+                        trailing: SizedBox(
+                          height: 36,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                            onPressed: () async {
+                              await ref.read(ledgerActionProvider.notifier).processPayment(buildingId: unpaid.unit.buildingId, unitId: unpaid.unit.id, tenantName: unpaid.unit.tenantName ?? '세입자', amount: unpaid.unit.monthlyRent, buildingName: "건물", unitNumber: unpaid.unit.roomNumber);
+                              if (context.mounted) { Navigator.pop(context); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${unpaid.unit.roomNumber}${l10n.translate("DASHBOARD_PAYMENT_COMPLETE")}'))); }
+                            },
+                            child: FittedBox(fit: BoxFit.scaleDown, child: Text(l10n.translate("COMMON_CONFIRM"), maxLines: 1)),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLegendItem(dynamic l10n, String labelKey, Color color) {
+    return Row(children: [Container(width: 12, height: 3, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))), const SizedBox(width: 4), Text(l10n.translate(labelKey), style: const TextStyle(fontSize: 11, color: Colors.grey))]);
+  }
+
+  Widget _buildSummaryCard(dynamic l10n, String titleKey, String value, IconData icon, Color color, {String? subtitle}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))]),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Icon(icon, color: color, size: 28), const SizedBox(height: 12),
-        Text(titleKey.tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 12)), const SizedBox(height: 4),
+        Text(l10n.translate(titleKey), style: const TextStyle(color: Colors.grey, fontSize: 12)), const SizedBox(height: 4),
         FittedBox(fit: BoxFit.scaleDown, child: Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
         if (subtitle != null) ...[const SizedBox(height: 4), Text(subtitle, style: const TextStyle(color: Colors.redAccent, fontSize: 11))]
       ]),
@@ -2131,104 +2234,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       case 'CAT_UTILITY': return Icons.lightbulb_circle_rounded;
       default: return Icons.receipt_long_rounded;
     }
-  }
-
-  Widget _buildHeader(BuildContext context, WidgetRef ref, List<AppAlert> alerts) {
-    final profile = ref.watch(userNicknameProvider);
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
-      decoration: const BoxDecoration(color: Color(0xFF1A237E), borderRadius: BorderRadius.vertical(bottom: Radius.circular(24))),
-      child: Row(children: [
-        CircleAvatar(backgroundColor: Colors.white24, backgroundImage: profile.imagePath != null ? FileImage(File(profile.imagePath!)) : null, child: profile.imagePath == null ? const Icon(Icons.person, color: Colors.white) : null),
-        const SizedBox(width: 12),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text("DASHBOARD_WELCOME".tr(ref), style: const TextStyle(color: Colors.white70, fontSize: 14)), Text(profile.nickname.startsWith('SETTINGS_') ? profile.nickname.tr(ref) : profile.nickname, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold))])),
-        ShakingBellIcon(alertCount: alerts.length, onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) { return const AlertListScreen(); })); }),
-      ]),
-    );
-  }
-
-  Widget _buildUnpaidBanner(BuildContext context, WidgetRef ref, AsyncValue<List<UnpaidStatus>> unpaidAsync) {
-    return unpaidAsync.when(
-      data: (list) {
-        final overdueUnits = list.where((u) { return u.status == 'OVERDUE'; }).toList();
-        if (overdueUnits.isEmpty) { return const SizedBox.shrink(); }
-        final roomsText = overdueUnits.map((u) { return u.unit.roomNumber; }).join(', ');
-        return InkWell(
-          onTap: () { HapticFeedback.mediumImpact(); _showUnpaidActionSheet(context, ref, overdueUnits); },
-          child: Container(
-            margin: const EdgeInsets.fromLTRB(16, 16, 16, 0), padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: Colors.redAccent.withOpacity(0.9), borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.red.withOpacity(0.2), blurRadius: 8)]),
-            child: Row(children: [
-              const Icon(Icons.warning_amber_rounded, color: Colors.white, size: 28),
-              const SizedBox(width: 12),
-              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text("DASHBOARD_UNPAID_DETECTED".tr(ref), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
-                Text("${"COMMON_ROOMS".tr(ref)}: $roomsText", style: const TextStyle(color: Colors.white, fontSize: 13)),
-              ])),
-              const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
-            ]),
-          ),
-        );
-      },
-      loading: () { return const SizedBox.shrink(); },
-      error: (_, __) { return const SizedBox.shrink(); },
-    );
-  }
-
-  void _showUnpaidActionSheet(BuildContext context, WidgetRef ref, List<UnpaidStatus> overdueUnits) {
-    final currentLang = ref.read(localizationProvider.notifier).currentLang;
-    final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-      builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Expanded(child: Text("DASHBOARD_UNPAID_TITLE".tr(ref), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
-                  IconButton(onPressed: () { Navigator.pop(context); }, icon: const Icon(Icons.close)),
-                ]),
-                Text("DASHBOARD_UNPAID_SUBTITLE".tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 13), maxLines: 2, overflow: TextOverflow.ellipsis),
-                const SizedBox(height: 16),
-                Flexible(
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemCount: overdueUnits.length,
-                    separatorBuilder: (context, index) { return const Divider(height: 1); },
-                    itemBuilder: (context, index) {
-                      final unpaid = overdueUnits[index];
-                      return ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: CircleAvatar(backgroundColor: Colors.redAccent.withOpacity(0.1), child: FittedBox(fit: BoxFit.scaleDown, child: Text(unpaid.unit.roomNumber, style: const TextStyle(color: Colors.redAccent, fontSize: 12, fontWeight: FontWeight.bold)))),
-                        title: Text("${unpaid.unit.roomNumber}${"COMMON_ROOM_UNIT".tr(ref)} ${"DASHBOARD_PAYMENT_CONFIRM".tr(ref)}", maxLines: 1, overflow: TextOverflow.ellipsis),
-                        subtitle: Text("${unpaid.unit.tenantName ?? '세입자'} / ${currencyFmt.format(unpaid.unit.monthlyRent)}", maxLines: 1, overflow: TextOverflow.ellipsis),
-                        trailing: SizedBox(
-                          height: 36,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-                            onPressed: () async {
-                              await ref.read(ledgerActionProvider.notifier).processPayment(buildingId: unpaid.unit.buildingId, unitId: unpaid.unit.id, tenantName: unpaid.unit.tenantName ?? '세입자', amount: unpaid.unit.monthlyRent, buildingName: "건물", unitNumber: unpaid.unit.roomNumber);
-                              if (context.mounted) { Navigator.pop(context); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${unpaid.unit.roomNumber}${"DASHBOARD_PAYMENT_COMPLETE".tr(ref)}'))); }
-                            },
-                            child: FittedBox(fit: BoxFit.scaleDown, child: Text("COMMON_CONFIRM".tr(ref), maxLines: 1)),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 }
 
