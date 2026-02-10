@@ -1296,8 +1296,15 @@ class RoomDetailScreen extends ConsumerWidget {
     final roomController = TextEditingController(text: currentUnit.roomNumber);
     final tenantController = TextEditingController(text: currentUnit.tenantName);
     final phoneController = TextEditingController(text: currentUnit.tenantPhone);
-    final depositController = TextEditingController(text: currentUnit.deposit.toString());
-    final rentController = TextEditingController(text: currentUnit.monthlyRent.toString());
+    //final depositController = TextEditingController(text: currentUnit.deposit.toString());
+    //final rentController = TextEditingController(text: currentUnit.monthlyRent.toString());
+    final depositController = TextEditingController(
+        text: NumberFormat('#,###').format(currentUnit.deposit)
+    );
+    final rentController = TextEditingController(
+        text: NumberFormat('#,###').format(currentUnit.monthlyRent)
+    );
+
     final paymentDayController = TextEditingController(text: currentUnit.paymentDay?.toString() ?? "");
     final memoController = TextEditingController(text: currentUnit.memo);
 
@@ -1428,7 +1435,19 @@ class RoomDetailScreen extends ConsumerWidget {
                           isDense: true,
                         ),
                         keyboardType: TextInputType.number,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        //inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          TextInputFormatter.withFunction((oldValue, newValue) {
+                            if (newValue.text.isEmpty) return newValue;
+                            final intValue = int.parse(newValue.text.replaceAll(',', ''));
+                            final newText = NumberFormat('#,###').format(intValue);
+                            return newValue.copyWith(
+                              text: newText,
+                              selection: TextSelection.collapsed(offset: newText.length),
+                            );
+                          }),
+                        ],
                       ),
                       if (selectedType == '월세' || selectedType == '반전세') ...[
                         const SizedBox(height: 12),
@@ -1440,7 +1459,19 @@ class RoomDetailScreen extends ConsumerWidget {
                             isDense: true,
                           ),
                           keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          //inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            TextInputFormatter.withFunction((oldValue, newValue) {
+                              if (newValue.text.isEmpty) return newValue;
+                              final intValue = int.parse(newValue.text.replaceAll(',', ''));
+                              final newText = NumberFormat('#,###').format(intValue);
+                              return newValue.copyWith(
+                                text: newText,
+                                selection: TextSelection.collapsed(offset: newText.length),
+                              );
+                            }),
+                          ],
                         ),
                         const SizedBox(height: 12),
                         TextField(
@@ -1530,8 +1561,11 @@ class RoomDetailScreen extends ConsumerWidget {
                     leaseType: Value(selectedType),
                     tenantName: Value(tenantController.text),
                     tenantPhone: Value(phoneController.text),
-                    deposit: Value(int.tryParse(depositController.text) ?? 0),
-                    monthlyRent: Value(int.tryParse(rentController.text) ?? 0),
+                    //deposit: Value(int.tryParse(depositController.text) ?? 0),
+                    //monthlyRent: Value(int.tryParse(rentController.text) ?? 0),
+                    deposit: Value(int.tryParse(depositController.text.replaceAll(',', '')) ?? 0),
+                    monthlyRent: Value(int.tryParse(rentController.text.replaceAll(',', '')) ?? 0),
+
                     paymentDay: Value(int.tryParse(paymentDayController.text)),
                     contractStart: Value(startDate),
                     contractEnd: Value(endDate),
