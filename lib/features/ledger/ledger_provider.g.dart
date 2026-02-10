@@ -55,8 +55,8 @@ final categoryStatisticsProvider = AutoDisposeFutureProvider<
 
 typedef CategoryStatisticsRef = AutoDisposeFutureProviderRef<
     List<({String category, int amount, double percentage})>>;
-String _$searchTransactionsHash() =>
-    r'949a76ee2ab955d68a8c5af063d4cf2cc4274e1b';
+String _$annualCategoryStatisticsHash() =>
+    r'0318d67828fb7e44f7bfcdce656b55bdd2bddf76';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -78,6 +78,144 @@ class _SystemHash {
     return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
   }
 }
+
+/// See also [annualCategoryStatistics].
+@ProviderFor(annualCategoryStatistics)
+const annualCategoryStatisticsProvider = AnnualCategoryStatisticsFamily();
+
+/// See also [annualCategoryStatistics].
+class AnnualCategoryStatisticsFamily extends Family<
+    AsyncValue<List<({String category, int amount, double percentage})>>> {
+  /// See also [annualCategoryStatistics].
+  const AnnualCategoryStatisticsFamily();
+
+  /// See also [annualCategoryStatistics].
+  AnnualCategoryStatisticsProvider call(
+    int year,
+  ) {
+    return AnnualCategoryStatisticsProvider(
+      year,
+    );
+  }
+
+  @override
+  AnnualCategoryStatisticsProvider getProviderOverride(
+    covariant AnnualCategoryStatisticsProvider provider,
+  ) {
+    return call(
+      provider.year,
+    );
+  }
+
+  static const Iterable<ProviderOrFamily>? _dependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
+
+  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
+
+  @override
+  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
+      _allTransitiveDependencies;
+
+  @override
+  String? get name => r'annualCategoryStatisticsProvider';
+}
+
+/// See also [annualCategoryStatistics].
+class AnnualCategoryStatisticsProvider extends AutoDisposeFutureProvider<
+    List<({String category, int amount, double percentage})>> {
+  /// See also [annualCategoryStatistics].
+  AnnualCategoryStatisticsProvider(
+    int year,
+  ) : this._internal(
+          (ref) => annualCategoryStatistics(
+            ref as AnnualCategoryStatisticsRef,
+            year,
+          ),
+          from: annualCategoryStatisticsProvider,
+          name: r'annualCategoryStatisticsProvider',
+          debugGetCreateSourceHash:
+              const bool.fromEnvironment('dart.vm.product')
+                  ? null
+                  : _$annualCategoryStatisticsHash,
+          dependencies: AnnualCategoryStatisticsFamily._dependencies,
+          allTransitiveDependencies:
+              AnnualCategoryStatisticsFamily._allTransitiveDependencies,
+          year: year,
+        );
+
+  AnnualCategoryStatisticsProvider._internal(
+    super._createNotifier, {
+    required super.name,
+    required super.dependencies,
+    required super.allTransitiveDependencies,
+    required super.debugGetCreateSourceHash,
+    required super.from,
+    required this.year,
+  }) : super.internal();
+
+  final int year;
+
+  @override
+  Override overrideWith(
+    FutureOr<List<({String category, int amount, double percentage})>> Function(
+            AnnualCategoryStatisticsRef provider)
+        create,
+  ) {
+    return ProviderOverride(
+      origin: this,
+      override: AnnualCategoryStatisticsProvider._internal(
+        (ref) => create(ref as AnnualCategoryStatisticsRef),
+        from: from,
+        name: null,
+        dependencies: null,
+        allTransitiveDependencies: null,
+        debugGetCreateSourceHash: null,
+        year: year,
+      ),
+    );
+  }
+
+  @override
+  AutoDisposeFutureProviderElement<
+          List<({String category, int amount, double percentage})>>
+      createElement() {
+    return _AnnualCategoryStatisticsProviderElement(this);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is AnnualCategoryStatisticsProvider && other.year == year;
+  }
+
+  @override
+  int get hashCode {
+    var hash = _SystemHash.combine(0, runtimeType.hashCode);
+    hash = _SystemHash.combine(hash, year.hashCode);
+
+    return _SystemHash.finish(hash);
+  }
+}
+
+mixin AnnualCategoryStatisticsRef on AutoDisposeFutureProviderRef<
+    List<({String category, int amount, double percentage})>> {
+  /// The parameter `year` of this provider.
+  int get year;
+}
+
+class _AnnualCategoryStatisticsProviderElement
+    extends AutoDisposeFutureProviderElement<
+        List<({String category, int amount, double percentage})>>
+    with AnnualCategoryStatisticsRef {
+  _AnnualCategoryStatisticsProviderElement(super.provider);
+
+  @override
+  int get year => (origin as AnnualCategoryStatisticsProvider).year;
+}
+
+String _$searchTransactionsHash() =>
+    r'949a76ee2ab955d68a8c5af063d4cf2cc4274e1b';
 
 /// See also [searchTransactions].
 @ProviderFor(searchTransactions)
@@ -224,7 +362,7 @@ final calendarEventsProvider =
 
 typedef CalendarEventsRef
     = AutoDisposeFutureProviderRef<Map<DateTime, List<Transaction>>>;
-String _$monthlyTrendHash() => r'3196a8a678ca1c2dafc314cf5a0f5565cebe45cc';
+String _$monthlyTrendHash() => r'b0ab52bb28c76743103e7abae5aed883ad6c5361';
 
 /// See also [monthlyTrend].
 @ProviderFor(monthlyTrend)

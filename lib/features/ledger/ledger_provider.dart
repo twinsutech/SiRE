@@ -138,6 +138,92 @@ Future<List<({String category, int amount, double percentage})>> categoryStatist
 }
 
 // -----------------------------------------------------------------------------
+// 📍 [신규 추가] 연간 카테고리별 지출 통계 (보고서 화면 전용)
+// -----------------------------------------------------------------------------
+// @riverpod
+// Future<List<({String category, int amount, double percentage})>> annualCategoryStatistics(AnnualCategoryStatisticsRef ref) async {
+//   final db = ref.watch(databaseProvider);
+//
+//   // 📍 현재 연도의 1월 1일부터 12월 31일까지 데이터를 직접 가져옵니다.
+//   final now = DateTime.now();
+//   final firstDayOfYear = DateTime(now.year, 1, 1);
+//   final lastDayOfYear = DateTime(now.year, 12, 31, 23, 59, 59);
+//
+//   final annualExpenses = await (db.select(db.transactions)
+//     ..where((t) {
+//       return t.type.equals('EXP') &
+//       t.transactionDate.isBetweenValues(firstDayOfYear, lastDayOfYear);
+//     }))
+//       .get();
+//
+//   if (annualExpenses.isEmpty) { return []; }
+//
+//   int totalExpense = 0;
+//   final Map<String, int> grouped = {};
+//
+//   for (var tx in annualExpenses) {
+//     final amount = tx.amount.toInt();
+//     totalExpense += amount;
+//     grouped[tx.category] = (grouped[tx.category] ?? 0) + amount;
+//   }
+//
+//   final result = grouped.entries.map((entry) {
+//     return (
+//     category: entry.key,
+//     amount: entry.value,
+//     percentage: totalExpense > 0 ? entry.value / totalExpense : 0.0,
+//     );
+//   }).toList();
+//
+//   result.sort((a, b) { return b.amount.compareTo(a.amount); });
+//   return result;
+// }
+
+// 📍 [고도화] 연도별 통계를 위한 프로바이더 (선택된 연도를 인자로 받음)
+@riverpod
+Future<List<({String category, int amount, double percentage})>> annualCategoryStatistics(
+    AnnualCategoryStatisticsRef ref,
+    int year // 📍 연도를 인자로 받도록 수정
+    ) async {
+  final db = ref.watch(databaseProvider);
+
+  // 📍 회계 기준: 해당 연도 1월 1일 ~ 12월 31일
+  final firstDay = DateTime(year, 1, 1);
+  final lastDay = DateTime(year, 12, 31, 23, 59, 59);
+
+  final annualExpenses = await (db.select(db.transactions)
+    ..where((t) {
+      return t.type.equals('EXP') &
+      t.transactionDate.isBetweenValues(firstDay, lastDay);
+    }))
+      .get();
+
+  if (annualExpenses.isEmpty) { return []; }
+
+  int totalExpense = 0;
+  final Map<String, int> grouped = {};
+
+  for (var tx in annualExpenses) {
+    final amount = tx.amount.toInt();
+    totalExpense += amount;
+    grouped[tx.category] = (grouped[tx.category] ?? 0) + amount;
+  }
+
+  final result = grouped.entries.map((entry) {
+    return (
+    category: entry.key,
+    amount: entry.value,
+    percentage: totalExpense > 0 ? entry.value / totalExpense : 0.0,
+    );
+  }).toList();
+
+  result.sort((a, b) { return b.amount.compareTo(a.amount); });
+  return result;
+}
+
+
+
+// -----------------------------------------------------------------------------
 // 📍 6. 검색 기능 (최신순 정렬 반영)
 // -----------------------------------------------------------------------------
 @riverpod
@@ -174,34 +260,66 @@ Future<Map<DateTime, List<Transaction>>> calendarEvents(CalendarEventsRef ref) a
 // -----------------------------------------------------------------------------
 // 📍 월별 추이 데이터 (보고서용)
 // -----------------------------------------------------------------------------
+// @riverpod
+// Future<List<({DateTime month, int income, int expense})>> monthlyTrend(MonthlyTrendRef ref) async {
+//   final db = ref.watch(databaseProvider);
+//   final now = DateTime.now();
+//   final sixMonthsAgo = DateTime(now.year, now.month - 5, 1);
+//
+//   final transactions = await (db.select(db.transactions)
+//     ..where((t) => t.transactionDate.isBiggerOrEqualValue(sixMonthsAgo))
+//     ..orderBy([(t) => OrderingTerm.asc(t.transactionDate)]))
+//       .get();
+//
+//   final List<({DateTime month, int income, int expense})> result = [];
+//
+//   for (int i = 5; i >= 0; i--) {
+//     final m = DateTime(now.year, now.month - i, 1);
+//     int mIncome = 0;
+//     int mExpense = 0;
+//
+//     for (var tx in transactions) {
+//       if (tx.transactionDate.year == m.year && tx.transactionDate.month == m.month) {
+//         if (tx.type == 'INC') mIncome += tx.amount.toInt();
+//         if (tx.type == 'EXP') mExpense += tx.amount.toInt();
+//       }
+//     }
+//     result.add((month: m, income: mIncome, expense: mExpense));
+//   }
+//   return result;
+// }
+// 📍 월별 추이 데이터 (보고서 전용 - 12개월로 확장)
 @riverpod
 Future<List<({DateTime month, int income, int expense})>> monthlyTrend(MonthlyTrendRef ref) async {
   final db = ref.watch(databaseProvider);
   final now = DateTime.now();
-  final sixMonthsAgo = DateTime(now.year, now.month - 5, 1);
+  // 📍 기존 5에서 11로 변경하여 현재 포함 최근 1년(12개월) 데이터를 가져옴
+  final twelveMonthsAgo = DateTime(now.year, now.month - 11, 1);
 
   final transactions = await (db.select(db.transactions)
-    ..where((t) => t.transactionDate.isBiggerOrEqualValue(sixMonthsAgo))
-    ..orderBy([(t) => OrderingTerm.asc(t.transactionDate)]))
+    ..where((t) { return t.transactionDate.isBiggerOrEqualValue(twelveMonthsAgo); })
+    ..orderBy([(t) { return OrderingTerm.asc(t.transactionDate); }]))
       .get();
 
   final List<({DateTime month, int income, int expense})> result = [];
 
-  for (int i = 5; i >= 0; i--) {
+  // 📍 11부터 0까지 역순으로 12개월치 데이터 생성
+  for (int i = 11; i >= 0; i--) {
     final m = DateTime(now.year, now.month - i, 1);
     int mIncome = 0;
     int mExpense = 0;
 
     for (var tx in transactions) {
       if (tx.transactionDate.year == m.year && tx.transactionDate.month == m.month) {
-        if (tx.type == 'INC') mIncome += tx.amount.toInt();
-        if (tx.type == 'EXP') mExpense += tx.amount.toInt();
+        if (tx.type == 'INC') { mIncome += tx.amount.toInt(); }
+        if (tx.type == 'EXP') { mExpense += tx.amount.toInt(); }
       }
     }
     result.add((month: m, income: mIncome, expense: mExpense));
   }
   return result;
 }
+
 
 // -----------------------------------------------------------------------------
 // 📍 8. 통합 액션
