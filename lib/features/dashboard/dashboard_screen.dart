@@ -1273,6 +1273,558 @@
 //   }
 // }
 
+//
+//
+// import 'dart:math';
+// import 'dart:io';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:intl/intl.dart';
+// import 'package:fl_chart/fl_chart.dart';
+//
+// import '../../core/localization/localization_provider.dart';
+// import '../../core/theme/app_colors.dart';
+// import '../ledger/add_transaction_sheet.dart';
+// import '../ledger/ledger_provider.dart';
+// import '../settings/user_provider.dart';
+// import 'dashboard_provider.dart';
+// import '../ledger/unpaid_provider.dart';
+// import 'alert_provider.dart';
+// import 'alert_list_screen.dart';
+//
+// // 📍 [수정] 차트 스크롤 제어를 위해 ConsumerStatefulWidget으로 전환
+// class DashboardScreen extends ConsumerStatefulWidget {
+//   const DashboardScreen({super.key});
+//
+//   @override
+//   ConsumerState<DashboardScreen> createState() {
+//     return _DashboardScreenState();
+//   }
+// }
+//
+// class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+//   // 📍 차트 스크롤 제어를 위한 컨트롤러
+//   final ScrollController _chartScrollController = ScrollController();
+//
+//   // 📍 버튼 가시성 제어 상태
+//   bool _canScrollLeft = false;
+//   bool _canScrollRight = false;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _chartScrollController.addListener(_scrollListener);
+//     // 초기 로딩 후 버튼 상태 체크를 위해 콜백 등록
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       _scrollListener();
+//     });
+//   }
+//
+//   // 📍 스크롤 위치를 감지하여 버튼 노출 여부 결정
+//   void _scrollListener() {
+//     if (!_chartScrollController.hasClients) {
+//       return;
+//     }
+//
+//     final maxScroll = _chartScrollController.position.maxScrollExtent;
+//     final currentScroll = _chartScrollController.offset;
+//
+//     setState(() {
+//       // reverse: true 설정으로 인해 0이 가장 오른쪽(최신), maxScroll이 가장 왼쪽(과거)입니다.
+//       _canScrollLeft = currentScroll < maxScroll - 5; // 왼쪽(과거) 데이터가 더 있는가
+//       _canScrollRight = currentScroll > 5;           // 오른쪽(최신) 데이터가 더 있는가
+//     });
+//   }
+//
+//   @override
+//   void dispose() {
+//     _chartScrollController.removeListener(_scrollListener);
+//     _chartScrollController.dispose();
+//     super.dispose();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final dashboardAsync = ref.watch(dashboardDataProvider);
+//     final unpaidAsync = ref.watch(unpaidListProvider);
+//     final alerts = ref.watch(appAlertProvider);
+//     final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+//
+//     // 📍 글로벌 화폐 포매터 정의
+//     final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
+//
+//     return Scaffold(
+//       backgroundColor: Colors.grey[100],
+//       body: dashboardAsync.when(
+//         loading: () {
+//           return const Center(child: CircularProgressIndicator());
+//         },
+//         error: (err, stack) {
+//           return Center(child: Text('Error: $err'));
+//         },
+//         data: (data) {
+//           // 데이터 로드 시점에도 스크롤 상태 체크
+//           WidgetsBinding.instance.addPostFrameCallback((_) {
+//             _scrollListener();
+//           });
+//
+//           return SingleChildScrollView(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 _buildHeader(context, ref, alerts),
+//                 _buildUnpaidBanner(context, ref, unpaidAsync),
+//
+//                 Padding(
+//                   padding: const EdgeInsets.all(16.0),
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Row(
+//                         children: [
+//                           Expanded(
+//                             child: _buildSummaryCard(
+//                               ref,
+//                               "DASHBOARD_THIS_MONTH",
+//                               currencyFmt.format(data.totalIncome),
+//                               Icons.monetization_on,
+//                               AppColors.incomeGreen,
+//                             ),
+//                           ),
+//                           const SizedBox(width: 12),
+//                           Expanded(
+//                             child: _buildSummaryCard(
+//                               ref,
+//                               "DASHBOARD_OCCUPANCY",
+//                               "${(data.occupancyRate * 100).toStringAsFixed(0)}%",
+//                               Icons.home,
+//                               data.occupancyRate >= 0.9 ? AppColors.primaryNavy : Colors.orange,
+//                               subtitle: "${data.vacantUnits} ${"DASHBOARD_VACANT_UNITS".tr(ref)}",
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                       const SizedBox(height: 24),
+//
+//                       Text("DASHBOARD_REVENUE_TREND".tr(ref),
+//                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+//                           maxLines: 1,
+//                           overflow: TextOverflow.ellipsis),
+//                       const SizedBox(height: 12),
+//
+//                       // 📍 수익 추이 그래프 (12개월 스크롤 버전)
+//                       _buildRevenueChart(data, ref),
+//
+//                       const SizedBox(height: 24),
+//
+//                       Text("DASHBOARD_RECENT_ACTIVITY".tr(ref),
+//                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+//                           maxLines: 1,
+//                           overflow: TextOverflow.ellipsis),
+//                       const SizedBox(height: 8),
+//
+//                       if (data.recentTransactions.isEmpty)
+//                         Padding(
+//                           padding: const EdgeInsets.symmetric(vertical: 40),
+//                           child: Center(
+//                             child: Text(
+//                               "DASHBOARD_NO_RECENT_ACTIVITY".tr(ref),
+//                               style: const TextStyle(color: Colors.grey),
+//                               maxLines: 2,
+//                               overflow: TextOverflow.ellipsis,
+//                               textAlign: TextAlign.center,
+//                             ),
+//                           ),
+//                         )
+//                       else
+//                         ...data.recentTransactions.map((item) {
+//                           final tx = item.transaction;
+//                           final isIncome = tx.type == 'INC';
+//                           final themeColor = isIncome ? AppColors.incomeGreen : AppColors.expenseRed;
+//
+//                           return Padding(
+//                             padding: const EdgeInsets.only(bottom: 4),
+//                             child: Card(
+//                               elevation: 0.5,
+//                               color: Colors.white,
+//                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+//                               child: ListTile(
+//                                 dense: true,
+//                                 onTap: () {
+//                                   showModalBottomSheet(
+//                                     context: context,
+//                                     isScrollControlled: true,
+//                                     backgroundColor: Colors.transparent,
+//                                     builder: (context) {
+//                                       return AddTransactionSheet(transaction: tx);
+//                                     },
+//                                   );
+//                                 },
+//                                 leading: CircleAvatar(
+//                                   backgroundColor: themeColor.withOpacity(0.1),
+//                                   child: Icon(
+//                                     _getCategoryIcon(tx.category),
+//                                     color: themeColor,
+//                                     size: 20,
+//                                   ),
+//                                 ),
+//                                 title: Row(
+//                                   children: [
+//                                     Expanded(
+//                                       child: Text(
+//                                         tx.category.startsWith('CAT_') ? tx.category.tr(ref) : tx.category,
+//                                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+//                                         maxLines: 1,
+//                                         overflow: TextOverflow.ellipsis,
+//                                       ),
+//                                     ),
+//                                     if (item.hasImages) ...[
+//                                       const SizedBox(width: 4),
+//                                       const Icon(Icons.receipt_long, size: 12, color: Colors.blueGrey),
+//                                     ]
+//                                   ],
+//                                 ),
+//                                 subtitle: Text(
+//                                   "${DateFormat('MM.dd').format(tx.transactionDate)} ${tx.memo ?? ''}",
+//                                   style: const TextStyle(fontSize: 12),
+//                                   maxLines: 1,
+//                                   overflow: TextOverflow.ellipsis,
+//                                 ),
+//                                 trailing: ConstrainedBox(
+//                                   constraints: const BoxConstraints(maxWidth: 140),
+//                                   child: FittedBox(
+//                                     fit: BoxFit.scaleDown,
+//                                     alignment: Alignment.centerRight,
+//                                     child: Text(
+//                                       "${isIncome ? '+' : '-'}${currencyFmt.format(tx.amount)}",
+//                                       style: TextStyle(color: themeColor, fontWeight: FontWeight.bold, fontSize: 15),
+//                                       maxLines: 1,
+//                                       overflow: TextOverflow.ellipsis,
+//                                       textAlign: TextAlign.right,
+//                                     ),
+//                                   ),
+//                                 ),
+//                               ),
+//                             ),
+//                           );
+//                         }),
+//                       const SizedBox(height: 80),
+//                     ],
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           );
+//         },
+//       ),
+//     );
+//   }
+//
+//   // 📍 [에러 해결] 차트 위젯 (SideTitleFitInsideData 필수 파라미터 및 타입 변환 적용)
+//   Widget _buildRevenueChart(dynamic data, WidgetRef ref) {
+//     final currentLang = ref.watch(localizationProvider.notifier).currentLang;
+//
+//     final double screenWidth = MediaQuery.of(context).size.width;
+//     final double availableWidth = screenWidth - 32;
+//     final double singlePointWidth = availableWidth / 5.5;
+//     final double chartTotalWidth = max(availableWidth, (data.revenueSpots as List).length * singlePointWidth);
+//
+//     return Container(
+//       height: 280,
+//       decoration: BoxDecoration(
+//           color: Colors.white,
+//           borderRadius: BorderRadius.circular(16),
+//           boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)]
+//       ),
+//       child: Stack(
+//         children: [
+//           Padding(
+//             padding: const EdgeInsets.fromLTRB(10, 40, 10, 12),
+//             child: Column(
+//               children: [
+//                 Expanded(
+//                   child: SingleChildScrollView(
+//                     controller: _chartScrollController,
+//                     scrollDirection: Axis.horizontal,
+//                     reverse: true,
+//                     child: SizedBox(
+//                       width: chartTotalWidth,
+//                       child: LineChart(
+//                         LineChartData(
+//                           lineTouchData: LineTouchData(enabled: false),
+//                           gridData: FlGridData(
+//                               show: true,
+//                               drawVerticalLine: false,
+//                               getDrawingHorizontalLine: (v) {
+//                                 return FlLine(color: Colors.grey.withOpacity(0.05), strokeWidth: 1);
+//                               }
+//                           ),
+//                           titlesData: FlTitlesData(
+//                             show: true,
+//                             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+//                             topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+//                             leftTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+//                             bottomTitles: AxisTitles(
+//                               sideTitles: SideTitles(
+//                                 showTitles: true,
+//                                 reservedSize: 32,
+//                                 interval: 1,
+//                                 getTitlesWidget: (value, meta) {
+//                                   final now = DateTime.now();
+//                                   final int spotCount = (data.revenueSpots as List).length;
+//                                   // 📍 [에러 해결] 계산 결과를 .toInt()로 명시적 변환 수행
+//                                   final int monthOffset = (spotCount - 1 - value.toInt()).toInt();
+//                                   final date = DateTime(now.year, now.month - monthOffset, 1);
+//
+//                                   return SideTitleWidget(
+//                                     axisSide: meta.axisSide,
+//                                     space: 8,
+//                                     // 📍 [에러 해결] fitInside의 모든 필수 파라미터(axisPosition 포함) 전달
+//                                     fitInside: SideTitleFitInsideData(
+//                                       enabled: true,
+//                                       axisPosition: meta.axisPosition,
+//                                       parentAxisSize: meta.parentAxisSize,
+//                                       distanceFromEdge: 0,
+//                                     ),
+//                                     child: Text(
+//                                         '${date.month}${"COMMON_MONTH_UNIT".tr(ref)}',
+//                                         style: const TextStyle(color: Colors.grey, fontSize: 10)
+//                                     ),
+//                                   );
+//                                 },
+//                               ),
+//                             ),
+//                           ),
+//                           borderData: FlBorderData(show: false),
+//                           lineBarsData: [
+//                             LineChartBarData(
+//                                 spots: data.revenueSpots,
+//                                 isCurved: true,
+//                                 color: const Color(0xFF1A237E),
+//                                 barWidth: 4,
+//                                 dotData: const FlDotData(show: true),
+//                                 belowBarData: BarAreaData(show: true, color: const Color(0xFF1A237E).withOpacity(0.05))
+//                             ),
+//                             if (data.expenseSpots != null && (data.expenseSpots as List).isNotEmpty)
+//                               LineChartBarData(
+//                                   spots: data.expenseSpots,
+//                                   isCurved: true,
+//                                   color: Colors.red[300]!.withOpacity(0.6),
+//                                   barWidth: 3,
+//                                   dashArray: [5, 5],
+//                                   dotData: const FlDotData(show: false)
+//                               ),
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//                 const SizedBox(height: 12),
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.center,
+//                   children: [
+//                     _buildLegendItem(ref, "COMMON_INCOME", const Color(0xFF1A237E)),
+//                     const SizedBox(width: 16),
+//                     _buildLegendItem(ref, "COMMON_EXPENSE", Colors.red[300]!.withOpacity(0.6)),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//           ),
+//
+//           // 📍 [복구] 지능형 화살표 버튼
+//           if (_canScrollLeft)
+//             Positioned(
+//               left: 8, top: 0, bottom: 40,
+//               child: Center(
+//                 child: _buildScrollButton(Icons.chevron_left, () {
+//                   _chartScrollController.animateTo(
+//                       _chartScrollController.offset + 150,
+//                       duration: const Duration(milliseconds: 300),
+//                       curve: Curves.easeInOut
+//                   );
+//                 }),
+//               ),
+//             ),
+//           if (_canScrollRight)
+//             Positioned(
+//               right: 8, top: 0, bottom: 40,
+//               child: Center(
+//                 child: _buildScrollButton(Icons.chevron_right, () {
+//                   _chartScrollController.animateTo(
+//                       _chartScrollController.offset - 150,
+//                       duration: const Duration(milliseconds: 300),
+//                       curve: Curves.easeInOut
+//                   );
+//                 }),
+//               ),
+//             ),
+//         ],
+//       ),
+//     );
+//   }
+//
+//   Widget _buildScrollButton(IconData icon, VoidCallback onTap) {
+//     return Container(
+//       decoration: BoxDecoration(
+//           color: Colors.white.withOpacity(0.8),
+//           shape: BoxShape.circle,
+//           boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)]
+//       ),
+//       child: IconButton(
+//           icon: Icon(icon, color: const Color(0xFF1A237E), size: 24),
+//           onPressed: onTap
+//       ),
+//     );
+//   }
+//
+//   // --- 기존 스타일 헬퍼 메서드 ---
+//
+//   Widget _buildHeader(BuildContext context, WidgetRef ref, List<AppAlert> alerts) {
+//     final profile = ref.watch(userNicknameProvider);
+//     return Container(
+//       padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
+//       decoration: const BoxDecoration(color: Color(0xFF1A237E), borderRadius: BorderRadius.vertical(bottom: Radius.circular(24))),
+//       child: Row(children: [
+//         CircleAvatar(backgroundColor: Colors.white24, backgroundImage: profile.imagePath != null ? FileImage(File(profile.imagePath!)) : null, child: profile.imagePath == null ? const Icon(Icons.person, color: Colors.white) : null),
+//         const SizedBox(width: 12),
+//         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text("DASHBOARD_WELCOME".tr(ref), style: const TextStyle(color: Colors.white70, fontSize: 14)), Text(profile.nickname.startsWith('SETTINGS_') ? profile.nickname.tr(ref) : profile.nickname, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold))])),
+//         // 📍 [에러 해결] ShakingBellIcon 위젯 호출 (정의 누락 해결)
+//         ShakingBellIcon(alertCount: alerts.length, onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) { return const AlertListScreen(); })); }),
+//       ]),
+//     );
+//   }
+//
+//   Widget _buildUnpaidBanner(BuildContext context, WidgetRef ref, AsyncValue<List<UnpaidStatus>> unpaidAsync) {
+//     return unpaidAsync.when(
+//       data: (list) {
+//         final overdueUnits = list.where((u) { return u.status == 'OVERDUE'; }).toList();
+//         if (overdueUnits.isEmpty) { return const SizedBox.shrink(); }
+//         return InkWell(
+//           onTap: () { HapticFeedback.mediumImpact(); },
+//           child: Container(
+//             margin: const EdgeInsets.fromLTRB(16, 16, 16, 0), padding: const EdgeInsets.all(16),
+//             decoration: BoxDecoration(color: Colors.redAccent.withOpacity(0.9), borderRadius: BorderRadius.circular(16)),
+//             child: Row(children: [const Icon(Icons.warning_amber_rounded, color: Colors.white), const SizedBox(width: 12), Text("DASHBOARD_UNPAID_DETECTED".tr(ref), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))]),
+//           ),
+//         );
+//       },
+//       loading: () { return const SizedBox.shrink(); },
+//       error: (_, __) { return const SizedBox.shrink(); },
+//     );
+//   }
+//
+//   Widget _buildLegendItem(WidgetRef ref, String labelKey, Color color) {
+//     return Row(children: [Container(width: 12, height: 3, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(2))), const SizedBox(width: 4), Text(labelKey.tr(ref), style: const TextStyle(fontSize: 11, color: Colors.grey))]);
+//   }
+//
+//   Widget _buildSummaryCard(WidgetRef ref, String titleKey, String value, IconData icon, Color color, {String? subtitle}) {
+//     return Container(
+//       padding: const EdgeInsets.all(16),
+//       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))]),
+//       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+//         Icon(icon, color: color, size: 28), const SizedBox(height: 12),
+//         Text(titleKey.tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 12)), const SizedBox(height: 4),
+//         FittedBox(fit: BoxFit.scaleDown, child: Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))),
+//         if (subtitle != null) ...[const SizedBox(height: 4), Text(subtitle, style: const TextStyle(color: Colors.redAccent, fontSize: 11))]
+//       ]),
+//     );
+//   }
+//
+//   IconData _getCategoryIcon(String category) {
+//     switch (category) {
+//       case 'CAT_RENT': return Icons.home_work_rounded;
+//       case 'CAT_TAX': return Icons.request_quote_rounded;
+//       case 'CAT_REPAIR': return Icons.build_circle_rounded;
+//       case 'CAT_UTILITY': return Icons.lightbulb_circle_rounded;
+//       default: return Icons.receipt_long_rounded;
+//     }
+//   }
+// }
+//
+// // -----------------------------------------------------------------------------
+// // 📍 [에러 해결] ShakingBellIcon 위젯 정의 (State 클래스 밖으로 이동하여 정의)
+// // -----------------------------------------------------------------------------
+// class ShakingBellIcon extends StatefulWidget {
+//   final int alertCount;
+//   final VoidCallback onTap;
+//
+//   const ShakingBellIcon({super.key, required this.alertCount, required this.onTap});
+//
+//   @override
+//   State<ShakingBellIcon> createState() {
+//     return _ShakingBellIconState();
+//   }
+// }
+//
+// class _ShakingBellIconState extends State<ShakingBellIcon> with SingleTickerProviderStateMixin {
+//   late AnimationController _controller;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
+//     _startAnimationLoop();
+//   }
+//
+//   void _startAnimationLoop() async {
+//     while (mounted) {
+//       if (widget.alertCount > 0) {
+//         await _controller.forward();
+//         await _controller.reverse();
+//       }
+//       await Future.delayed(const Duration(seconds: 3));
+//     }
+//   }
+//
+//   @override
+//   void dispose() {
+//     _controller.dispose();
+//     super.dispose();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: widget.onTap,
+//       child: AnimatedBuilder(
+//         animation: _controller,
+//         builder: (context, child) {
+//           final double rotation = sin(_controller.value * 2 * pi) * 0.15;
+//           return Transform.rotate(angle: widget.alertCount > 0 ? rotation : 0, child: child);
+//         },
+//         child: Stack(
+//           clipBehavior: Clip.none,
+//           children: [
+//             const Icon(Icons.notifications_none, color: Colors.white, size: 28),
+//             if (widget.alertCount > 0)
+//               Positioned(
+//                 right: -4,
+//                 top: -2,
+//                 child: Container(
+//                   padding: const EdgeInsets.all(2),
+//                   decoration: BoxDecoration(
+//                     color: Colors.red,
+//                     shape: BoxShape.circle,
+//                     border: Border.all(color: const Color(0xFF1A237E), width: 1.5),
+//                   ),
+//                   constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
+//                   child: Center(
+//                     child: Text(
+//                       widget.alertCount > 9 ? '9+' : '${widget.alertCount}',
+//                       style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
 
 import 'dart:math';
@@ -1293,7 +1845,6 @@ import '../ledger/unpaid_provider.dart';
 import 'alert_provider.dart';
 import 'alert_list_screen.dart';
 
-// 📍 [수정] 차트 스크롤 제어를 위해 ConsumerStatefulWidget으로 전환
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
 
@@ -1304,37 +1855,39 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-  // 📍 차트 스크롤 제어를 위한 컨트롤러
   final ScrollController _chartScrollController = ScrollController();
 
-  // 📍 버튼 가시성 제어 상태
-  bool _canScrollLeft = false;
+  // 📍 버튼 가시성 상태 (초기값은 true로 설정하여 데이터 로드 전에도 공간 확보 가능)
+  bool _canScrollLeft = true;
   bool _canScrollRight = false;
 
   @override
   void initState() {
     super.initState();
     _chartScrollController.addListener(_scrollListener);
-    // 초기 로딩 후 버튼 상태 체크를 위해 콜백 등록
+
+    // 📍 초기 상태 체크는 최초 1회만 수행
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollListener();
+      if (mounted) _scrollListener();
     });
   }
 
-  // 📍 스크롤 위치를 감지하여 버튼 노출 여부 결정
   void _scrollListener() {
-    if (!_chartScrollController.hasClients) {
-      return;
-    }
+    if (!_chartScrollController.hasClients) return;
 
     final maxScroll = _chartScrollController.position.maxScrollExtent;
     final currentScroll = _chartScrollController.offset;
 
-    setState(() {
-      // reverse: true 설정으로 인해 0이 가장 오른쪽(최신), maxScroll이 가장 왼쪽(과거)입니다.
-      _canScrollLeft = currentScroll < maxScroll - 5; // 왼쪽(과거) 데이터가 더 있는가
-      _canScrollRight = currentScroll > 5;           // 오른쪽(최신) 데이터가 더 있는가
-    });
+    // 📍 불필요한 setState 방지를 위해 값이 변할 때만 호출
+    final newCanScrollLeft = currentScroll < maxScroll - 5;
+    final newCanScrollRight = currentScroll > 5;
+
+    if (_canScrollLeft != newCanScrollLeft || _canScrollRight != newCanScrollRight) {
+      setState(() {
+        _canScrollLeft = newCanScrollLeft;
+        _canScrollRight = newCanScrollRight;
+      });
+    }
   }
 
   @override
@@ -1350,25 +1903,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final unpaidAsync = ref.watch(unpaidListProvider);
     final alerts = ref.watch(appAlertProvider);
     final currentLang = ref.watch(localizationProvider.notifier).currentLang;
-
-    // 📍 글로벌 화폐 포매터 정의
     final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: dashboardAsync.when(
-        loading: () {
-          return const Center(child: CircularProgressIndicator());
-        },
-        error: (err, stack) {
-          return Center(child: Text('Error: $err'));
-        },
+        loading: () { return const Center(child: CircularProgressIndicator()); },
+        error: (err, stack) { return Center(child: Text('Error: $err')); },
         data: (data) {
-          // 데이터 로드 시점에도 스크롤 상태 체크
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _scrollListener();
-          });
-
+          // 📍 절대 build 메서드 안에서 setState를 유발하는 콜백을 직접 실행하지 마세요. (삭제됨)
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1385,18 +1928,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         children: [
                           Expanded(
                             child: _buildSummaryCard(
-                              ref,
-                              "DASHBOARD_THIS_MONTH",
+                              ref, "DASHBOARD_THIS_MONTH",
                               currencyFmt.format(data.totalIncome),
-                              Icons.monetization_on,
-                              AppColors.incomeGreen,
+                              Icons.monetization_on, AppColors.incomeGreen,
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: _buildSummaryCard(
-                              ref,
-                              "DASHBOARD_OCCUPANCY",
+                              ref, "DASHBOARD_OCCUPANCY",
                               "${(data.occupancyRate * 100).toStringAsFixed(0)}%",
                               Icons.home,
                               data.occupancyRate >= 0.9 ? AppColors.primaryNavy : Colors.orange,
@@ -1406,108 +1946,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         ],
                       ),
                       const SizedBox(height: 24),
-
                       Text("DASHBOARD_REVENUE_TREND".tr(ref),
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 12),
-
-                      // 📍 수익 추이 그래프 (12개월 스크롤 버전)
                       _buildRevenueChart(data, ref),
-
                       const SizedBox(height: 24),
-
                       Text("DASHBOARD_RECENT_ACTIVITY".tr(ref),
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 8),
-
                       if (data.recentTransactions.isEmpty)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 40),
-                          child: Center(
-                            child: Text(
-                              "DASHBOARD_NO_RECENT_ACTIVITY".tr(ref),
-                              style: const TextStyle(color: Colors.grey),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
+                          child: Center(child: Text("DASHBOARD_NO_RECENT_ACTIVITY".tr(ref), style: const TextStyle(color: Colors.grey))),
                         )
                       else
                         ...data.recentTransactions.map((item) {
-                          final tx = item.transaction;
-                          final isIncome = tx.type == 'INC';
-                          final themeColor = isIncome ? AppColors.incomeGreen : AppColors.expenseRed;
-
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: Card(
-                              elevation: 0.5,
-                              color: Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              child: ListTile(
-                                dense: true,
-                                onTap: () {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.transparent,
-                                    builder: (context) {
-                                      return AddTransactionSheet(transaction: tx);
-                                    },
-                                  );
-                                },
-                                leading: CircleAvatar(
-                                  backgroundColor: themeColor.withOpacity(0.1),
-                                  child: Icon(
-                                    _getCategoryIcon(tx.category),
-                                    color: themeColor,
-                                    size: 20,
-                                  ),
-                                ),
-                                title: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        tx.category.startsWith('CAT_') ? tx.category.tr(ref) : tx.category,
-                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                    if (item.hasImages) ...[
-                                      const SizedBox(width: 4),
-                                      const Icon(Icons.receipt_long, size: 12, color: Colors.blueGrey),
-                                    ]
-                                  ],
-                                ),
-                                subtitle: Text(
-                                  "${DateFormat('MM.dd').format(tx.transactionDate)} ${tx.memo ?? ''}",
-                                  style: const TextStyle(fontSize: 12),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                trailing: ConstrainedBox(
-                                  constraints: const BoxConstraints(maxWidth: 140),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    alignment: Alignment.centerRight,
-                                    child: Text(
-                                      "${isIncome ? '+' : '-'}${currencyFmt.format(tx.amount)}",
-                                      style: TextStyle(color: themeColor, fontWeight: FontWeight.bold, fontSize: 15),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.right,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
+                          return _buildTransactionItem(context, ref, item, currencyFmt);
                         }),
                       const SizedBox(height: 80),
                     ],
@@ -1521,10 +1975,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     );
   }
 
-  // 📍 [에러 해결] 차트 위젯 (SideTitleFitInsideData 필수 파라미터 및 타입 변환 적용)
   Widget _buildRevenueChart(dynamic data, WidgetRef ref) {
-    final currentLang = ref.watch(localizationProvider.notifier).currentLang;
-
     final double screenWidth = MediaQuery.of(context).size.width;
     final double availableWidth = screenWidth - 32;
     final double singlePointWidth = availableWidth / 5.5;
@@ -1552,14 +2003,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       width: chartTotalWidth,
                       child: LineChart(
                         LineChartData(
-                          lineTouchData: LineTouchData(enabled: false),
-                          gridData: FlGridData(
-                              show: true,
-                              drawVerticalLine: false,
-                              getDrawingHorizontalLine: (v) {
-                                return FlLine(color: Colors.grey.withOpacity(0.05), strokeWidth: 1);
-                              }
-                          ),
+                          lineTouchData: const LineTouchData(enabled: false),
+                          gridData: FlGridData(show: true, drawVerticalLine: false, getDrawingHorizontalLine: (v) { return FlLine(color: Colors.grey.withOpacity(0.05), strokeWidth: 1); }),
                           titlesData: FlTitlesData(
                             show: true,
                             rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -1573,24 +2018,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                                 getTitlesWidget: (value, meta) {
                                   final now = DateTime.now();
                                   final int spotCount = (data.revenueSpots as List).length;
-                                  // 📍 [에러 해결] 계산 결과를 .toInt()로 명시적 변환 수행
                                   final int monthOffset = (spotCount - 1 - value.toInt()).toInt();
                                   final date = DateTime(now.year, now.month - monthOffset, 1);
 
                                   return SideTitleWidget(
                                     axisSide: meta.axisSide,
                                     space: 8,
-                                    // 📍 [에러 해결] fitInside의 모든 필수 파라미터(axisPosition 포함) 전달
                                     fitInside: SideTitleFitInsideData(
                                       enabled: true,
                                       axisPosition: meta.axisPosition,
                                       parentAxisSize: meta.parentAxisSize,
                                       distanceFromEdge: 0,
                                     ),
-                                    child: Text(
-                                        '${date.month}${"COMMON_MONTH_UNIT".tr(ref)}',
-                                        style: const TextStyle(color: Colors.grey, fontSize: 10)
-                                    ),
+                                    child: Text('${date.month}${"COMMON_MONTH_UNIT".tr(ref)}', style: const TextStyle(color: Colors.grey, fontSize: 10)),
                                   );
                                 },
                               ),
@@ -1599,22 +2039,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           borderData: FlBorderData(show: false),
                           lineBarsData: [
                             LineChartBarData(
-                                spots: data.revenueSpots,
-                                isCurved: true,
-                                color: const Color(0xFF1A237E),
-                                barWidth: 4,
-                                dotData: const FlDotData(show: true),
+                                spots: data.revenueSpots, isCurved: true, color: const Color(0xFF1A237E), barWidth: 4, dotData: const FlDotData(show: true),
                                 belowBarData: BarAreaData(show: true, color: const Color(0xFF1A237E).withOpacity(0.05))
                             ),
                             if (data.expenseSpots != null && (data.expenseSpots as List).isNotEmpty)
-                              LineChartBarData(
-                                  spots: data.expenseSpots,
-                                  isCurved: true,
-                                  color: Colors.red[300]!.withOpacity(0.6),
-                                  barWidth: 3,
-                                  dashArray: [5, 5],
-                                  dotData: const FlDotData(show: false)
-                              ),
+                              LineChartBarData(spots: data.expenseSpots, isCurved: true, color: Colors.red[300]!.withOpacity(0.6), barWidth: 3, dashArray: [5, 5], dotData: const FlDotData(show: false)),
                           ],
                         ),
                       ),
@@ -1622,44 +2051,27 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildLegendItem(ref, "COMMON_INCOME", const Color(0xFF1A237E)),
-                    const SizedBox(width: 16),
-                    _buildLegendItem(ref, "COMMON_EXPENSE", Colors.red[300]!.withOpacity(0.6)),
-                  ],
-                ),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  _buildLegendItem(ref, "COMMON_INCOME", const Color(0xFF1A237E)),
+                  const SizedBox(width: 16),
+                  _buildLegendItem(ref, "COMMON_EXPENSE", Colors.red[300]!.withOpacity(0.6)),
+                ]),
               ],
             ),
           ),
-
-          // 📍 [복구] 지능형 화살표 버튼
           if (_canScrollLeft)
             Positioned(
               left: 8, top: 0, bottom: 40,
-              child: Center(
-                child: _buildScrollButton(Icons.chevron_left, () {
-                  _chartScrollController.animateTo(
-                      _chartScrollController.offset + 150,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut
-                  );
-                }),
-              ),
+              child: Center(child: _buildScrollButton(Icons.chevron_left, () {
+                _chartScrollController.animateTo(_chartScrollController.offset + 150, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+              })),
             ),
           if (_canScrollRight)
             Positioned(
               right: 8, top: 0, bottom: 40,
-              child: Center(
-                child: _buildScrollButton(Icons.chevron_right, () {
-                  _chartScrollController.animateTo(
-                      _chartScrollController.offset - 150,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut
-                  );
-                }),
-              ),
+              child: Center(child: _buildScrollButton(Icons.chevron_right, () {
+                _chartScrollController.animateTo(_chartScrollController.offset - 150, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+              })),
             ),
         ],
       ),
@@ -1668,51 +2080,29 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   Widget _buildScrollButton(IconData icon, VoidCallback onTap) {
     return Container(
-      decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.8),
-          shape: BoxShape.circle,
-          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)]
-      ),
-      child: IconButton(
-          icon: Icon(icon, color: const Color(0xFF1A237E), size: 24),
-          onPressed: onTap
-      ),
+      decoration: BoxDecoration(color: Colors.white.withOpacity(0.8), shape: BoxShape.circle, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)]),
+      child: IconButton(icon: Icon(icon, color: const Color(0xFF1A237E), size: 24), onPressed: onTap),
     );
   }
 
   // --- 기존 스타일 헬퍼 메서드 ---
-
-  Widget _buildHeader(BuildContext context, WidgetRef ref, List<AppAlert> alerts) {
-    final profile = ref.watch(userNicknameProvider);
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
-      decoration: const BoxDecoration(color: Color(0xFF1A237E), borderRadius: BorderRadius.vertical(bottom: Radius.circular(24))),
-      child: Row(children: [
-        CircleAvatar(backgroundColor: Colors.white24, backgroundImage: profile.imagePath != null ? FileImage(File(profile.imagePath!)) : null, child: profile.imagePath == null ? const Icon(Icons.person, color: Colors.white) : null),
-        const SizedBox(width: 12),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text("DASHBOARD_WELCOME".tr(ref), style: const TextStyle(color: Colors.white70, fontSize: 14)), Text(profile.nickname.startsWith('SETTINGS_') ? profile.nickname.tr(ref) : profile.nickname, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold))])),
-        // 📍 [에러 해결] ShakingBellIcon 위젯 호출 (정의 누락 해결)
-        ShakingBellIcon(alertCount: alerts.length, onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) { return const AlertListScreen(); })); }),
-      ]),
-    );
-  }
-
-  Widget _buildUnpaidBanner(BuildContext context, WidgetRef ref, AsyncValue<List<UnpaidStatus>> unpaidAsync) {
-    return unpaidAsync.when(
-      data: (list) {
-        final overdueUnits = list.where((u) { return u.status == 'OVERDUE'; }).toList();
-        if (overdueUnits.isEmpty) { return const SizedBox.shrink(); }
-        return InkWell(
-          onTap: () { HapticFeedback.mediumImpact(); },
-          child: Container(
-            margin: const EdgeInsets.fromLTRB(16, 16, 16, 0), padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: Colors.redAccent.withOpacity(0.9), borderRadius: BorderRadius.circular(16)),
-            child: Row(children: [const Icon(Icons.warning_amber_rounded, color: Colors.white), const SizedBox(width: 12), Text("DASHBOARD_UNPAID_DETECTED".tr(ref), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))]),
-          ),
-        );
-      },
-      loading: () { return const SizedBox.shrink(); },
-      error: (_, __) { return const SizedBox.shrink(); },
+  Widget _buildTransactionItem(BuildContext context, WidgetRef ref, dynamic item, NumberFormat fmt) {
+    final tx = item.transaction;
+    final bool isIncome = tx.type == 'INC';
+    final Color color = isIncome ? AppColors.incomeGreen : AppColors.expenseRed;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Card(
+        elevation: 0.5, color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: ListTile(
+          dense: true,
+          onTap: () { showModalBottomSheet(context: context, isScrollControlled: true, backgroundColor: Colors.transparent, builder: (context) { return AddTransactionSheet(transaction: tx); }); },
+          leading: CircleAvatar(backgroundColor: color.withOpacity(0.1), child: Icon(_getCategoryIcon(tx.category), color: color, size: 20)),
+          title: Text(tx.category.startsWith('CAT_') ? tx.category.tr(ref) : tx.category, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+          subtitle: Text("${DateFormat('MM.dd').format(tx.transactionDate)} ${tx.memo ?? ''}", style: const TextStyle(fontSize: 12)),
+          trailing: Text("${isIncome ? '+' : '-'}${fmt.format(tx.amount)}", style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 15)),
+        ),
+      ),
     );
   }
 
@@ -1742,83 +2132,134 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       default: return Icons.receipt_long_rounded;
     }
   }
+
+  Widget _buildHeader(BuildContext context, WidgetRef ref, List<AppAlert> alerts) {
+    final profile = ref.watch(userNicknameProvider);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
+      decoration: const BoxDecoration(color: Color(0xFF1A237E), borderRadius: BorderRadius.vertical(bottom: Radius.circular(24))),
+      child: Row(children: [
+        CircleAvatar(backgroundColor: Colors.white24, backgroundImage: profile.imagePath != null ? FileImage(File(profile.imagePath!)) : null, child: profile.imagePath == null ? const Icon(Icons.person, color: Colors.white) : null),
+        const SizedBox(width: 12),
+        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text("DASHBOARD_WELCOME".tr(ref), style: const TextStyle(color: Colors.white70, fontSize: 14)), Text(profile.nickname.startsWith('SETTINGS_') ? profile.nickname.tr(ref) : profile.nickname, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold))])),
+        ShakingBellIcon(alertCount: alerts.length, onTap: () { Navigator.push(context, MaterialPageRoute(builder: (context) { return const AlertListScreen(); })); }),
+      ]),
+    );
+  }
+
+  Widget _buildUnpaidBanner(BuildContext context, WidgetRef ref, AsyncValue<List<UnpaidStatus>> unpaidAsync) {
+    return unpaidAsync.when(
+      data: (list) {
+        final overdueUnits = list.where((u) { return u.status == 'OVERDUE'; }).toList();
+        if (overdueUnits.isEmpty) { return const SizedBox.shrink(); }
+        final roomsText = overdueUnits.map((u) { return u.unit.roomNumber; }).join(', ');
+        return InkWell(
+          onTap: () { HapticFeedback.mediumImpact(); _showUnpaidActionSheet(context, ref, overdueUnits); },
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(16, 16, 16, 0), padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(color: Colors.redAccent.withOpacity(0.9), borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: Colors.red.withOpacity(0.2), blurRadius: 8)]),
+            child: Row(children: [
+              const Icon(Icons.warning_amber_rounded, color: Colors.white, size: 28),
+              const SizedBox(width: 12),
+              Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text("DASHBOARD_UNPAID_DETECTED".tr(ref), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15)),
+                Text("${"COMMON_ROOMS".tr(ref)}: $roomsText", style: const TextStyle(color: Colors.white, fontSize: 13)),
+              ])),
+              const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+            ]),
+          ),
+        );
+      },
+      loading: () { return const SizedBox.shrink(); },
+      error: (_, __) { return const SizedBox.shrink(); },
+    );
+  }
+
+  void _showUnpaidActionSheet(BuildContext context, WidgetRef ref, List<UnpaidStatus> overdueUnits) {
+    final currentLang = ref.read(localizationProvider.notifier).currentLang;
+    final currencyFmt = NumberFormat.simpleCurrency(locale: currentLang, decimalDigits: 0);
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      builder: (context) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                  Expanded(child: Text("DASHBOARD_UNPAID_TITLE".tr(ref), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis)),
+                  IconButton(onPressed: () { Navigator.pop(context); }, icon: const Icon(Icons.close)),
+                ]),
+                Text("DASHBOARD_UNPAID_SUBTITLE".tr(ref), style: const TextStyle(color: Colors.grey, fontSize: 13), maxLines: 2, overflow: TextOverflow.ellipsis),
+                const SizedBox(height: 16),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    itemCount: overdueUnits.length,
+                    separatorBuilder: (context, index) { return const Divider(height: 1); },
+                    itemBuilder: (context, index) {
+                      final unpaid = overdueUnits[index];
+                      return ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: CircleAvatar(backgroundColor: Colors.redAccent.withOpacity(0.1), child: FittedBox(fit: BoxFit.scaleDown, child: Text(unpaid.unit.roomNumber, style: const TextStyle(color: Colors.redAccent, fontSize: 12, fontWeight: FontWeight.bold)))),
+                        title: Text("${unpaid.unit.roomNumber}${"COMMON_ROOM_UNIT".tr(ref)} ${"DASHBOARD_PAYMENT_CONFIRM".tr(ref)}", maxLines: 1, overflow: TextOverflow.ellipsis),
+                        subtitle: Text("${unpaid.unit.tenantName ?? '세입자'} / ${currencyFmt.format(unpaid.unit.monthlyRent)}", maxLines: 1, overflow: TextOverflow.ellipsis),
+                        trailing: SizedBox(
+                          height: 36,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1A237E), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+                            onPressed: () async {
+                              await ref.read(ledgerActionProvider.notifier).processPayment(buildingId: unpaid.unit.buildingId, unitId: unpaid.unit.id, tenantName: unpaid.unit.tenantName ?? '세입자', amount: unpaid.unit.monthlyRent, buildingName: "건물", unitNumber: unpaid.unit.roomNumber);
+                              if (context.mounted) { Navigator.pop(context); ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('${unpaid.unit.roomNumber}${"DASHBOARD_PAYMENT_COMPLETE".tr(ref)}'))); }
+                            },
+                            child: FittedBox(fit: BoxFit.scaleDown, child: Text("COMMON_CONFIRM".tr(ref), maxLines: 1)),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
-// -----------------------------------------------------------------------------
-// 📍 [에러 해결] ShakingBellIcon 위젯 정의 (State 클래스 밖으로 이동하여 정의)
-// -----------------------------------------------------------------------------
 class ShakingBellIcon extends StatefulWidget {
   final int alertCount;
   final VoidCallback onTap;
-
   const ShakingBellIcon({super.key, required this.alertCount, required this.onTap});
-
   @override
-  State<ShakingBellIcon> createState() {
-    return _ShakingBellIconState();
-  }
+  State<ShakingBellIcon> createState() { return _ShakingBellIconState(); }
 }
 
 class _ShakingBellIconState extends State<ShakingBellIcon> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-
   @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    _startAnimationLoop();
-  }
-
-  void _startAnimationLoop() async {
-    while (mounted) {
-      if (widget.alertCount > 0) {
-        await _controller.forward();
-        await _controller.reverse();
-      }
-      await Future.delayed(const Duration(seconds: 3));
-    }
-  }
-
+  void initState() { super.initState(); _controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this); _startAnimationLoop(); }
+  void _startAnimationLoop() async { while (mounted) { if (widget.alertCount > 0) { await _controller.forward(); await _controller.reverse(); } await Future.delayed(const Duration(seconds: 3)); } }
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
+  void dispose() { _controller.dispose(); super.dispose(); }
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.onTap,
       child: AnimatedBuilder(
         animation: _controller,
-        builder: (context, child) {
-          final double rotation = sin(_controller.value * 2 * pi) * 0.15;
-          return Transform.rotate(angle: widget.alertCount > 0 ? rotation : 0, child: child);
-        },
+        builder: (context, child) { return Transform.rotate(angle: widget.alertCount > 0 ? sin(_controller.value * 2 * pi) * 0.15 : 0, child: child); },
         child: Stack(
           clipBehavior: Clip.none,
           children: [
             const Icon(Icons.notifications_none, color: Colors.white, size: 28),
             if (widget.alertCount > 0)
-              Positioned(
-                right: -4,
-                top: -2,
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: const Color(0xFF1A237E), width: 1.5),
-                  ),
-                  constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
-                  child: Center(
-                    child: Text(
-                      widget.alertCount > 9 ? '9+' : '${widget.alertCount}',
-                      style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ),
+              Positioned(right: -4, top: -2, child: Container(padding: const EdgeInsets.all(2), decoration: BoxDecoration(color: Colors.red, shape: BoxShape.circle, border: Border.all(color: const Color(0xFF1A237E), width: 1.5)), constraints: const BoxConstraints(minWidth: 18, minHeight: 18), child: Center(child: Text(widget.alertCount > 9 ? '9+' : '${widget.alertCount}', style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold))))),
           ],
         ),
       ),
