@@ -114,6 +114,9 @@ class AppAlert {
 }
 
 final appAlertProvider = Provider<List<AppAlert>>((ref) {
+  // 📍 [핵심 추가] 다국어 상태 변경을 감지하여 Provider를 리빌드하도록 watch 추가
+  ref.watch(localizationProvider);
+
   final List<AppAlert> alerts = [];
   final now = DateTime.now();
 
