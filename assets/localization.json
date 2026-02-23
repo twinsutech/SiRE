@@ -1064,5 +1064,13 @@
   },
   "SUPPORT_EMAIL_APP_INFO": {
     "ar": "إصدار التطبيق", "bn": "অ্যাপ সংস্করণ", "zh": "应用版本", "nl": "App-versie", "en": "App Version", "fr": "Version de l'application", "de": "App-Version", "hi": "ऐप संस्करण", "id": "Versi Aplikasi", "it": "Versione app", "ja": "アプリのバージョン", "ko": "앱 버전", "ms": "Versi Apl", "pl": "Wersja aplikacji", "pt": "Versão do App", "ru": "Версия приложения", "es": "Versión de la aplicación", "th": "เวอร์ชันแอป", "tr": "Uygulama Sürümü", "vi": "Phiên bản ứng dụng"
+  },
+
+  "REPORT_RECEIPT_COMPLETION": {
+    "ar": "معدل إكمال إثبات المصروفات", "bn": "ব্যয় প্রমাণ সমাপ্তির হার", "zh": "支出凭证完成率", "nl": "Voltooiingspercentage onkostbewijzen", "en": "Expense Proof Completion Rate", "fr": "Taux de complétion des justificatifs", "de": "Abschlussrate der Ausgabenbelege", "hi": "व्यय प्रमाण पूर्णता दर", "id": "Tingkat Penyelesaian Bukti Pengeluaran", "it": "Tasso di completamento delle ricevute", "ja": "支出証明完了率", "ko": "지출 증빙 완료율", "ms": "Kadar Melengkapkan Bukti Perbelanjaan", "pl": "Wskaźnik kompletności dowodów wydatków", "pt": "Taxa de conclusão de comprovantes", "ru": "Уровень завершения подтверждения расходов", "es": "Tasa de finalización de comprobantes", "th": "อัตราการส่งหลักฐานค่าใช้จ่าย", "tr": "Gider Belgesi Tamamlama Oranı", "vi": "Tỷ lệ hoàn thành chứng từ chi phí"
+  },
+  "REPORT_PROFIT_MARGIN": {
+    "ar": "هامش الربح", "bn": "মুনাফার হার", "zh": "利润率", "nl": "Winstmarge", "en": "Profit Margin", "fr": "Marge bénéficiaire", "de": "Gewinnmarge", "hi": "लाभ मार्जिन", "id": "Margin Laba", "it": "Margine di profitto", "ja": "純利益率", "ko": "순이익률", "ms": "Margin Keuntungan", "pl": "Marża zysku", "pt": "Margem de Lucro", "ru": "Маржа прибыли", "es": "Margen de beneficio", "th": "อัตรากำไรสุทธิ", "tr": "Kar Marjı", "vi": "Tỷ suất lợi nhuận"
   }
+
 }

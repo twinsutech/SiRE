@@ -4346,6 +4346,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:sire/features/reports/reports_provider.dart';
 import '../../core/localization/localization_provider.dart';
 import '../../core/purchase/state/purchase_provider.dart';
 import '../../core/purchase/ui/paywall_screen.dart';
@@ -4524,29 +4525,28 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                     }),
 
                 // ✅ [복구] 재무 분석
-                _buildSectionTitle(
-                    Icons.analytics_outlined, "REPORT_SEC_FINANCIAL".tr(ref)),
+                _buildSectionTitle(Icons.analytics_outlined, "REPORT_SEC_FINANCIAL".tr(ref)),
                 const SizedBox(height: 10),
-                _buildFinancialAnalytics(context, ref, monthlyTrendAsync,
-                    categoryStatsAsync, currencyFmt, lang, isPro),
+                _buildFinancialAnalytics(context, ref, monthlyTrendAsync, categoryStatsAsync, currencyFmt, lang, isPro),
 
                 const SizedBox(height: 30),
-                _buildSectionTitle(
-                    Icons.assessment_outlined, "REPORT_SEC_TAX".tr(ref)),
+                _buildSectionTitle(Icons.table_chart_outlined,"REPORT_SEC_ANNUAL_SUMMARY".tr(ref)),
+                const SizedBox(height: 10),
+                _buildAnnualSummary(context, ref, monthlyTrendAsync, currencyFmt, isPro),
+
+                const SizedBox(height: 40),
+                const Divider(thickness: 1.5), // 분석 영역과 도구 영역 구분을 위한 구분선
+                const SizedBox(height: 20),
+
+                _buildSectionTitle(Icons.assessment_outlined, "REPORT_SEC_TAX".tr(ref)),
                 const SizedBox(height: 10),
                 _buildTaxSection(context, ref, isPro),
 
                 const SizedBox(height: 30),
-                _buildSectionTitle(Icons.notification_important_outlined,
-                    "REPORT_SEC_UNPAID".tr(ref)),
+                _buildSectionTitle(Icons.notification_important_outlined,"REPORT_SEC_UNPAID".tr(ref)),
                 const SizedBox(height: 10),
                 _buildUnpaidSection(context, ref, unpaidAsync, currencyFmt, isPro),
 
-                const SizedBox(height: 30),
-                _buildSectionTitle(Icons.table_chart_outlined,
-                    "REPORT_SEC_ANNUAL_SUMMARY".tr(ref)),
-                const SizedBox(height: 10),
-                _buildAnnualSummary(context, ref, monthlyTrendAsync, currencyFmt, isPro),
               ],
             ),
           ),
@@ -5009,23 +5009,135 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     ]));
   }
 
+  // Widget _buildAnnualSummary(BuildContext context, WidgetRef ref, AsyncValue t, NumberFormat f, bool isPro) {
+  //   if (!isPro) { return _buildSimpleLockCard(ref, "REPORT_LOCK_ANNUAL".tr(ref)); }
+  //   return Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)]), child: t.when(loading: () { return const SizedBox(); }, error: (err, stack) { return const SizedBox(); }, data: (trend) {
+  //     final yearData = (trend as List).where((e) { return e.month.year == _selectedYear; }).toList();
+  //     int inc = yearData.fold(0, (sum, e) { return (sum + e.income).toInt(); });
+  //     int exp = yearData.fold(0, (sum, e) { return (sum + e.expense).toInt(); });
+  //     return Column(children: [
+  //       Row(mainAxisAlignment: MainAxisAlignment.end, children: [Text("${'COMMON_YEAR'.tr(ref)}: $_selectedYear", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold))]),
+  //       const SizedBox(height: 10),
+  //       _buildSummaryRow(f, "REPORT_YEARLY_REVENUE".tr(ref), inc, Colors.blue, isBold: false),
+  //       const Divider(height: 20),
+  //       _buildSummaryRow(f, "REPORT_YEARLY_EXPENSES".tr(ref), exp, Colors.redAccent, isBold: false),
+  //       const Divider(height: 20),
+  //       _buildSummaryRow(f, "REPORT_ANNUAL_NET_PROFIT".tr(ref), inc - exp, Colors.indigo, isBold: true)
+  //     ]);
+  //   }));
+  // }
+
+  // Widget _buildAnnualSummary(BuildContext context, WidgetRef ref, AsyncValue t, NumberFormat f, bool isPro) {
+  //   if (!isPro) { return _buildSimpleLockCard(ref, "REPORT_LOCK_ANNUAL".tr(ref)); }
+  //
+  //   // 📍 [신규] 증빙 완료율 데이터 구독
+  //   final receiptCompletionAsync = ref.watch(annualReceiptCompletionProvider(_selectedYear));
+  //
+  //   return Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)]), child: t.when(loading: () { return const SizedBox(); }, error: (err, stack) { return const SizedBox(); }, data: (trend) {
+  //     final yearData = (trend as List).where((e) { return e.month.year == _selectedYear; }).toList();
+  //     int inc = yearData.fold(0, (sum, e) { return (sum + e.income).toInt(); });
+  //     int exp = yearData.fold(0, (sum, e) { return (sum + e.expense).toInt(); });
+  //
+  //     return Column(children: [
+  //       Row(mainAxisAlignment: MainAxisAlignment.end, children: [Text("${'COMMON_YEAR'.tr(ref)}: $_selectedYear", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold))]),
+  //       const SizedBox(height: 10),
+  //       _buildSummaryRow(f, "REPORT_YEARLY_REVENUE".tr(ref), inc, Colors.blue, isBold: false),
+  //       const Divider(height: 20),
+  //       _buildSummaryRow(f, "REPORT_YEARLY_EXPENSES".tr(ref), exp, Colors.redAccent, isBold: false),
+  //
+  //       // 📍 [신규 추가] 1번 기능: 지출 증빙 완료율 표시
+  //       receiptCompletionAsync.when(
+  //         data: (completionRate) => Padding(
+  //           padding: const EdgeInsets.only(top: 8, bottom: 8),
+  //           child: Row(
+  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //             children: [
+  //               Text("REPORT_RECEIPT_COMPLETION".tr(ref), style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+  //               Text("${completionRate.toStringAsFixed(1)}%", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: completionRate >= 90 ? Colors.green : Colors.orange)),
+  //             ],
+  //           ),
+  //         ),
+  //         loading: () => const SizedBox.shrink(),
+  //         error: (_, __) => const SizedBox.shrink(),
+  //       ),
+  //
+  //       const Divider(height: 20),
+  //       _buildSummaryRow(f, "REPORT_ANNUAL_NET_PROFIT".tr(ref), inc - exp, Colors.indigo, isBold: true)
+  //     ]);
+  //   }));
+  // }
+
   Widget _buildAnnualSummary(BuildContext context, WidgetRef ref, AsyncValue t, NumberFormat f, bool isPro) {
     if (!isPro) { return _buildSimpleLockCard(ref, "REPORT_LOCK_ANNUAL".tr(ref)); }
+
+    // 📍 1번/3번 데이터 구독
+    final receiptCompletionAsync = ref.watch(annualReceiptCompletionProvider(_selectedYear));
+    final profitMarginAsync = ref.watch(annualProfitMarginProvider(_selectedYear));
+
     return Container(padding: const EdgeInsets.all(16), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)]), child: t.when(loading: () { return const SizedBox(); }, error: (err, stack) { return const SizedBox(); }, data: (trend) {
       final yearData = (trend as List).where((e) { return e.month.year == _selectedYear; }).toList();
       int inc = yearData.fold(0, (sum, e) { return (sum + e.income).toInt(); });
       int exp = yearData.fold(0, (sum, e) { return (sum + e.expense).toInt(); });
+      int netProfit = inc - exp;
+
       return Column(children: [
         Row(mainAxisAlignment: MainAxisAlignment.end, children: [Text("${'COMMON_YEAR'.tr(ref)}: $_selectedYear", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold))]),
         const SizedBox(height: 10),
         _buildSummaryRow(f, "REPORT_YEARLY_REVENUE".tr(ref), inc, Colors.blue, isBold: false),
         const Divider(height: 20),
         _buildSummaryRow(f, "REPORT_YEARLY_EXPENSES".tr(ref), exp, Colors.redAccent, isBold: false),
+
+        // 📍 [1번 기능] 지출 증빙 완료율 (중간에 배치)
+        receiptCompletionAsync.when(
+          data: (rate) => _buildSubInsightRow("REPORT_RECEIPT_COMPLETION".tr(ref), "${rate.toStringAsFixed(1)}%"),
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
+        ),
+
         const Divider(height: 20),
-        _buildSummaryRow(f, "REPORT_ANNUAL_NET_PROFIT".tr(ref), inc - exp, Colors.indigo, isBold: true)
+
+        // 📍 [핵심 변경] 연간 순이익 금액을 먼저 표시
+        _buildSummaryRow(f, "REPORT_ANNUAL_NET_PROFIT".tr(ref), netProfit, Colors.indigo, isBold: true),
+
+        // 📍 [3번 기능] 순이익률 (순이익 금액 바로 아래에 배치)
+        profitMarginAsync.when(
+          data: (margin) => Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end, // 금액과 줄을 맞추기 위해 오른쪽 정렬
+              children: [
+                Text("${"REPORT_PROFIT_MARGIN".tr(ref)}: ", style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                Text("${margin.toStringAsFixed(1)}%",
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: margin >= 0 ? Colors.indigo : Colors.red // 수익률 상태에 따른 색상 변화
+                    )
+                ),
+              ],
+            ),
+          ),
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
+        ),
       ]);
     }));
   }
+
+  // 📍 [도움 위젯] 요약표 내부의 작은 인사이트 행을 그리는 함수
+  Widget _buildSubInsightRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+          Text(value, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.blueGrey)),
+        ],
+      ),
+    );
+  }
+
 
   Widget _buildSectionTitle(IconData i, String t) { return Row(children: [Icon(i, color: const Color(0xFF1A237E)), const SizedBox(width: 8), Text(t, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold))]); }
   Widget _buildSummaryRow(NumberFormat fmt, String l, int a, Color c, {required bool isBold}) { return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(l, style: TextStyle(fontWeight: isBold ? FontWeight.bold : FontWeight.normal)), Text(fmt.format(a), style: TextStyle(fontWeight: FontWeight.bold, color: c))]); }
