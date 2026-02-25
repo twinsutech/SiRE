@@ -4,6 +4,8 @@
 
 # SiRE 프로젝트 클래스 다이어그램
 
+# SiRE 프로젝트 통합 클래스 다이어그램
+
 ```mermaid
 classDiagram
     direction TB
@@ -17,6 +19,7 @@ classDiagram
             +transactions
             +transactionImages
             +categories
+            +users
         }
         class DatabaseProvider {
             <<Riverpod>>
@@ -27,6 +30,8 @@ classDiagram
             +Buildings
             +Units
             +Transactions
+            +Categories
+            +Users
         }
     }
 
@@ -99,6 +104,29 @@ classDiagram
         }
     }
 
+    %% Features Layer: Settings
+    namespace Feature_Settings {
+        class SettingsScreen {
+            <<UI>>
+        }
+        class CategoryProvider {
+            <<Riverpod>>
+            +categoriesList
+            +addCategory()
+            +deleteCategory()
+        }
+        class UserProvider {
+            <<Riverpod>>
+            +userData
+            +updateUser()
+        }
+        class SupportService {
+            <<Service>>
+            +sendInquiry()
+            +openGuide()
+        }
+    }
+
     %% App Structure
     namespace App_Shell {
         class Main {
@@ -117,30 +145,37 @@ classDiagram
         }
     }
 
-    %% Relationships
+    %% Relationships (Navigation)
     Main --> App : Initializes
     App --> MainScreen : Root
     MainScreen --> DashboardScreen : Tab
     MainScreen --> LedgerScreen : Tab
     MainScreen --> PropertyScreen : Tab
     MainScreen --> ReportsScreen : Tab
+    MainScreen --> SettingsScreen : Tab
     
-    %% Data Flow
+    %% Data Flow & Dependencies
     DatabaseProvider ..> AppDatabase : Provides
     AppDatabase o-- Tables : Defines
     
     PropertyProvider --> DatabaseProvider : Uses DB
     LedgerProvider --> DatabaseProvider : Uses DB
     ReportsProvider --> DatabaseProvider : Uses DB
+    CategoryProvider --> DatabaseProvider : Uses DB
+    UserProvider --> DatabaseProvider : Uses DB
     
     LedgerScreen ..> LedgerProvider : Watches
     PropertyScreen ..> PropertyProvider : Watches
     ReportsScreen ..> ReportsProvider : Watches
+    SettingsScreen ..> UserProvider : Watches
+    SettingsScreen ..> CategoryProvider : Watches
+    SettingsScreen --> SupportService : Uses
     
     ReportsScreen --> ExcelExportService : Triggers
     
     AddTransactionSheet --> LedgerProvider : Updates
     AddTransactionSheet --> PropertyProvider : Fetch Units
+    AddTransactionSheet ..> CategoryProvider : Fetch Categories
     
     PurchaseProvider --> IAPService : Communicates
     MainScreen ..> PurchaseProvider : Checks Pro Status
