@@ -4,8 +4,6 @@
 
 # SiRE 프로젝트 클래스 다이어그램
 
-# SiRE 프로젝트 통합 클래스 다이어그램
-
 ```mermaid
 classDiagram
     direction TB
