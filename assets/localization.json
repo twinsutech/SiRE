@@ -1071,6 +1071,31 @@
   },
   "REPORT_PROFIT_MARGIN": {
     "ar": "هامش الربح", "bn": "মুনাফার হার", "zh": "利润率", "nl": "Winstmarge", "en": "Profit Margin", "fr": "Marge bénéficiaire", "de": "Gewinnmarge", "hi": "लाभ मार्जिन", "id": "Margin Laba", "it": "Margine di profitto", "ja": "純利益率", "ko": "순이익률", "ms": "Margin Keuntungan", "pl": "Marża zysku", "pt": "Margem de Lucro", "ru": "Маржа прибыли", "es": "Margen de beneficio", "th": "อัตรากำไรสุทธิ", "tr": "Kar Marjı", "vi": "Tỷ suất lợi nhuận"
+  },
+  "REPORT_DETAIL_DATE_SHORT": {
+    "ar": "يوم", "bn": "দিন", "zh": "日", "nl": "Dag", "en": "Day", "fr": "Jour", "de": "Tag", "hi": "दिन", "id": "Hari", "it": "G.", "ja": "日", "ko": "일", "ms": "Hari", "pl": "Dzień", "pt": "Dia", "ru": "Дн", "es": "Día", "th": "วันที่", "tr": "Gün", "vi": "Ngày"
+  },
+  "REPORT_DETAIL_ITEM_CAT": {
+    "ar": "البند | الفئة", "bn": "আইটেম | বিভাগ", "zh": "项目 | 类别", "nl": "Item | Categorie", "en": "Item | Category", "fr": "Article | Catégorie", "de": "Position | Kategorie", "hi": "मद | श्रेणी", "id": "Item | Kategori", "it": "Articolo | Categoria", "ja": "項目 | カテゴリ", "ko": "항목 | 카테고리", "ms": "Item | Kategori", "pl": "Pozycja | Kategoria", "pt": "Item | Categoria", "ru": "Пункт | Категория", "es": "Artículo | Categoría", "th": "รายการ | หมวดหมู่", "tr": "Öğe | Kategori", "vi": "Mục | Danh mục"
+  },
+  "REPORT_DETAIL_RECEIPT": {
+    "ar": "إثبات", "bn": "প্রমাণ", "zh": "凭证", "nl": "Bewijs", "en": "Receipt", "fr": "Justificatif", "de": "Beleg", "hi": "प्रमाण", "id": "Bukti", "it": "Ricevuta", "ja": "証憑", "ko": "증빙", "ms": "Bukti", "pl": "Dowód", "pt": "Comprovante", "ru": "Документ", "es": "Comprobante", "th": "หลักฐาน", "tr": "Kanıt", "vi": "Chứng từ"
+  },
+  "REPORT_DETAIL_AMOUNT": {
+    "ar": "المبلغ", "bn": "পরিমাণ", "zh": "金额", "nl": "Bedrag", "en": "Amount", "fr": "Montant", "de": "Betrag", "hi": "राशि", "id": "Jumlah", "it": "Importo", "ja": "金額", "ko": "금액", "ms": "Jumlah", "pl": "Kwota", "pt": "Valor", "ru": "Сумма", "es": "Monto", "th": "จำนวนเงิน", "tr": "Tutar", "vi": "Số tiền"
+  },
+  "REPORT_DETAIL_MONTH_UNIT": {
+    "ar": "شهر", "bn": "মাস", "zh": "月", "nl": "Maand", "en": "Month", "fr": "Mois", "de": "Monat", "hi": "महीना", "id": "Bulan", "it": "Mese", "ja": "月", "ko": "월", "ms": "Bulan", "pl": "Miesiąc", "pt": "Mês", "ru": "Мес", "es": "Mes", "th": "เดือน", "tr": "Ay", "vi": "Tháng"
+  },
+  "REPORT_NO_IMAGE_DATA": {
+    "ar": "لا توجد صور إثبات مسجلة.", "bn": "কোন প্রমাণ চিত্র নিবন্ধিত নেই।", "zh": "未登记凭证图片。", "nl": "Geen bewijsmateriaal geregistreerd.", "en": "No receipt images registered.", "fr": "Aucune image justificative enregistrée.", "de": "Keine Belegbilder registriert.", "hi": "कोई प्रमाण चित्र पंजीकृत नहीं है।", "id": "Tidak ada gambar bukti yang terdaftar.", "it": "Nessuna immagine di prova registrata.", "ja": "登録された証憑画像がありません。", "ko": "등록된 증빙 이미지가 없습니다.", "ms": "Tiada imej bukti berdaftar.", "pl": "Brak zarejestrowanych obrazów dowodowych.", "pt": "Nenhum comprovante registrado.", "ru": "Нет зарегистрированных изображений.", "es": "No hay imágenes de comprobante registradas.", "th": "ไม่ได้ลงทะเบียนรูปภาพหลักฐาน", "tr": "Kayıtlı kanıt resmi yok.", "vi": "Không có hình ảnh chứng từ nào được đăng ký."
+  },
+  "REPORT_IMAGE_LOAD_ERROR": {
+    "ar": "تعذر تحميل الصورة.", "bn": "ছবি লোড করা যায়নি।", "zh": "无法加载图片。", "nl": "Afbeelding kon niet worden geladen.", "en": "Could not load image.", "fr": "Impossible de charger l'image.", "de": "Bild konnte nicht geladen werden.", "hi": "छवि लोड नहीं की जा सकी।", "id": "Tidak dapat memuat gambar.", "it": "Impossibile caricare l'immagine.", "ja": "画像を読み込めませんでした。", "ko": "이미지를 불러올 수 없습니다.", "ms": "Tidak dapat memuatkan imej.", "pl": "Nie można załadować obrazu.", "pt": "Não foi possível carregar a imagem.", "ru": "Не удалось загрузить изображение.", "es": "No se pudo cargar la imagen.", "th": "ไม่สามารถโหลดรูปภาพได้", "tr": "Resim yüklenemedi.", "vi": "Không thể tải hình ảnh."
+  },
+
+  "COMMON_NO_DATA": {
+    "ar": "لا توجد بيانات متاحة.", "bn": "কোন তথ্য পাওয়া যায়নি।", "zh": "暂无数据。", "nl": "Geen gegevens beschikbaar.", "en": "No data available.", "fr": "Aucune donnée disponible.", "de": "Keine Daten verfügbar.", "hi": "कोई डेटा उपलब्ध नहीं है।", "id": "Tidak ada data yang tersedia.", "it": "Nessun dato disponibile.", "ja": "データがありません。", "ko": "데이터가 없습니다.", "ms": "Tiada data tersedia.", "pl": "Brak dostępnych danych.", "pt": "Nenhum dado disponível.", "ru": "Нет доступных данных.", "es": "No hay datos disponibles.", "th": "ไม่มีข้อมูล", "tr": "Veri bulunamadı.", "vi": "Không có dữ liệu."
   }
 
 }
