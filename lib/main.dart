@@ -2099,151 +2099,364 @@
 //
 //
 
+//
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:intl/date_symbol_data_local.dart'; // 📍 날짜 및 숫자 포맷 초기화를 위해 필수
+//
+// import 'app.dart';
+// import 'core/database/app_database.dart';
+// import 'core/database/data_seeder.dart'; // 📍 기본 카테고리 데이터 생성
+// import 'core/database/database_provider.dart';
+// import 'features/security/pin_screen.dart';
+// import 'features/security/security_provider.dart';
+//
+// // ✅ [추가] Play Integrity 호출 클라이언트
+// import 'core/platform/integrity_client.dart';
+//
+// // ✅ [정리] Integrity 정책은 core/platform/integrity_policy.dart
+// import 'core/platform/integrity_policy.dart';
+//
+// // ✅ [추가] 점진적 제한(유예/제한) 상태 저장용
+// import 'package:shared_preferences/shared_preferences.dart';
+//
+// // ❌ [정리] 유료앱(license) 기반 게이트는 인앱 결제 전환을 위해 제거합니다.
+// // import 'core/license/license_model.dart';
+// // import 'core/license/mock_license_service.dart';
+// // import 'core/license/license_policy.dart';
+//
+// import 'package:flutter/services.dart'; // ✅ SystemNavigator.pop() 사용
+//
+// // ✅ [정리] RestrictedScreen / NeedsVerificationScreen 분리
+// // - 인앱 전환 단계에서는 "유료앱 환불/권한 재확인" 흐름을 제거하므로 NeedsVerificationScreen은 사용하지 않습니다.
+// // - RestrictedScreen은 보안/정책(예: Integrity restricted) 화면으로 "유지"할 수 있으나, 현재는 CS 최소화를 위해 기본 차단은 비활성화합니다.
+// import 'restricted_screen.dart';
+// // import 'needs_verification_screen.dart';
+//
+// // ✅ [추가] IAP 구매 상태 Provider (앱 시작 시점 소유 검증을 확실히 트리거하기 위해)
+// import 'core/purchase/state/purchase_provider.dart';
+//
+// void main() async {
+//   // 📍 플러터 엔진과 위젯 바인딩 초기화
+//   WidgetsFlutterBinding.ensureInitialized();
+//
+//   // 📍 [다국어 핵심] 전 세계 모든 로케일의 날짜/통화 포맷 데이터를 메모리에 로드합니다.
+//   // 이 과정이 없으면 Ledger나 Stats 화면에서 특정 국가 로케일 사용 시 에러가 발생할 수 있습니다.
+//   await initializeDateFormatting(null, null);
+//
+//   // 📍 데이터베이스 싱글톤 인스턴스 생성
+//   final database = AppDatabase();
+//
+//   // 📍 [데이터 무결성] 앱 최초 실행 시 '월세(CAT_RENT)'와 같은 필수 다국어 키 카테고리를 생성합니다.
+//   // 실제 금액 데이터와 상관없는 '구조적 키'를 생성하므로 화폐 다국어 처리에 안전합니다.
+//   await seedDatabase(database);
+//
+//   runApp(
+//     ProviderScope(
+//       overrides: [
+//         // 생성된 DB 인스턴스를 프로바이더에 주입
+//         databaseProvider.overrideWithValue(database),
+//       ],
+//       // 💡 보안 진입점(Gateway)을 통해 앱 시작
+//       child: const SecurityGateway(),
+//     ),
+//   );
+// }
+//
+// // ✅ [추가] Integrity 체크 결과를 담기 위한 간단 모델
+// class IntegrityCheckResult {
+//   final bool ok;
+//   final String? token; // 성공 시 토큰(서버 없으므로 판독은 못 하지만, “성공 여부” 신호로 사용)
+//   final String? errorMessage;
+//
+//   const IntegrityCheckResult({
+//     required this.ok,
+//     this.token,
+//     this.errorMessage,
+//   });
+// }
+//
+// // ✅ [정리] Integrity 체크 Provider (앱 시작 시 1회 호출)
+// // - 여기서 Integrity 결과만 가져옴(성공/실패)
+// // - 실제 차단/유예 판단은 아래 integrityGateProvider에서 수행
+// final integrityCheckProvider = FutureProvider<IntegrityCheckResult>((ref) async {
+//   try {
+//     final res = await IntegrityClient.requestToken();
+//
+//     // ignore: avoid_print
+//     print('Integrity raw result = $res');
+//
+//     final ok = res['ok'] == true;
+//     if (ok) {
+//       final token = res['token'] as String?;
+//       // 토큰 문자열이 존재하면 Integrity 호출 성공으로 간주
+//       return IntegrityCheckResult(ok: true, token: token);
+//     } else {
+//       final msg = res['errorMessage']?.toString() ?? 'Integrity check failed';
+//       return IntegrityCheckResult(ok: false, errorMessage: msg);
+//     }
+//   } catch (e) {
+//     return IntegrityCheckResult(ok: false, errorMessage: e.toString());
+//   }
+// });
+//
+// // ✅ [추가] 점진적 제한(유예/제한) 게이트 Provider
+// // - Integrity 성공/실패를 기반으로 "ok/grace/restricted" 상태를 계산
+// // - SharedPreferences로 누적 상태를 저장하여, 오프라인 등에서 CS 폭탄을 줄임
+// final integrityGateProvider = FutureProvider<IntegrityGateState>((ref) async {
+//   final check = await ref.watch(integrityCheckProvider.future);
+//   return IntegrityPolicy.evaluate(integrityOkNow: check.ok);
+// });
+//
+// // ❌ [정리] (유료앱 테스트용) Mock License 기반 게이트는 인앱 결제 전환을 위해 제거합니다.
+// // final mockLicenseProvider = FutureProvider<LicenseStatus>((ref) async {
+// //   final svc = MockLicenseService();
+// //   return svc.fetch();
+// // });
+// //
+// // final licenseGateProvider = FutureProvider<LicenseGateState>((ref) async {
+// //   final license = await ref.watch(mockLicenseProvider.future);
+// //   return LicensePolicy.evaluate(license: license);
+// // });
+//
+// // 📍 보안 진입점 관리용 위젯
+// // 다국어 초기화가 이루어지는 SireApp 진입 전, 보안 상태에 따라 화면을 분기합니다.
+// class SecurityGateway extends ConsumerWidget {
+//   const SecurityGateway({super.key});
+//
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     // ✅ [추가] IAP 구매 컨트롤러를 "앱 시작 시점"에 생성/초기화시키기 위한 트리거
+//     // - PurchaseController 내부에서:
+//     //   1) SharedPreferences 기반 빠른 복원
+//     //   2) 스토어 소유(owned) 재검증(환불/취소 반영) 을 수행합니다.
+//     //
+//     // ⚠️ 중요:
+//     // - 이 줄이 없으면, 앱 흐름상 Settings에 들어가기 전까지 구매 provider가 생성되지 않아
+//     //   "앱 시작 시점 소유 검증"이 늦게 실행될 수 있습니다.
+//     ref.watch(purchaseControllerProvider);
+//
+//     // ✅ [추가] Integrity 체크를 먼저 수행 (점진적 제한 게이트)
+//     final gateAsync = ref.watch(integrityGateProvider);
+//
+//     // ✅ [정리] 인앱 전환 단계에서는 유료앱(license) 기반 분기를 제거합니다.
+//     // - 기존: mockLicenseProvider / licenseGateProvider 로딩까지 기다림
+//     // - 변경: Integrity + PIN만으로 게이트를 구성
+//
+//     // ✅ [추가] 로딩이면 스플래시
+//     if (gateAsync.isLoading) {
+//       return const MaterialApp(
+//         debugShowCheckedModeBanner: false,
+//         home: Scaffold(body: Center(child: CircularProgressIndicator())),
+//       );
+//     }
+//
+//     return gateAsync.when(
+//       loading: () => const MaterialApp(
+//         debugShowCheckedModeBanner: false,
+//         home: Scaffold(body: Center(child: CircularProgressIndicator())),
+//       ),
+//       error: (err, __) {
+//         // Integrity 체크 자체에서 예외가 나도, 서버 없는 구조에서는 바로 차단하면 CS 폭탄 가능
+//         // 우선은 앱 진입 허용(나중에 정책/유예로 강화)
+//         return const SireApp();
+//       },
+//       data: (gateState) {
+//         // ✅ 제한 상태면 Continue 없이 잠금(또는 제한) 화면으로 이동
+//         // - 현재는 "CS 최소화"를 위해 기본 차단을 비활성화합니다.
+//         // - 추후 인앱 결제 도입 이후에도, Integrity restricted는 "보안 정책"으로만 사용하세요(구매/환불 판별용 아님).
+//         if (gateState == IntegrityGateState.restricted) {
+//           //return const RestrictedScreen();
+//         }
+//
+//         // 📍 사용자의 PIN 설정 여부 비동기 확인
+//         final securityAsync = ref.watch(securityNotifierProvider);
+//
+//         return securityAsync.when(
+//           loading: () => const MaterialApp(
+//             debugShowCheckedModeBanner: false,
+//             home: Scaffold(body: Center(child: CircularProgressIndicator())),
+//           ),
+//           // 에러 발생 시 시스템 보호를 위해 메인 앱으로 안전하게 우회 진입
+//           error: (_, __) => const SireApp(),
+//           data: (hasPin) {
+//             // ✅ [변경] gateState가 grace여도 즉시 차단하지 않고 정상 진입 허용
+//             // - 필요하다면 grace 상태에서만 배너/토스트/안내 화면을 띄울 수 있음
+//             // - 현재는 "CS 최소화"를 위해 그냥 진입하도록 둠
+//
+//             if (hasPin) {
+//               // 🔒 보안 잠금이 활성화된 경우: PIN 입력 화면으로 이동
+//               // 📍 PinScreen 내에서 사용자의 현재 로케일에 맞는 다국어 제목이 표시됩니다.
+//               return const MaterialApp(
+//                 debugShowCheckedModeBanner: false,
+//                 home: PinScreen(),
+//               );
+//             } else {
+//               // ✅ 보안 잠금이 없는 경우: 즉시 메인 앱(SireApp) 실행
+//               // 📍 SireApp 내부에서 MaterialApp 로케일 설정이 최종 적용됩니다.
+//               return const SireApp();
+//             }
+//           },
+//         );
+//       },
+//     );
+//   }
+// }
+//
+
+//
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:intl/date_symbol_data_local.dart';
+// import 'app.dart';
+// import 'core/database/app_database.dart';
+// import 'core/database/data_seeder.dart';
+// import 'core/database/database_provider.dart';
+// import 'features/security/pin_screen.dart';
+// import 'features/security/security_provider.dart';
+// import 'core/platform/integrity_client.dart';
+// import 'core/platform/integrity_policy.dart';
+// import 'core/purchase/state/purchase_provider.dart';
+//
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await initializeDateFormatting(null, null);
+//   final database = AppDatabase();
+//   await seedDatabase(database);
+//
+//   runApp(
+//     ProviderScope(
+//       overrides: [databaseProvider.overrideWithValue(database)],
+//       child: const SecurityGateway(),
+//     ),
+//   );
+// }
+//
+// class IntegrityCheckResult {
+//   final bool ok;
+//   final String? errorMessage;
+//   const IntegrityCheckResult({required this.ok, this.errorMessage});
+// }
+//
+// final integrityCheckProvider = FutureProvider<IntegrityCheckResult>((ref) async {
+//   try {
+//     final res = await IntegrityClient.requestToken();
+//     return IntegrityCheckResult(ok: res['ok'] == true, errorMessage: res['errorMessage']?.toString());
+//   } catch (e) {
+//     return IntegrityCheckResult(ok: false, errorMessage: e.toString());
+//   }
+// });
+//
+// final integrityGateProvider = FutureProvider<IntegrityGateState>((ref) async {
+//   final check = await ref.watch(integrityCheckProvider.future);
+//   return IntegrityPolicy.evaluate(integrityOkNow: check.ok);
+// });
+//
+// class SecurityGateway extends ConsumerStatefulWidget {
+//   const SecurityGateway({super.key});
+//   @override
+//   ConsumerState<SecurityGateway> createState() => _SecurityGatewayState();
+// }
+//
+// class _SecurityGatewayState extends ConsumerState<SecurityGateway> {
+//   bool _isUnlocked = false; // 📍 잠금 해제 상태 관리
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     ref.watch(purchaseControllerProvider);
+//     final gateAsync = ref.watch(integrityGateProvider);
+//
+//     if (gateAsync.isLoading) {
+//       return const MaterialApp(home: Scaffold(body: Center(child: CircularProgressIndicator())));
+//     }
+//
+//     final securityAsync = ref.watch(securityNotifierProvider);
+//     return securityAsync.when(
+//       loading: () => const MaterialApp(home: Scaffold(body: Center(child: CircularProgressIndicator()))),
+//       error: (_, __) => const SireApp(),
+//       data: (hasPin) {
+//         // 📍 PIN이 없거나 이미 풀었다면 메인 앱 실행
+//         if (!hasPin || _isUnlocked) {
+//           return const SireApp();
+//         }
+//
+//         // 📍 PIN이 있으면 PIN 화면을 독립적으로 먼저 띄움
+//         return MaterialApp(
+//           debugShowCheckedModeBanner: false,
+//           home: PinScreen(
+//             onSuccess: () {
+//               setState(() => _isUnlocked = true); // 성공 시 상태 변경 -> SireApp으로 교체됨
+//             },
+//           ),
+//         );
+//       },
+//     );
+//   }
+// }
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/date_symbol_data_local.dart'; // 📍 날짜 및 숫자 포맷 초기화를 위해 필수
-
+import 'package:intl/date_symbol_data_local.dart';
 import 'app.dart';
 import 'core/database/app_database.dart';
-import 'core/database/data_seeder.dart'; // 📍 기본 카테고리 데이터 생성
+import 'core/database/data_seeder.dart';
 import 'core/database/database_provider.dart';
 import 'features/security/pin_screen.dart';
 import 'features/security/security_provider.dart';
-
-// ✅ [추가] Play Integrity 호출 클라이언트
 import 'core/platform/integrity_client.dart';
-
-// ✅ [정리] Integrity 정책은 core/platform/integrity_policy.dart
 import 'core/platform/integrity_policy.dart';
-
-// ✅ [추가] 점진적 제한(유예/제한) 상태 저장용
-import 'package:shared_preferences/shared_preferences.dart';
-
-// ❌ [정리] 유료앱(license) 기반 게이트는 인앱 결제 전환을 위해 제거합니다.
-// import 'core/license/license_model.dart';
-// import 'core/license/mock_license_service.dart';
-// import 'core/license/license_policy.dart';
-
-import 'package:flutter/services.dart'; // ✅ SystemNavigator.pop() 사용
-
-// ✅ [정리] RestrictedScreen / NeedsVerificationScreen 분리
-// - 인앱 전환 단계에서는 "유료앱 환불/권한 재확인" 흐름을 제거하므로 NeedsVerificationScreen은 사용하지 않습니다.
-// - RestrictedScreen은 보안/정책(예: Integrity restricted) 화면으로 "유지"할 수 있으나, 현재는 CS 최소화를 위해 기본 차단은 비활성화합니다.
-import 'restricted_screen.dart';
-// import 'needs_verification_screen.dart';
-
-// ✅ [추가] IAP 구매 상태 Provider (앱 시작 시점 소유 검증을 확실히 트리거하기 위해)
 import 'core/purchase/state/purchase_provider.dart';
 
 void main() async {
-  // 📍 플러터 엔진과 위젯 바인딩 초기화
   WidgetsFlutterBinding.ensureInitialized();
-
-  // 📍 [다국어 핵심] 전 세계 모든 로케일의 날짜/통화 포맷 데이터를 메모리에 로드합니다.
-  // 이 과정이 없으면 Ledger나 Stats 화면에서 특정 국가 로케일 사용 시 에러가 발생할 수 있습니다.
   await initializeDateFormatting(null, null);
-
-  // 📍 데이터베이스 싱글톤 인스턴스 생성
   final database = AppDatabase();
-
-  // 📍 [데이터 무결성] 앱 최초 실행 시 '월세(CAT_RENT)'와 같은 필수 다국어 키 카테고리를 생성합니다.
-  // 실제 금액 데이터와 상관없는 '구조적 키'를 생성하므로 화폐 다국어 처리에 안전합니다.
   await seedDatabase(database);
 
   runApp(
     ProviderScope(
-      overrides: [
-        // 생성된 DB 인스턴스를 프로바이더에 주입
-        databaseProvider.overrideWithValue(database),
-      ],
-      // 💡 보안 진입점(Gateway)을 통해 앱 시작
+      overrides: [databaseProvider.overrideWithValue(database)],
       child: const SecurityGateway(),
     ),
   );
 }
 
-// ✅ [추가] Integrity 체크 결과를 담기 위한 간단 모델
 class IntegrityCheckResult {
   final bool ok;
-  final String? token; // 성공 시 토큰(서버 없으므로 판독은 못 하지만, “성공 여부” 신호로 사용)
   final String? errorMessage;
-
-  const IntegrityCheckResult({
-    required this.ok,
-    this.token,
-    this.errorMessage,
-  });
+  const IntegrityCheckResult({required this.ok, this.errorMessage});
 }
 
-// ✅ [정리] Integrity 체크 Provider (앱 시작 시 1회 호출)
-// - 여기서 Integrity 결과만 가져옴(성공/실패)
-// - 실제 차단/유예 판단은 아래 integrityGateProvider에서 수행
 final integrityCheckProvider = FutureProvider<IntegrityCheckResult>((ref) async {
   try {
     final res = await IntegrityClient.requestToken();
-
-    // ignore: avoid_print
-    print('Integrity raw result = $res');
-
-    final ok = res['ok'] == true;
-    if (ok) {
-      final token = res['token'] as String?;
-      // 토큰 문자열이 존재하면 Integrity 호출 성공으로 간주
-      return IntegrityCheckResult(ok: true, token: token);
-    } else {
-      final msg = res['errorMessage']?.toString() ?? 'Integrity check failed';
-      return IntegrityCheckResult(ok: false, errorMessage: msg);
-    }
+    return IntegrityCheckResult(ok: res['ok'] == true, errorMessage: res['errorMessage']?.toString());
   } catch (e) {
     return IntegrityCheckResult(ok: false, errorMessage: e.toString());
   }
 });
 
-// ✅ [추가] 점진적 제한(유예/제한) 게이트 Provider
-// - Integrity 성공/실패를 기반으로 "ok/grace/restricted" 상태를 계산
-// - SharedPreferences로 누적 상태를 저장하여, 오프라인 등에서 CS 폭탄을 줄임
 final integrityGateProvider = FutureProvider<IntegrityGateState>((ref) async {
   final check = await ref.watch(integrityCheckProvider.future);
   return IntegrityPolicy.evaluate(integrityOkNow: check.ok);
 });
 
-// ❌ [정리] (유료앱 테스트용) Mock License 기반 게이트는 인앱 결제 전환을 위해 제거합니다.
-// final mockLicenseProvider = FutureProvider<LicenseStatus>((ref) async {
-//   final svc = MockLicenseService();
-//   return svc.fetch();
-// });
-//
-// final licenseGateProvider = FutureProvider<LicenseGateState>((ref) async {
-//   final license = await ref.watch(mockLicenseProvider.future);
-//   return LicensePolicy.evaluate(license: license);
-// });
-
-// 📍 보안 진입점 관리용 위젯
-// 다국어 초기화가 이루어지는 SireApp 진입 전, 보안 상태에 따라 화면을 분기합니다.
-class SecurityGateway extends ConsumerWidget {
+class SecurityGateway extends ConsumerStatefulWidget {
   const SecurityGateway({super.key});
+  @override
+  ConsumerState<SecurityGateway> createState() => _SecurityGatewayState();
+}
+
+class _SecurityGatewayState extends ConsumerState<SecurityGateway> {
+  bool _isUnlocked = false;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // ✅ [추가] IAP 구매 컨트롤러를 "앱 시작 시점"에 생성/초기화시키기 위한 트리거
-    // - PurchaseController 내부에서:
-    //   1) SharedPreferences 기반 빠른 복원
-    //   2) 스토어 소유(owned) 재검증(환불/취소 반영) 을 수행합니다.
-    //
-    // ⚠️ 중요:
-    // - 이 줄이 없으면, 앱 흐름상 Settings에 들어가기 전까지 구매 provider가 생성되지 않아
-    //   "앱 시작 시점 소유 검증"이 늦게 실행될 수 있습니다.
+  Widget build(BuildContext context) {
     ref.watch(purchaseControllerProvider);
-
-    // ✅ [추가] Integrity 체크를 먼저 수행 (점진적 제한 게이트)
     final gateAsync = ref.watch(integrityGateProvider);
 
-    // ✅ [정리] 인앱 전환 단계에서는 유료앱(license) 기반 분기를 제거합니다.
-    // - 기존: mockLicenseProvider / licenseGateProvider 로딩까지 기다림
-    // - 변경: Integrity + PIN만으로 게이트를 구성
-
-    // ✅ [추가] 로딩이면 스플래시
+    // 📍 로딩 화면에서 디버그 띠 제거
     if (gateAsync.isLoading) {
       return const MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -2251,55 +2464,27 @@ class SecurityGateway extends ConsumerWidget {
       );
     }
 
-    return gateAsync.when(
+    final securityAsync = ref.watch(securityNotifierProvider);
+    return securityAsync.when(
       loading: () => const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(body: Center(child: CircularProgressIndicator())),
       ),
-      error: (err, __) {
-        // Integrity 체크 자체에서 예외가 나도, 서버 없는 구조에서는 바로 차단하면 CS 폭탄 가능
-        // 우선은 앱 진입 허용(나중에 정책/유예로 강화)
-        return const SireApp();
-      },
-      data: (gateState) {
-        // ✅ 제한 상태면 Continue 없이 잠금(또는 제한) 화면으로 이동
-        // - 현재는 "CS 최소화"를 위해 기본 차단을 비활성화합니다.
-        // - 추후 인앱 결제 도입 이후에도, Integrity restricted는 "보안 정책"으로만 사용하세요(구매/환불 판별용 아님).
-        if (gateState == IntegrityGateState.restricted) {
-          //return const RestrictedScreen();
+      error: (_, __) => const SireApp(),
+      data: (hasPin) {
+        if (!hasPin || _isUnlocked) {
+          return const SireApp();
         }
 
-        // 📍 사용자의 PIN 설정 여부 비동기 확인
-        final securityAsync = ref.watch(securityNotifierProvider);
-
-        return securityAsync.when(
-          loading: () => const MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: Scaffold(body: Center(child: CircularProgressIndicator())),
+        return MaterialApp(
+          debugShowCheckedModeBanner: false, // 📍 PIN 화면에서 디버그 띠 제거
+          home: PinScreen(
+            onSuccess: () {
+              setState(() => _isUnlocked = true);
+            },
           ),
-          // 에러 발생 시 시스템 보호를 위해 메인 앱으로 안전하게 우회 진입
-          error: (_, __) => const SireApp(),
-          data: (hasPin) {
-            // ✅ [변경] gateState가 grace여도 즉시 차단하지 않고 정상 진입 허용
-            // - 필요하다면 grace 상태에서만 배너/토스트/안내 화면을 띄울 수 있음
-            // - 현재는 "CS 최소화"를 위해 그냥 진입하도록 둠
-
-            if (hasPin) {
-              // 🔒 보안 잠금이 활성화된 경우: PIN 입력 화면으로 이동
-              // 📍 PinScreen 내에서 사용자의 현재 로케일에 맞는 다국어 제목이 표시됩니다.
-              return const MaterialApp(
-                debugShowCheckedModeBanner: false,
-                home: PinScreen(),
-              );
-            } else {
-              // ✅ 보안 잠금이 없는 경우: 즉시 메인 앱(SireApp) 실행
-              // 📍 SireApp 내부에서 MaterialApp 로케일 설정이 최종 적용됩니다.
-              return const SireApp();
-            }
-          },
         );
       },
     );
   }
 }
-
